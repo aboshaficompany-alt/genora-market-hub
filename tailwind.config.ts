@@ -50,10 +50,19 @@ export default {
         orange: {
           primary: "hsl(var(--orange-primary))",
           vibrant: "hsl(var(--orange-vibrant))",
+          bright: "hsl(var(--orange-bright))",
         },
         yellow: {
           warm: "hsl(var(--yellow-warm))",
           light: "hsl(var(--yellow-light))",
+          glow: "hsl(var(--yellow-glow))",
+        },
+        pink: {
+          accent: "hsl(var(--pink-accent))",
+          light: "hsl(var(--pink-light))",
+        },
+        teal: {
+          accent: "hsl(var(--teal-accent))",
         },
         charcoal: {
           DEFAULT: "hsl(var(--charcoal))",
@@ -64,13 +73,19 @@ export default {
         'gradient-primary': 'var(--gradient-primary)',
         'gradient-warm': 'var(--gradient-warm)',
         'gradient-hero': 'var(--gradient-hero)',
+        'gradient-card': 'var(--gradient-card)',
+        'gradient-glow': 'var(--gradient-glow)',
+        'gradient-dark': 'var(--gradient-dark)',
       },
       boxShadow: {
         'soft': 'var(--shadow-soft)',
         'card': 'var(--shadow-card)',
+        'glow': 'var(--shadow-glow)',
+        'float': 'var(--shadow-float)',
       },
       transitionTimingFunction: {
         'smooth': 'var(--transition-smooth)',
+        'bounce': 'var(--transition-bounce)',
       },
       borderRadius: {
         lg: "var(--radius)",
