@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import storesRow from "@/assets/stores-row.jpg";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Store, TrendingUp, Shield, Zap } from "lucide-react";
@@ -82,13 +83,15 @@ const FeaturedStores = () => {
               ))}
             </ul>
             
-            <Button 
-              size="lg"
-              className="bg-gradient-primary hover:shadow-glow text-primary-foreground text-lg px-10 py-6 rounded-full shadow-card transition-all duration-500 hover:scale-110 font-bold"
-            >
-              استكشف المتاجر
-              <ArrowLeft className="mr-3 h-6 w-6" />
-            </Button>
+            <Link to="/stores">
+              <Button 
+                size="lg"
+                className="bg-gradient-primary hover:shadow-glow text-primary-foreground text-lg px-10 py-6 rounded-full shadow-card transition-all duration-500 hover:scale-110 font-bold"
+              >
+                استكشف المتاجر
+                <ArrowLeft className="mr-3 h-6 w-6" />
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

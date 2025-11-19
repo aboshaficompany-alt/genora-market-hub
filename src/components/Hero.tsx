@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-marketplace.jpg";
 import { ArrowLeft, Smile, Sparkles, ShoppingBag, Store } from "lucide-react";
@@ -58,21 +59,25 @@ const Hero = () => {
             
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-end">
-              <Button 
-                size="lg" 
-                className="bg-gradient-primary hover:shadow-glow text-primary-foreground shadow-float transition-all duration-500 hover:scale-110 text-lg px-8 py-6 rounded-full font-bold"
-              >
-                <ShoppingBag className="ml-2 h-6 w-6" />
-                ابدأ التسوق الآن
-              </Button>
-              <Button 
-                size="lg"
-                variant="outline"
-                className="border-3 border-primary text-primary hover:bg-primary hover:text-primary-foreground shadow-soft transition-all duration-500 hover:scale-110 text-lg px-8 py-6 rounded-full font-bold"
-              >
-                للبائعين: انضم الآن
-                <ArrowLeft className="mr-2 h-6 w-6" />
-              </Button>
+              <Link to="/products">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-primary hover:shadow-glow text-primary-foreground shadow-float transition-all duration-500 hover:scale-110 text-lg px-8 py-6 rounded-full font-bold"
+                >
+                  <ShoppingBag className="ml-2 h-6 w-6" />
+                  ابدأ التسوق الآن
+                </Button>
+              </Link>
+              <Link to="/stores">
+                <Button 
+                  size="lg"
+                  variant="outline"
+                  className="border-3 border-primary text-primary hover:bg-primary hover:text-primary-foreground shadow-soft transition-all duration-500 hover:scale-110 text-lg px-8 py-6 rounded-full font-bold"
+                >
+                  للبائعين: انضم الآن
+                  <ArrowLeft className="mr-2 h-6 w-6" />
+                </Button>
+              </Link>
             </div>
           </div>
 
