@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useForm } from "react-hook-form";
@@ -85,6 +85,14 @@ export default function VendorRegistration() {
       store_url: "",
     },
   });
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/auth");
+    }
+    loadCategories();
+    loadPlans();
+  }, [user, authLoading, navigate]);
 
   const loadCategories = async () => {
     const { data } = await supabase.from("categories").select("*");
