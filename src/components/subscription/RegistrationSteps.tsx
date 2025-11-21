@@ -10,10 +10,11 @@ interface RegistrationStepsProps {
 }
 
 const steps: Step[] = [
-  { number: 1, title: "اختيار الباقة" },
-  { number: 2, title: "معلومات المتجر" },
-  { number: 3, title: "معلومات المالك" },
-  { number: 4, title: "معلومات التواصل" },
+  { number: 1, title: "إنشاء الحساب" },
+  { number: 2, title: "اختيار الباقة" },
+  { number: 3, title: "معلومات المتجر" },
+  { number: 4, title: "معلومات المالك" },
+  { number: 5, title: "معلومات التواصل" },
 ];
 
 export default function RegistrationSteps({ currentStep }: RegistrationStepsProps) {

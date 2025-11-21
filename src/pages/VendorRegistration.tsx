@@ -34,6 +34,8 @@ const CITIES = [
 ];
 
 const formSchema = z.object({
+  email: z.string().email("البريد الإلكتروني غير صالح"),
+  password: z.string().min(6, "كلمة المرور يجب أن تكون 6 أحرف على الأقل"),
   plan_id: z.string().min(1, "يجب اختيار باقة"),
   category: z.string().min(1, "يجب اختيار القسم"),
   name: z.string().min(3, "اسم المتجر يجب أن يكون 3 أحرف على الأقل"),
@@ -42,7 +44,6 @@ const formSchema = z.object({
   owner_name: z.string().min(3, "اسم المالك يجب أن يكون 3 أحرف على الأقل"),
   owner_id_number: z.string().length(10, "رقم الهوية يجب أن يكون 10 أرقام"),
   phone: z.string().regex(/^(05|5)[0-9]{8}$/, "رقم الجوال غير صالح"),
-  email: z.string().email("البريد الإلكتروني غير صالح"),
   commercial_registration: z.string().optional(),
   store_url: z.string().optional(),
 });
@@ -56,7 +57,6 @@ interface SubscriptionPlan {
 }
 
 export default function VendorRegistration() {
-  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
@@ -72,6 +72,8 @@ export default function VendorRegistration() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      email: "",
+      password: "",
       plan_id: "",
       category: "",
       name: "",
@@ -80,19 +82,15 @@ export default function VendorRegistration() {
       owner_name: "",
       owner_id_number: "",
       phone: "",
-      email: user?.email || "",
       commercial_registration: "",
       store_url: "",
     },
   });
 
   useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/auth");
-    }
     loadCategories();
     loadPlans();
-  }, [user, authLoading, navigate]);
+  }, []);
 
   const loadCategories = async () => {
     const { data } = await supabase.from("categories").select("*");
@@ -118,10 +116,12 @@ export default function VendorRegistration() {
     let fieldsToValidate: (keyof z.infer<typeof formSchema>)[] = [];
 
     if (currentStep === 1) {
-      fieldsToValidate = ["plan_id"];
+      fieldsToValidate = ["email", "password"];
     } else if (currentStep === 2) {
-      fieldsToValidate = ["category", "name", "description", "city"];
+      fieldsToValidate = ["plan_id"];
     } else if (currentStep === 3) {
+      fieldsToValidate = ["category", "name", "description", "city"];
+    } else if (currentStep === 4) {
       fieldsToValidate = ["owner_name", "owner_id_number"];
     }
 
@@ -179,22 +179,59 @@ export default function VendorRegistration() {
     setUploading(true);
 
     try {
+      // أولاً: إنشاء حساب جديد
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: values.email,
+        password: values.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+        },
+      });
+
+      if (authError) {
+        toast({
+          variant: "destructive",
+          title: "خطأ في التسجيل",
+          description: authError.message,
+        });
+        setIsSubmitting(false);
+        setUploading(false);
+        return;
+      }
+
+      if (!authData.user) {
+        toast({
+          variant: "destructive",
+          title: "خطأ",
+          description: "فشل إنشاء الحساب",
+        });
+        setIsSubmitting(false);
+        setUploading(false);
+        return;
+      }
+
+      const userId = authData.user.id;
+
       let logoUrl = "";
       let idImageUrl = "";
 
       // رفع صورة الشعار
       if (logoFile) {
-        const logoPath = `${user!.id}/logo-${Date.now()}.${logoFile.name.split(".").pop()}`;
+        const logoPath = `${userId}/logo-${Date.now()}.${logoFile.name.split(".").pop()}`;
         logoUrl = await uploadImage(logoFile, "store-logos", logoPath);
       }
 
       // رفع صورة الهوية
       if (idImageFile) {
-        const idPath = `${user!.id}/id-${Date.now()}.${idImageFile.name.split(".").pop()}`;
+        const idPath = `${userId}/id-${Date.now()}.${idImageFile.name.split(".").pop()}`;
         idImageUrl = await uploadImage(idImageFile, "id-images", idPath);
       }
-      // أولاً، نضيف دور التاجر للمستخدم
-      const { error: roleError } = await supabase.from("user_roles").insert({ user_id: user!.id, role: "vendor" });
+
+      // ثانياً: إضافة دور التاجر للمستخدم
+      const { error: roleError } = await supabase.from("user_roles").insert({ 
+        user_id: userId, 
+        role: "vendor" 
+      });
 
       if (roleError && !roleError.message.includes("duplicate")) {
         toast({
@@ -203,6 +240,7 @@ export default function VendorRegistration() {
           description: "فشل تحديث صلاحيات المستخدم",
         });
         setIsSubmitting(false);
+        setUploading(false);
         return;
       }
 
@@ -211,9 +249,9 @@ export default function VendorRegistration() {
       const subscriptionEnd = new Date();
       subscriptionEnd.setMonth(subscriptionEnd.getMonth() + 1);
 
-      // ثم ننشئ المتجر
+      // ثالثاً: إنشاء المتجر
       const { error: storeError } = await supabase.from("stores").insert({
-        vendor_id: user!.id,
+        vendor_id: userId,
         plan_id: values.plan_id,
         subscription_start_date: subscriptionStart.toISOString(),
         subscription_end_date: subscriptionEnd.toISOString(),
@@ -239,30 +277,28 @@ export default function VendorRegistration() {
           description: "فشل إنشاء المتجر: " + storeError.message,
         });
         setIsSubmitting(false);
+        setUploading(false);
         return;
       }
 
       toast({
         title: "تم التسجيل بنجاح! 🎉",
-        description: "تم تسجيل متجرك وسيتم مراجعته من قبل الإدارة قريباً",
+        description: "تم تسجيل حسابك ومتجرك، وسيتم مراجعته من قبل الإدارة قريباً",
       });
 
+      // تسجيل الدخول تلقائياً بعد التسجيل
       navigate("/vendor-dashboard");
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "خطأ",
-        description: "حدث خطأ غير متوقع",
+        description: error.message || "حدث خطأ غير متوقع",
       });
     } finally {
       setIsSubmitting(false);
       setUploading(false);
     }
   };
-
-  if (authLoading) {
-    return null;
-  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-muted/20">
@@ -282,22 +318,56 @@ export default function VendorRegistration() {
           <Card className="mt-8">
             <CardHeader>
               <CardTitle className="text-2xl">
-                {currentStep === 1 && "اختر الباقة المناسبة لك"}
-                {currentStep === 2 && "معلومات المتجر"}
-                {currentStep === 3 && "معلومات المالك"}
-                {currentStep === 4 && "معلومات التواصل"}
+                {currentStep === 1 && "إنشاء حساب جديد"}
+                {currentStep === 2 && "اختر الباقة المناسبة لك"}
+                {currentStep === 3 && "معلومات المتجر"}
+                {currentStep === 4 && "معلومات المالك"}
+                {currentStep === 5 && "معلومات التواصل"}
               </CardTitle>
               <CardDescription>
-                {currentStep === 1 && "اختر الباقة التي تناسب احتياجات متجرك"}
-                {currentStep === 2 && "أدخل المعلومات الأساسية عن متجرك"}
-                {currentStep === 3 && "معلومات مالك المتجر للتوثيق"}
-                {currentStep === 4 && "معلومات التواصل والحساب البنكي"}
+                {currentStep === 1 && "أدخل بريدك الإلكتروني وكلمة المرور لإنشاء حساب جديد"}
+                {currentStep === 2 && "اختر الباقة التي تناسب احتياجات متجرك"}
+                {currentStep === 3 && "أدخل المعلومات الأساسية عن متجرك"}
+                {currentStep === 4 && "معلومات مالك المتجر للتوثيق"}
+                {currentStep === 5 && "معلومات التواصل والحساب البنكي"}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   {currentStep === 1 && (
+                    <div className="space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>البريد الإلكتروني *</FormLabel>
+                            <FormControl>
+                              <Input type="email" placeholder="example@email.com" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>كلمة المرور *</FormLabel>
+                            <FormControl>
+                              <Input type="password" placeholder="********" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )}
+
+                  {currentStep === 2 && (
                     <div className="grid md:grid-cols-2 gap-6">
                       <FormField
                         control={form.control}
@@ -328,7 +398,7 @@ export default function VendorRegistration() {
                     </div>
                   )}
 
-                  {currentStep === 2 && (
+                  {currentStep === 4 && (
                     <div className="space-y-4">
                       <FormField
                         control={form.control}
@@ -538,7 +608,7 @@ export default function VendorRegistration() {
                     </div>
                   )}
 
-                  {currentStep === 4 && (
+                  {currentStep === 5 && (
                     <div className="space-y-4">
                       <FormField
                         control={form.control}
@@ -597,7 +667,7 @@ export default function VendorRegistration() {
                         السابق
                       </Button>
                     )}
-                    {currentStep < 4 ? (
+                    {currentStep < 5 ? (
                       <Button type="button" onClick={nextStep} className="flex-1 bg-gradient-primary">
                         التالي
                         <ArrowLeft className="mr-2 h-4 w-4" />
