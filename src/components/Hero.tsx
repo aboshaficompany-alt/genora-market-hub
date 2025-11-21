@@ -9,9 +9,15 @@ const Hero = () => {
       {/* Animated background elements */}
       <div className="absolute inset-0 bg-gradient-glow opacity-60"></div>
       <div className="absolute top-20 right-[10%] w-32 h-32 bg-yellow-light/40 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-32 left-[15%] w-48 h-48 bg-primary/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-      <div className="absolute top-1/3 left-[5%] w-24 h-24 bg-pink-accent/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-      
+      <div
+        className="absolute bottom-32 left-[15%] w-48 h-48 bg-primary/30 rounded-full blur-3xl animate-pulse"
+        style={{ animationDelay: "1s" }}
+      ></div>
+      <div
+        className="absolute top-1/3 left-[5%] w-24 h-24 bg-pink-accent/20 rounded-full blur-2xl animate-pulse"
+        style={{ animationDelay: "2s" }}
+      ></div>
+
       <div className="container px-4 mx-auto relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Right side - Content (appears first in RTL) */}
@@ -27,20 +33,18 @@ const Hero = () => {
                 <Smile className="w-14 h-14 text-pink-accent" />
               </h1>
             </div>
-            
+
             {/* Subtitle with icon */}
             <div className="flex items-center justify-center lg:justify-end gap-3">
               <Store className="w-8 h-8 text-primary" />
-              <p className="text-3xl lg:text-4xl font-bold text-charcoal">
-                المتاجر المتعددة
-              </p>
+              <p className="text-3xl lg:text-4xl font-bold text-charcoal">المتاجر المتعددة</p>
             </div>
-            
+
             {/* Description */}
             <p className="text-xl lg:text-2xl text-charcoal-light leading-relaxed max-w-2xl mx-auto lg:mr-0">
               اكتشف تجربة تسوق فريدة تجمع أفضل المتاجر والبائعين في منصة واحدة سهلة الاستخدام
             </p>
-            
+
             {/* Stats */}
             <div className="grid grid-cols-3 gap-6 py-8 max-w-lg mx-auto lg:mr-0">
               <div className="text-center lg:text-right">
@@ -56,20 +60,20 @@ const Hero = () => {
                 <div className="text-sm text-charcoal-light">عميل</div>
               </div>
             </div>
-            
+
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-end">
               <Link to="/products">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="bg-gradient-primary hover:shadow-glow text-primary-foreground shadow-float transition-all duration-500 hover:scale-110 text-lg px-8 py-6 rounded-full font-bold"
                 >
                   <ShoppingBag className="ml-2 h-6 w-6" />
                   ابدأ التسوق الآن
                 </Button>
               </Link>
-              <Link to="/stores">
-                <Button 
+              <Link to="/vendor-registration">
+                <Button
                   size="lg"
                   variant="outline"
                   className="border-3 border-primary text-primary hover:bg-primary hover:text-primary-foreground shadow-soft transition-all duration-500 hover:scale-110 text-lg px-8 py-6 rounded-full font-bold"
@@ -86,16 +90,12 @@ const Hero = () => {
             <div className="relative">
               {/* Glow effect behind image */}
               <div className="absolute inset-0 bg-gradient-primary opacity-30 blur-3xl rounded-[3rem] scale-105"></div>
-              
+
               {/* Main image */}
               <div className="relative rounded-[3rem] overflow-hidden shadow-float hover:shadow-glow transition-all duration-700 hover:scale-105 hover:rotate-1 border-4 border-white/50">
-                <img 
-                  src={heroImage} 
-                  alt="منصة جينورا للمتاجر المتعددة"
-                  className="w-full h-auto"
-                />
+                <img src={heroImage} alt="منصة جينورا للمتاجر المتعددة" className="w-full h-auto" />
               </div>
-              
+
               {/* Floating badge */}
               <div className="absolute -bottom-6 -right-6 bg-white rounded-3xl p-6 shadow-float animate-bounce">
                 <div className="text-center">
