@@ -288,8 +288,8 @@ export default function VendorRegistration() {
         description: "تم تسجيل حسابك ومتجرك، وسيتم مراجعته من قبل الإدارة قريباً",
       });
 
-      // تسجيل الدخول تلقائياً بعد التسجيل
-      navigate("/vendor-dashboard");
+      // الانتقال إلى شاشة النجاح
+      setCurrentStep(6);
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -315,8 +315,36 @@ export default function VendorRegistration() {
             <p className="text-muted-foreground text-lg">ابدأ رحلتك في عالم التجارة الإلكترونية معنا</p>
           </div>
 
-          <RegistrationSteps currentStep={currentStep} />
+          {currentStep < 6 && <RegistrationSteps currentStep={currentStep} />}
 
+          {currentStep === 6 ? (
+            <div className="flex flex-col items-center justify-center py-16 space-y-6 text-center animate-fade-in">
+              <div className="w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center">
+                <svg className="w-16 h-16 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-4xl font-bold text-charcoal">تم إرسال طلبك للمراجعة</h2>
+              <p className="text-lg text-charcoal-light max-w-2xl">
+                شكراً لتسجيلك معنا! سيقوم فريقنا بمراجعة طلبك خلال 24-48 ساعة وسنقوم بإعلامك عبر البريد الإلكتروني.
+              </p>
+              <div className="flex gap-4 pt-4">
+                <Button 
+                  onClick={() => navigate("/vendor-dashboard")}
+                  className="bg-gradient-primary text-white px-8 py-3 text-lg"
+                >
+                  الانتقال إلى لوحة التحكم
+                </Button>
+                <Button 
+                  onClick={() => navigate("/")}
+                  variant="outline"
+                  className="px-8 py-3 text-lg"
+                >
+                  العودة للرئيسية
+                </Button>
+              </div>
+            </div>
+          ) : (
           <Card className="mt-8">
             <CardHeader>
               <CardTitle className="text-2xl">
@@ -648,6 +676,7 @@ export default function VendorRegistration() {
                     </div>
                   )}
 
+                  {currentStep < 6 && (
                   <div className="flex gap-4 pt-6">
                     {currentStep > 1 && (
                       <Button type="button" variant="outline" onClick={prevStep} className="flex-1">
@@ -666,10 +695,12 @@ export default function VendorRegistration() {
                       </Button>
                     )}
                   </div>
+                  )}
                 </form>
               </Form>
             </CardContent>
           </Card>
+          )}
         </div>
       </main>
 

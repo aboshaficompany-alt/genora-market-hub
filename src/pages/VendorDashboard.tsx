@@ -35,7 +35,14 @@ export default function VendorDashboard() {
 
   useEffect(() => {
     const checkVendorStatus = async () => {
-      if (!authLoading && user) {
+      if (authLoading) return;
+      
+      if (!user) {
+        navigate("/auth");
+        return;
+      }
+
+      try {
         const vendorStatus = await hasRole("vendor");
         setIsVendor(vendorStatus);
         
@@ -46,16 +53,18 @@ export default function VendorDashboard() {
             description: "هذه الصفحة متاحة للتجار فقط",
           });
           navigate("/");
-        } else {
-          loadVendorData();
+          return;
         }
-      } else if (!authLoading && !user) {
-        navigate("/auth");
+        
+        loadVendorData();
+      } catch (error) {
+        console.error("Error checking vendor status:", error);
+        navigate("/");
       }
     };
 
     checkVendorStatus();
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading, hasRole, navigate, toast]);
 
   const loadVendorData = async () => {
     if (!user) return;
