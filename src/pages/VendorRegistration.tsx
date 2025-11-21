@@ -123,6 +123,8 @@ export default function VendorRegistration() {
       fieldsToValidate = ["category", "name", "description", "city"];
     } else if (currentStep === 4) {
       fieldsToValidate = ["owner_name", "owner_id_number"];
+    } else if (currentStep === 5) {
+      fieldsToValidate = ["phone"];
     }
 
     const isValid = await form.trigger(fieldsToValidate);
@@ -398,7 +400,7 @@ export default function VendorRegistration() {
                     </div>
                   )}
 
-                  {currentStep === 4 && (
+                  {currentStep === 3 && (
                     <div className="space-y-4">
                       <FormField
                         control={form.control}
@@ -528,7 +530,7 @@ export default function VendorRegistration() {
                     </div>
                   )}
 
-                  {currentStep === 3 && (
+                  {currentStep === 4 && (
                     <div className="space-y-4">
                       <FormField
                         control={form.control}
@@ -618,20 +620,6 @@ export default function VendorRegistration() {
                             <FormLabel>رقم الجوال *</FormLabel>
                             <FormControl>
                               <Input type="tel" placeholder="05xxxxxxxx" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>البريد الإلكتروني *</FormLabel>
-                            <FormControl>
-                              <Input type="email" placeholder="your@email.com" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
