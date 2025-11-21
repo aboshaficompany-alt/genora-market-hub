@@ -70,9 +70,6 @@ const Navbar = () => {
                 <Link to="/vendor-dashboard">
                   <Button variant="ghost">لوحة التاجر</Button>
                 </Link>
-                <Link to="/admin-dashboard">
-                  <Button variant="ghost">لوحة المدير</Button>
-                </Link>
                 <Button onClick={signOut} variant="ghost" className="text-red-500">
                   <LogOut className="w-5 h-5 ml-2" />
                   تسجيل الخروج

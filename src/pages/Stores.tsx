@@ -1,12 +1,47 @@
 import { Link } from "react-router-dom";
-import { stores } from "@/data/stores";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, MapPin, Package, ShieldCheck } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Stores = () => {
+  const [stores, setStores] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStores = async () => {
+      const { data, error } = await supabase
+        .from("stores")
+        .select(`
+          *,
+          products(count)
+        `)
+        .eq("is_approved", true)
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        setStores(data);
+      }
+      setLoading(false);
+    };
+
+    fetchStores();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-warm" dir="rtl">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <p className="text-xl text-charcoal-light">جاري التحميل...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-gradient-warm" dir="rtl">
       <Navbar />
@@ -30,54 +65,60 @@ const Stores = () => {
 
           {/* Stores Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {stores.map((store, index) => (
-              <Link 
-                key={store.id} 
-                to={`/store/${store.id}`}
-                className="group animate-fade-in"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <Card className="overflow-hidden border-2 border-transparent hover:border-primary hover:shadow-glow transition-all duration-300 hover:scale-105 bg-white">
-                  <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={store.image} 
-                      alt={store.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    {store.verified && (
-                      <div className="absolute top-4 left-4 bg-white rounded-full p-2 shadow-card">
-                        <ShieldCheck className="w-6 h-6 text-primary" />
+            {stores.length === 0 ? (
+              <div className="col-span-full text-center py-12">
+                <p className="text-xl text-charcoal-light">لا توجد متاجر متاحة حالياً</p>
+              </div>
+            ) : (
+              stores.map((store, index) => (
+                <Link 
+                  key={store.id} 
+                  to={`/store/${store.id}`}
+                  className="group animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <Card className="overflow-hidden border-2 border-transparent hover:border-primary hover:shadow-glow transition-all duration-300 hover:scale-105 bg-white">
+                    <div className="relative h-48 overflow-hidden">
+                      <img 
+                        src={store.image_url || "/placeholder.svg"} 
+                        alt={store.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      {store.verified && (
+                        <div className="absolute top-4 left-4 bg-white rounded-full p-2 shadow-card">
+                          <ShieldCheck className="w-6 h-6 text-primary" />
+                        </div>
+                      )}
+                      <div className="absolute top-4 right-4">
+                        <Badge className="bg-gradient-primary text-primary-foreground font-bold shadow-card">
+                          {store.category || "عام"}
+                        </Badge>
                       </div>
-                    )}
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-gradient-primary text-primary-foreground font-bold shadow-card">
-                        {store.category}
-                      </Badge>
                     </div>
-                  </div>
-                  
-                  <CardContent className="p-6">
-                    <h3 className="text-2xl font-bold text-charcoal mb-2 group-hover:text-primary transition-colors">
-                      {store.name}
-                    </h3>
-                    <p className="text-charcoal-light mb-4 line-clamp-2">
-                      {store.description}
-                    </p>
                     
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-2">
-                        <Star className="w-5 h-5 text-yellow-light fill-yellow-light" />
-                        <span className="font-bold text-charcoal">{store.rating}</span>
+                    <CardContent className="p-6">
+                      <h3 className="text-2xl font-bold text-charcoal mb-2 group-hover:text-primary transition-colors">
+                        {store.name}
+                      </h3>
+                      <p className="text-charcoal-light mb-4 line-clamp-2">
+                        {store.description || "لا يوجد وصف"}
+                      </p>
+                      
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2">
+                          <Star className="w-5 h-5 text-yellow-light fill-yellow-light" />
+                          <span className="font-bold text-charcoal">{store.rating || 0}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-charcoal-light">
+                          <Package className="w-5 h-5" />
+                          <span>{store.products?.[0]?.count || 0} منتج</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2 text-charcoal-light">
-                        <Package className="w-5 h-5" />
-                        <span>{store.products} منتج</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))
+            )}
           </div>
         </div>
       </section>
