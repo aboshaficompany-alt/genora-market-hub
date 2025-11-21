@@ -1,18 +1,60 @@
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { products } from "@/data/products";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, ShoppingCart, Store } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Star, ShoppingCart, Store, Search, Heart, SlidersHorizontal } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const Products = () => {
+  const { addToCart } = useCart();
+  const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist();
+  
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [minRating, setMinRating] = useState(0);
+  const [sortBy, setSortBy] = useState("default");
+
+  const categories = useMemo(() => {
+    const cats = ["all", ...new Set(products.map(p => p.category))];
+    return cats;
+  }, []);
+
+  const filteredProducts = useMemo(() => {
+    let filtered = products.filter(product => {
+      const matchesSearch = product.name.includes(searchQuery) || 
+                           product.description.includes(searchQuery);
+      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
+      const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
+      const matchesRating = product.rating >= minRating;
+      
+      return matchesSearch && matchesCategory && matchesPrice && matchesRating;
+    });
+
+    if (sortBy === "price-low") {
+      filtered.sort((a, b) => a.price - b.price);
+    } else if (sortBy === "price-high") {
+      filtered.sort((a, b) => b.price - a.price);
+    } else if (sortBy === "rating") {
+      filtered.sort((a, b) => b.rating - a.rating);
+    }
+
+    return filtered;
+  }, [searchQuery, selectedCategory, priceRange, minRating, sortBy]);
+
   return (
     <div className="min-h-screen bg-gradient-warm" dir="rtl">
       <Navbar />
       
-      {/* Hero Section */}
       <section className="pt-32 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-0 w-96 h-96 bg-secondary rounded-full blur-3xl"></div>
@@ -20,7 +62,7 @@ const Products = () => {
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-16 animate-fade-in">
+          <div className="text-center mb-12 animate-fade-in">
             <h1 className="text-5xl lg:text-6xl font-black text-charcoal mb-6">
               جميع <span className="bg-gradient-primary bg-clip-text text-transparent">المنتجات</span>
             </h1>
@@ -29,9 +71,103 @@ const Products = () => {
             </p>
           </div>
 
-          {/* Products Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product, index) => (
+          {/* Search and Filters */}
+          <div className="grid lg:grid-cols-4 gap-8 mb-12">
+            {/* Filters Sidebar */}
+            <div className="lg:col-span-1">
+              <Card className="border-2 sticky top-24 animate-fade-in">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <SlidersHorizontal className="w-5 h-5 text-primary" />
+                    <h3 className="text-xl font-bold text-charcoal">التصفية</h3>
+                  </div>
+
+                  {/* Search */}
+                  <div className="mb-6">
+                    <Label className="mb-2 block">البحث</Label>
+                    <div className="relative">
+                      <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal-light" />
+                      <Input
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="ابحث عن منتج..."
+                        className="pr-10"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Category */}
+                  <div className="mb-6">
+                    <Label className="mb-2 block">الفئة</Label>
+                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">جميع الفئات</SelectItem>
+                        {categories.filter(cat => cat !== "all").map(cat => (
+                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Price Range */}
+                  <div className="mb-6">
+                    <Label className="mb-2 block">
+                      نطاق السعر: {priceRange[0]} - {priceRange[1]} ر.س
+                    </Label>
+                    <Slider
+                      value={priceRange}
+                      onValueChange={setPriceRange}
+                      max={5000}
+                      step={50}
+                      className="mt-4"
+                    />
+                  </div>
+
+                  {/* Rating Filter */}
+                  <div className="mb-6">
+                    <Label className="mb-2 block">التقييم الأدنى</Label>
+                    <Select value={minRating.toString()} onValueChange={(val) => setMinRating(Number(val))}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="0">الكل</SelectItem>
+                        <SelectItem value="4">4 نجوم فأكثر</SelectItem>
+                        <SelectItem value="4.5">4.5 نجوم فأكثر</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Sort */}
+                  <div>
+                    <Label className="mb-2 block">الترتيب</Label>
+                    <Select value={sortBy} onValueChange={setSortBy}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="default">افتراضي</SelectItem>
+                        <SelectItem value="price-low">السعر: من الأقل للأعلى</SelectItem>
+                        <SelectItem value="price-high">السعر: من الأعلى للأقل</SelectItem>
+                        <SelectItem value="rating">الأعلى تقييماً</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Products Grid */}
+            <div className="lg:col-span-3">
+              <div className="mb-6 text-charcoal-light animate-fade-in">
+                تم العثور على {filteredProducts.length} منتج
+              </div>
+              
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProducts.map((product, index) => (
               <Link 
                 key={product.id} 
                 to={`/product/${product.id}`}
@@ -89,21 +225,40 @@ const Products = () => {
                           </div>
                         )}
                       </div>
-                      <Button 
-                        size="sm" 
-                        className="bg-gradient-primary text-primary-foreground hover:shadow-glow rounded-full"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // Add to cart functionality
-                        }}
-                      >
-                        <ShoppingCart className="w-4 h-4" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          className="bg-gradient-primary text-primary-foreground hover:shadow-glow rounded-full flex-1"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            addToCart(product);
+                          }}
+                        >
+                          <ShoppingCart className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant={isInWishlist(product.id) ? "default" : "outline"}
+                          className="rounded-full"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (isInWishlist(product.id)) {
+                              removeFromWishlist(product.id);
+                            } else {
+                              addToWishlist(product);
+                            }
+                          }}
+                        >
+                          <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               </Link>
-            ))}
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>

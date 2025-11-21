@@ -1,6 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { products } from "@/data/products";
 import { stores } from "@/data/stores";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +14,8 @@ const ProductDetail = () => {
   const { id } = useParams();
   const product = products.find(p => p.id === Number(id));
   const store = product ? stores.find(s => s.id === product.storeId) : null;
+  const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
   if (!product || !store) {
     return <div>المنتج غير موجود</div>;
@@ -113,16 +117,24 @@ const ProductDetail = () => {
                     <Button 
                       size="lg"
                       className="flex-1 bg-gradient-primary text-primary-foreground hover:shadow-glow rounded-full font-bold text-xl py-7"
+                      onClick={() => addToCart(product)}
                     >
                       <ShoppingCart className="ml-2 w-6 h-6" />
                       أضف للسلة
                     </Button>
                     <Button 
                       size="lg"
-                      variant="outline"
+                      variant={isInWishlist(product.id) ? "default" : "outline"}
                       className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full"
+                      onClick={() => {
+                        if (isInWishlist(product.id)) {
+                          removeFromWishlist(product.id);
+                        } else {
+                          addToWishlist(product);
+                        }
+                      }}
                     >
-                      <Heart className="w-6 h-6" />
+                      <Heart className={`w-6 h-6 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
                     </Button>
                     <Button 
                       size="lg"
