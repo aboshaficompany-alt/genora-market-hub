@@ -1,10 +1,15 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Store, ShoppingBag, Home, User, Menu } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Store, ShoppingBag, Home, User, Menu, ShoppingCart, Heart } from "lucide-react";
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { totalItems } = useCart();
+  const { items: wishlistItems } = useWishlist();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-soft border-b border-border/30">
@@ -34,6 +39,26 @@ const Navbar = () => {
             <Link to="/products" className="text-charcoal hover:text-primary transition-colors font-semibold flex items-center gap-2">
               <ShoppingBag className="w-5 h-5" />
               المنتجات
+            </Link>
+            <Link to="/wishlist">
+              <Button variant="ghost" size="icon" className="relative rounded-full">
+                <Heart className="w-5 h-5" />
+                {wishlistItems.length > 0 && (
+                  <Badge className="absolute -top-1 -left-1 w-5 h-5 flex items-center justify-center p-0 bg-red-500 text-white text-xs">
+                    {wishlistItems.length}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
+            <Link to="/cart">
+              <Button variant="ghost" size="icon" className="relative rounded-full">
+                <ShoppingCart className="w-5 h-5" />
+                {totalItems > 0 && (
+                  <Badge className="absolute -top-1 -left-1 w-5 h-5 flex items-center justify-center p-0 bg-primary text-primary-foreground text-xs">
+                    {totalItems}
+                  </Badge>
+                )}
+              </Button>
             </Link>
             <Button className="bg-gradient-primary text-primary-foreground hover:shadow-glow rounded-full font-bold">
               <User className="w-5 h-5 ml-2" />
