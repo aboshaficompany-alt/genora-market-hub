@@ -11,6 +11,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   loading: boolean;
   hasRole: (role: string) => Promise<boolean>;
+  getUserRole: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -124,6 +125,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return data.role === role;
   };
 
+  const getUserRole = async () => {
+    if (!user) return null;
+    
+    const { data } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    
+    return data?.role || null;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -134,6 +147,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         signOut,
         loading,
         hasRole,
+        getUserRole,
       }}
     >
       {children}
