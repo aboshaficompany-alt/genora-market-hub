@@ -67,18 +67,31 @@ const Navbar = () => {
                 <Link to="/orders">
                   <Button variant="ghost">طلباتي</Button>
                 </Link>
+                <Link to="/vendor-dashboard">
+                  <Button variant="ghost">لوحة التاجر</Button>
+                </Link>
+                <Link to="/admin-dashboard">
+                  <Button variant="ghost">لوحة المدير</Button>
+                </Link>
                 <Button onClick={signOut} variant="ghost" className="text-red-500">
                   <LogOut className="w-5 h-5 ml-2" />
                   تسجيل الخروج
                 </Button>
               </>
             ) : (
-              <Link to="/auth">
-                <Button className="bg-gradient-primary text-primary-foreground hover:shadow-glow rounded-full font-bold">
-                  <User className="w-5 h-5 ml-2" />
-                  تسجيل الدخول
-                </Button>
-              </Link>
+              <>
+                <Link to="/auth">
+                  <Button className="bg-gradient-primary text-primary-foreground hover:shadow-glow rounded-full font-bold">
+                    <User className="w-5 h-5 ml-2" />
+                    تسجيل الدخول
+                  </Button>
+                </Link>
+                <Link to="/vendor-registration">
+                  <Button variant="outline" className="rounded-full font-bold">
+                    تسجيل كتاجر
+                  </Button>
+                </Link>
+              </>
             )}
           </div>
 

@@ -64,7 +64,7 @@ export default function VendorDashboard() {
       .from("stores")
       .select("*")
       .eq("vendor_id", user.id)
-      .single();
+      .maybeSingle();
 
     setStore(storeData);
 
@@ -173,10 +173,61 @@ export default function VendorDashboard() {
           <p className="text-muted-foreground">
             إدارة متجرك ومنتجاتك وطلباتك
           </p>
+          
+          {!store && (
+            <Card className="mt-4 border-orange-500">
+              <CardContent className="p-6">
+                <p className="text-center">
+                  ليس لديك متجر مسجل بعد. يرجى تسجيل متجرك أولاً.
+                </p>
+                <Button
+                  className="w-full mt-4 bg-gradient-primary"
+                  onClick={() => navigate("/vendor-registration")}
+                >
+                  تسجيل متجر جديد
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
+        {/* Store Info Card */}
+        {store && (
+          <Card className="mb-8 gradient-border">
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">رابط المتجر</p>
+                  <p className="font-semibold">
+                    {store.store_url || "لم يتم تحديده بعد"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">طريقة الشحن</p>
+                  <p className="font-semibold">
+                    {store.shipping_method === "vendor"
+                      ? "بواسطة التاجر"
+                      : "شركة الشحن"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">المدينة</p>
+                  <p className="font-semibold">{store.city}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">حالة المتجر</p>
+                  <p className="font-semibold">
+                    {store.is_approved ? "موافق عليه" : "قيد المراجعة"}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {store && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card className="gradient-border">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">إجمالي المنتجات</CardTitle>
@@ -206,10 +257,12 @@ export default function VendorDashboard() {
               <div className="text-2xl font-bold">{stats.totalRevenue.toFixed(2)} ر.س</div>
             </CardContent>
           </Card>
-        </div>
+          </div>
+        )}
 
         {/* Tabs */}
-        <Tabs defaultValue="products" className="space-y-4">
+        {store && (
+          <Tabs defaultValue="products" className="space-y-4">
           <TabsList>
             <TabsTrigger value="products">المنتجات</TabsTrigger>
             <TabsTrigger value="orders">الطلبات</TabsTrigger>
@@ -336,6 +389,7 @@ export default function VendorDashboard() {
             </div>
           </TabsContent>
         </Tabs>
+        )}
       </main>
 
       <Footer />
