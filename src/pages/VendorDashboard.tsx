@@ -42,26 +42,7 @@ export default function VendorDashboard() {
         return;
       }
 
-      try {
-        const vendorStatus = await hasRole("vendor");
-        setIsVendor(vendorStatus);
-        
-        if (!vendorStatus) {
-          toast({
-            variant: "destructive",
-            title: "غير مصرح",
-            description: "هذه الصفحة متاحة للتجار فقط",
-          });
-          navigate("/");
-          return;
-        }
-        
-        loadVendorData();
-      } catch (error) {
-        console.error("Error checking vendor status:", error);
-        navigate("/");
-      }
-    };
+     
 
     checkVendorStatus();
   }, [user, authLoading, hasRole, navigate, toast]);
