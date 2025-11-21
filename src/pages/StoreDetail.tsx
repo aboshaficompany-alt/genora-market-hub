@@ -6,19 +6,27 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, ShoppingCart, Heart, Facebook, Instagram, Twitter, Globe, Store } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Star, MapPin, ShoppingCart, Heart, Facebook, Instagram, Twitter, Globe, Store, Send } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 export default function StoreDetail() {
   const { id } = useParams();
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [store, setStore] = useState<any>(null);
   const [storeProducts, setStoreProducts] = useState<any[]>([]);
+  const [storeReviews, setStoreReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [userReview, setUserReview] = useState<any>(null);
 
   useEffect(() => {
     loadStoreData();
@@ -43,7 +51,102 @@ export default function StoreDetail() {
       .eq("store_id", id);
 
     setStoreProducts(productsData || []);
+
+    // Load reviews
+    const { data: reviewsData } = await supabase
+      .from("store_reviews")
+      .select(`
+        *,
+        profiles:user_id (
+          full_name,
+          avatar_url
+        )
+      `)
+      .eq("store_id", id)
+      .order("created_at", { ascending: false });
+
+    setStoreReviews(reviewsData || []);
+
+    // Check if user has already reviewed
+    if (user) {
+      const { data: existingReview } = await supabase
+        .from("store_reviews")
+        .select("*")
+        .eq("store_id", id)
+        .eq("user_id", user.id)
+        .maybeSingle();
+      
+      setUserReview(existingReview);
+      if (existingReview) {
+        setRating(existingReview.rating);
+        setComment(existingReview.comment || "");
+      }
+    }
+
     setLoading(false);
+  };
+
+  const handleSubmitReview = async () => {
+    if (!user) {
+      toast({
+        title: "يجب تسجيل الدخول",
+        description: "يجب عليك تسجيل الدخول لإضافة تقييم",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSubmittingReview(true);
+
+    try {
+      if (userReview) {
+        // Update existing review
+        const { error } = await supabase
+          .from("store_reviews")
+          .update({
+            rating,
+            comment,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", userReview.id);
+
+        if (error) throw error;
+
+        toast({
+          title: "تم التحديث",
+          description: "تم تحديث تقييمك بنجاح",
+        });
+      } else {
+        // Insert new review
+        const { error } = await supabase
+          .from("store_reviews")
+          .insert({
+            store_id: id,
+            user_id: user.id,
+            rating,
+            comment,
+          });
+
+        if (error) throw error;
+
+        toast({
+          title: "تم الإضافة",
+          description: "تم إضافة تقييمك بنجاح",
+        });
+      }
+
+      // Reload reviews
+      loadStoreData();
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      toast({
+        title: "خطأ",
+        description: "حدث خطأ أثناء إضافة التقييم",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmittingReview(false);
+    }
   };
 
   if (loading) {
@@ -247,6 +350,127 @@ export default function StoreDetail() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Store Reviews Section */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+            <Star className="h-7 w-7 text-yellow-400 fill-yellow-400" />
+            تقييمات المتجر
+          </h2>
+
+          {/* Add/Edit Review Form */}
+          {user && (
+            <Card className="mb-6 bg-gradient-to-br from-primary/5 to-primary/10">
+              <CardContent className="p-6">
+                <h3 className="font-bold text-xl mb-4">
+                  {userReview ? "تعديل تقييمك" : "أضف تقييمك"}
+                </h3>
+                
+                {/* Rating Stars */}
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="font-semibold">التقييم:</span>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => setRating(star)}
+                        className="transition-transform hover:scale-110"
+                      >
+                        <Star
+                          className={`h-8 w-8 ${
+                            star <= rating
+                              ? "text-yellow-400 fill-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Comment */}
+                <Textarea
+                  placeholder="اكتب تعليقك هنا (اختياري)"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  className="mb-4 min-h-[100px]"
+                />
+
+                <Button
+                  onClick={handleSubmitReview}
+                  disabled={submittingReview}
+                  className="bg-gradient-primary"
+                >
+                  <Send className="ml-2 h-4 w-4" />
+                  {submittingReview ? "جاري الإرسال..." : userReview ? "تحديث التقييم" : "إرسال التقييم"}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Reviews List */}
+          <div className="space-y-4">
+            {storeReviews.length > 0 ? (
+              storeReviews.map((review) => (
+                <Card key={review.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        {review.profiles?.avatar_url ? (
+                          <img
+                            src={review.profiles.avatar_url}
+                            alt={review.profiles.full_name}
+                            className="w-12 h-12 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span className="text-xl font-bold text-primary">
+                              {review.profiles?.full_name?.[0] || "؟"}
+                            </span>
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-bold">
+                            {review.profiles?.full_name || "مستخدم"}
+                          </p>
+                          <div className="flex items-center gap-1">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star
+                                key={star}
+                                className={`h-4 w-4 ${
+                                  star <= review.rating
+                                    ? "text-yellow-400 fill-yellow-400"
+                                    : "text-gray-300"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <span className="text-sm text-muted-foreground">
+                        {new Date(review.created_at).toLocaleDateString("ar-SA")}
+                      </span>
+                    </div>
+                    {review.comment && (
+                      <p className="text-muted-foreground leading-relaxed">
+                        {review.comment}
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <Star className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                  <p className="text-muted-foreground text-lg">
+                    لا توجد تقييمات حتى الآن. كن أول من يقيم هذا المتجر!
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
 
         {/* Store Products */}
         <h2 className="text-2xl font-bold mb-6">منتجات المتجر</h2>
