@@ -266,8 +266,10 @@ export type Database = {
       }
       stores: {
         Row: {
+          bank_account: string | null
           category: string | null
           city: string | null
+          commercial_registration: string | null
           created_at: string | null
           description: string | null
           email: string | null
@@ -279,17 +281,22 @@ export type Database = {
           owner_id_number: string | null
           owner_name: string | null
           phone: string | null
+          plan_id: string | null
           rating: number | null
           shipping_method: string | null
           social_media: Json | null
           store_url: string | null
+          subscription_end_date: string | null
+          subscription_start_date: string | null
           updated_at: string | null
           vendor_id: string
           verified: boolean | null
         }
         Insert: {
+          bank_account?: string | null
           category?: string | null
           city?: string | null
+          commercial_registration?: string | null
           created_at?: string | null
           description?: string | null
           email?: string | null
@@ -301,17 +308,22 @@ export type Database = {
           owner_id_number?: string | null
           owner_name?: string | null
           phone?: string | null
+          plan_id?: string | null
           rating?: number | null
           shipping_method?: string | null
           social_media?: Json | null
           store_url?: string | null
+          subscription_end_date?: string | null
+          subscription_start_date?: string | null
           updated_at?: string | null
           vendor_id: string
           verified?: boolean | null
         }
         Update: {
+          bank_account?: string | null
           category?: string | null
           city?: string | null
+          commercial_registration?: string | null
           created_at?: string | null
           description?: string | null
           email?: string | null
@@ -323,15 +335,25 @@ export type Database = {
           owner_id_number?: string | null
           owner_name?: string | null
           phone?: string | null
+          plan_id?: string | null
           rating?: number | null
           shipping_method?: string | null
           social_media?: Json | null
           store_url?: string | null
+          subscription_end_date?: string | null
+          subscription_start_date?: string | null
           updated_at?: string | null
           vendor_id?: string
           verified?: boolean | null
         }
         Relationships: [
+          {
+            foreignKeyName: "stores_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "stores_vendor_id_fkey"
             columns: ["vendor_id"]
@@ -340,6 +362,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      subscription_plans: {
+        Row: {
+          created_at: string | null
+          description_ar: string | null
+          display_order: number | null
+          duration_months: number
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          max_products: number | null
+          name_ar: string
+          name_en: string
+          price: number
+        }
+        Insert: {
+          created_at?: string | null
+          description_ar?: string | null
+          display_order?: number | null
+          duration_months: number
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          max_products?: number | null
+          name_ar: string
+          name_en: string
+          price: number
+        }
+        Update: {
+          created_at?: string | null
+          description_ar?: string | null
+          display_order?: number | null
+          duration_months?: number
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          max_products?: number | null
+          name_ar?: string
+          name_en?: string
+          price?: number
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
