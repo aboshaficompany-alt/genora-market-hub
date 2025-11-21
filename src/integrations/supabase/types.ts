@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string | null
+          id: string
+          name_ar: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name_ar: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name_ar?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string | null
@@ -249,36 +267,66 @@ export type Database = {
       stores: {
         Row: {
           category: string | null
+          city: string | null
           created_at: string | null
           description: string | null
+          email: string | null
           id: string
           image_url: string | null
+          is_approved: boolean | null
           name: string
+          owner_id_image_url: string | null
+          owner_id_number: string | null
+          owner_name: string | null
+          phone: string | null
           rating: number | null
+          shipping_method: string | null
+          social_media: Json | null
+          store_url: string | null
           updated_at: string | null
           vendor_id: string
           verified: boolean | null
         }
         Insert: {
           category?: string | null
+          city?: string | null
           created_at?: string | null
           description?: string | null
+          email?: string | null
           id?: string
           image_url?: string | null
+          is_approved?: boolean | null
           name: string
+          owner_id_image_url?: string | null
+          owner_id_number?: string | null
+          owner_name?: string | null
+          phone?: string | null
           rating?: number | null
+          shipping_method?: string | null
+          social_media?: Json | null
+          store_url?: string | null
           updated_at?: string | null
           vendor_id: string
           verified?: boolean | null
         }
         Update: {
           category?: string | null
+          city?: string | null
           created_at?: string | null
           description?: string | null
+          email?: string | null
           id?: string
           image_url?: string | null
+          is_approved?: boolean | null
           name?: string
+          owner_id_image_url?: string | null
+          owner_id_number?: string | null
+          owner_name?: string | null
+          phone?: string | null
           rating?: number | null
+          shipping_method?: string | null
+          social_media?: Json | null
+          store_url?: string | null
           updated_at?: string | null
           vendor_id?: string
           verified?: boolean | null

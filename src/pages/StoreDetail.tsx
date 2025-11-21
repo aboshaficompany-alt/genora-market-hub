@@ -1,168 +1,272 @@
 import { useParams, Link } from "react-router-dom";
-import { stores } from "@/data/stores";
-import { products } from "@/data/products";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, Phone, Mail, ShieldCheck, Package, ShoppingCart } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Star, MapPin, ShoppingCart, Heart, Facebook, Instagram, Twitter, Globe } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { useToast } from "@/hooks/use-toast";
 
-const StoreDetail = () => {
+export default function StoreDetail() {
   const { id } = useParams();
-  const store = stores.find(s => s.id === Number(id));
-  const storeProducts = products.filter(p => p.storeId === Number(id));
+  const { addToCart } = useCart();
+  const { addToWishlist } = useWishlist();
+  const { toast } = useToast();
+  const [store, setStore] = useState<any>(null);
+  const [storeProducts, setStoreProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadStoreData();
+  }, [id]);
+
+  const loadStoreData = async () => {
+    if (!id) return;
+    
+    // Load store
+    const { data: storeData } = await supabase
+      .from("stores")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    setStore(storeData);
+
+    // Load products
+    const { data: productsData } = await supabase
+      .from("products")
+      .select("*")
+      .eq("store_id", id);
+
+    setStoreProducts(productsData || []);
+    setLoading(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-1 container mx-auto px-4 py-8">
+          <p className="text-center text-xl">جاري التحميل...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!store) {
-    return <div>المتجر غير موجود</div>;
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-1 container mx-auto px-4 py-8">
+          <p className="text-center text-xl">المتجر غير موجود</p>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-warm" dir="rtl">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      
-      {/* Store Header */}
-      <section className="pt-32 pb-16 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 right-0 w-96 h-96 bg-primary rounded-full blur-3xl"></div>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <Card className="bg-white shadow-float border-2 border-primary/20 overflow-hidden">
-            <div className="grid lg:grid-cols-3 gap-0">
-              <div className="lg:col-span-1 h-80 lg:h-auto relative">
-                <img 
-                  src={store.image} 
-                  alt={store.name}
-                  className="w-full h-full object-cover"
-                />
-                {store.verified && (
-                  <div className="absolute top-6 right-6 bg-white rounded-full p-3 shadow-card">
-                    <ShieldCheck className="w-8 h-8 text-primary" />
-                  </div>
-                )}
-              </div>
-              
-              <CardContent className="lg:col-span-2 p-8 lg:p-12">
-                <Badge className="bg-gradient-primary text-primary-foreground font-bold mb-4 text-lg px-4 py-2">
-                  {store.category}
-                </Badge>
-                
-                <h1 className="text-5xl font-black text-charcoal mb-4">
-                  {store.name}
-                </h1>
-                
-                <p className="text-xl text-charcoal-light mb-8">
-                  {store.description}
-                </p>
-                
-                <div className="grid grid-cols-3 gap-6 mb-8">
-                  <div className="text-center p-6 bg-gradient-card rounded-2xl">
-                    <Star className="w-8 h-8 text-yellow-light fill-yellow-light mx-auto mb-2" />
-                    <div className="text-3xl font-black text-charcoal mb-1">{store.rating}</div>
-                    <div className="text-sm text-charcoal-light">التقييم</div>
-                  </div>
-                  <div className="text-center p-6 bg-gradient-card rounded-2xl">
-                    <Package className="w-8 h-8 text-primary mx-auto mb-2" />
-                    <div className="text-3xl font-black text-charcoal mb-1">{store.products}</div>
-                    <div className="text-sm text-charcoal-light">منتج</div>
-                  </div>
-                  <div className="text-center p-6 bg-gradient-card rounded-2xl">
-                    <ShieldCheck className="w-8 h-8 text-secondary mx-auto mb-2" />
-                    <div className="text-3xl font-black text-charcoal mb-1">موثق</div>
-                    <div className="text-sm text-charcoal-light">معتمد</div>
-                  </div>
-                </div>
-                
-                <div className="flex flex-wrap gap-4">
-                  <Button className="bg-gradient-primary text-primary-foreground hover:shadow-glow rounded-full font-bold text-lg px-8">
-                    <Mail className="ml-2 w-5 h-5" />
-                    تواصل مع المتجر
-                  </Button>
-                  <Button variant="outline" className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-full font-bold text-lg px-8">
-                    <Phone className="ml-2 w-5 h-5" />
-                    اتصل الآن
-                  </Button>
-                </div>
-              </CardContent>
-            </div>
-          </Card>
-        </div>
-      </section>
 
-      {/* Store Products */}
-      <section className="pb-24">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-black text-charcoal mb-12 text-center">
-            منتجات <span className="bg-gradient-primary bg-clip-text text-transparent">{store.name}</span>
-          </h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {storeProducts.map((product) => (
-              <Link 
-                key={product.id} 
-                to={`/product/${product.id}`}
-                className="group"
-              >
-                <Card className="overflow-hidden border-2 border-transparent hover:border-primary hover:shadow-glow transition-all duration-300 hover:scale-105 bg-white h-full flex flex-col">
-                  <div className="relative h-64 overflow-hidden">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    {product.discount && (
-                      <div className="absolute top-4 left-4">
-                        <Badge className="bg-red-500 text-white font-bold shadow-card text-lg px-3 py-1">
-                          -{product.discount}%
-                        </Badge>
+      <main className="flex-1 container mx-auto px-4 py-24">
+        {/* Store Header */}
+        <Card className="mb-8">
+          <CardContent className="p-6">
+            <div className="grid md:grid-cols-3 gap-6">
+              {store.image_url && (
+                <img
+                  src={store.image_url}
+                  alt={store.name}
+                  className="w-full h-64 object-cover rounded-lg"
+                />
+              )}
+              <div className="md:col-span-2">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h1 className="text-3xl font-bold mb-2">{store.name}</h1>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
+                      <span className="font-semibold">{store.rating || 0}</span>
+                      {store.verified && (
+                        <Badge className="bg-green-500">موثق</Badge>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                <p className="text-muted-foreground mb-4">{store.description}</p>
+
+                <div className="space-y-4">
+                  <Badge variant="secondary" className="text-lg px-4 py-2">
+                    {store.category}
+                  </Badge>
+                  
+                  {/* Store Contact Info */}
+                  <div className="mt-6 pt-6 border-t">
+                    <h3 className="font-bold text-lg mb-3">معلومات التواصل</h3>
+                    <div className="space-y-2 text-sm">
+                      {store.phone && (
+                        <p className="flex items-center gap-2">
+                          <span className="font-semibold">الهاتف:</span> {store.phone}
+                        </p>
+                      )}
+                      {store.email && (
+                        <p className="flex items-center gap-2">
+                          <span className="font-semibold">البريد:</span> {store.email}
+                        </p>
+                      )}
+                      {store.city && (
+                        <p className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4" />
+                          {store.city}
+                        </p>
+                      )}
+                      {store.shipping_method && (
+                        <p className="flex items-center gap-2">
+                          <span className="font-semibold">الشحن:</span>{" "}
+                          {store.shipping_method === "vendor"
+                            ? "بواسطة التاجر"
+                            : "شركة الشحن"}
+                        </p>
+                      )}
+                    </div>
+                    
+                    {/* Social Media Links */}
+                    {store.social_media && Object.keys(store.social_media).length > 0 && (
+                      <div className="mt-4">
+                        <h4 className="font-semibold mb-2">تابعنا على:</h4>
+                        <div className="flex gap-3">
+                          {store.social_media.facebook && (
+                            <a 
+                              href={store.social_media.facebook} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-primary hover:text-primary/80"
+                            >
+                              <Facebook className="h-5 w-5" />
+                            </a>
+                          )}
+                          {store.social_media.instagram && (
+                            <a 
+                              href={store.social_media.instagram} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-primary hover:text-primary/80"
+                            >
+                              <Instagram className="h-5 w-5" />
+                            </a>
+                          )}
+                          {store.social_media.twitter && (
+                            <a 
+                              href={store.social_media.twitter} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-primary hover:text-primary/80"
+                            >
+                              <Twitter className="h-5 w-5" />
+                            </a>
+                          )}
+                          {store.social_media.website && (
+                            <a 
+                              href={store.social_media.website} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-primary hover:text-primary/80"
+                            >
+                              <Globe className="h-5 w-5" />
+                            </a>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
-                  
-                  <CardContent className="p-6 flex-1 flex flex-col">
-                    <h3 className="text-xl font-bold text-charcoal mb-2 group-hover:text-primary transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="text-charcoal-light mb-4 line-clamp-2 text-sm flex-1">
-                      {product.description}
-                    </p>
-                    
-                    <div className="flex items-center gap-2 mb-4 text-sm">
-                      <Star className="w-4 h-4 text-yellow-light fill-yellow-light" />
-                      <span className="font-bold text-charcoal">{product.rating}</span>
-                      <span className="text-charcoal-light">({product.reviews})</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-2xl font-black text-primary">
-                          {product.price} ر.س
-                        </div>
-                        {product.originalPrice && (
-                          <div className="text-sm text-charcoal-light line-through">
-                            {product.originalPrice} ر.س
-                          </div>
-                        )}
-                      </div>
-                      <Button 
-                        size="sm" 
-                        className="bg-gradient-primary text-primary-foreground hover:shadow-glow rounded-full"
-                      >
-                        <ShoppingCart className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Store Products */}
+        <h2 className="text-2xl font-bold mb-6">منتجات المتجر</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {storeProducts.map((product) => (
+            <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+              {product.image_url && (
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  className="w-full h-48 object-cover"
+                />
+              )}
+              <CardContent className="p-4">
+                <Link to={`/product/${product.id}`}>
+                  <h3 className="font-bold text-lg mb-2 hover:text-primary transition-colors">
+                    {product.name}
+                  </h3>
+                </Link>
+                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                  {product.description}
+                </p>
+                <div className="flex items-center gap-2 mb-3">
+                  <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                  <span className="text-sm font-semibold">
+                    {product.rating || 0}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    ({product.reviews_count || 0})
+                  </span>
+                </div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xl font-bold text-primary">
+                    {product.discount_price || product.price} ر.س
+                  </span>
+                  {product.discount_price && (
+                    <span className="text-sm line-through text-muted-foreground">
+                      {product.price} ر.س
+                    </span>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    className="flex-1 bg-gradient-primary"
+                    onClick={() => {
+                      addToCart(product);
+                      toast({
+                        title: "تمت الإضافة",
+                        description: "تم إضافة المنتج إلى السلة",
+                      });
+                    }}
+                  >
+                    <ShoppingCart className="ml-2 h-4 w-4" />
+                    أضف للسلة
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      addToWishlist(product);
+                      toast({
+                        title: "تمت الإضافة",
+                        description: "تم إضافة المنتج للمفضلة",
+                      });
+                    }}
+                  >
+                    <Heart className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      </section>
+      </main>
 
       <Footer />
     </div>
   );
-};
-
-export default StoreDetail;
+}
