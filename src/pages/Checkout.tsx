@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,28 +15,92 @@ import { useToast } from "@/hooks/use-toast";
 
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [paymentMethod, setPaymentMethod] = useState("credit-card");
+  const [paymentMethod, setPaymentMethod] = useState("credit_card");
+  const [submitting, setSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     phone: "",
     city: "",
     address: "",
     notes: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (!authLoading && !user) {
+      toast({
+        variant: "destructive",
+        title: "يجب تسجيل الدخول",
+        description: "قم بتسجيل الدخول لإتمام عملية الشراء",
+      });
+      navigate("/auth");
+    }
+  }, [user, authLoading, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    toast({
-      title: "تم إرسال الطلب بنجاح!",
-      description: "سيتم التواصل معك قريباً لتأكيد الطلب",
-    });
+    if (!user) return;
     
-    clearCart();
-    navigate("/");
+    setSubmitting(true);
+
+    try {
+      // Create order
+      const { data: orderData, error: orderError } = await supabase
+        .from("orders")
+        .insert([{
+          user_id: user.id,
+          total_amount: totalPrice,
+          payment_method: paymentMethod as any,
+          shipping_name: formData.name,
+          shipping_email: formData.email,
+          shipping_phone: formData.phone,
+          shipping_address: formData.address,
+          shipping_city: formData.city,
+          notes: formData.notes,
+          status: "pending" as any,
+        }])
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      // Create order items
+      const orderItems = items.map(item => ({
+        order_id: orderData.id,
+        product_id: null, // Mock data doesn't have real product IDs
+        product_name: item.name,
+        product_price: item.price,
+        quantity: item.quantity,
+        subtotal: item.price * item.quantity,
+      }));
+
+      const { error: itemsError } = await supabase
+        .from("order_items")
+        .insert(orderItems);
+
+      if (itemsError) throw itemsError;
+
+      toast({
+        title: "تم إرسال الطلب بنجاح!",
+        description: "سيتم التواصل معك قريباً لتأكيد الطلب",
+      });
+
+      clearCart();
+      navigate("/orders");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "خطأ في إرسال الطلب",
+        description: error.message,
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (items.length === 0) {
@@ -79,6 +145,20 @@ const Checkout = () => {
                           value={formData.name}
                           onChange={(e) => setFormData({...formData, name: e.target.value})}
                           placeholder="أدخل اسمك الكامل"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="email" className="mb-2 block">
+                          البريد الإلكتروني
+                        </Label>
+                        <Input
+                          id="email"
+                          required
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => setFormData({...formData, email: e.target.value})}
+                          placeholder="example@email.com"
                         />
                       </div>
                       
@@ -239,8 +319,9 @@ const Checkout = () => {
                     <Button 
                       type="submit"
                       className="w-full bg-gradient-primary text-primary-foreground hover:shadow-glow text-lg py-6"
+                      disabled={submitting}
                     >
-                      تأكيد الطلب
+                      {submitting ? "جاري الإرسال..." : "تأكيد الطلب"}
                     </Button>
                   </CardContent>
                 </Card>

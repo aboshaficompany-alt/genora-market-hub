@@ -1,15 +1,17 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Store, ShoppingBag, Home, User, Menu, ShoppingCart, Heart } from "lucide-react";
+import { Store, ShoppingBag, Home, User, Menu, ShoppingCart, Heart, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { totalItems } = useCart();
   const { items: wishlistItems } = useWishlist();
+  const { user, signOut } = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-soft border-b border-border/30">
@@ -60,10 +62,24 @@ const Navbar = () => {
                 )}
               </Button>
             </Link>
-            <Button className="bg-gradient-primary text-primary-foreground hover:shadow-glow rounded-full font-bold">
-              <User className="w-5 h-5 ml-2" />
-              تسجيل الدخول
-            </Button>
+            {user ? (
+              <>
+                <Link to="/orders">
+                  <Button variant="ghost">طلباتي</Button>
+                </Link>
+                <Button onClick={signOut} variant="ghost" className="text-red-500">
+                  <LogOut className="w-5 h-5 ml-2" />
+                  تسجيل الخروج
+                </Button>
+              </>
+            ) : (
+              <Link to="/auth">
+                <Button className="bg-gradient-primary text-primary-foreground hover:shadow-glow rounded-full font-bold">
+                  <User className="w-5 h-5 ml-2" />
+                  تسجيل الدخول
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
