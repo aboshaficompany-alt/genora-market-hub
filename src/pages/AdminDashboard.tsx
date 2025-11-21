@@ -5,9 +5,24 @@ import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+  Legend,
+} from "recharts";
 import {
   Store,
   Users,
@@ -38,6 +53,12 @@ export default function AdminDashboard() {
     pendingStores: 0,
     totalUsers: 0,
     totalOrders: 0,
+    totalRevenue: 0,
+  });
+  const [chartData, setChartData] = useState<any>({
+    categoriesData: [],
+    ordersData: [],
+    revenueData: [],
   });
 
   useEffect(() => {
@@ -91,11 +112,74 @@ export default function AdminDashboard() {
 
     // حساب الإحصائيات
     const pendingStores = storesData?.filter((s) => !s.is_approved).length || 0;
+    const totalRevenue = ordersData?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
+    
     setStats({
       totalStores: storesData?.length || 0,
       pendingStores,
       totalUsers: usersData?.length || 0,
       totalOrders: ordersData?.length || 0,
+      totalRevenue,
+    });
+
+    // إعداد بيانات الرسوم البيانية
+    prepareChartData(storesData, ordersData);
+  };
+
+  const prepareChartData = (storesData: any[], ordersData: any[]) => {
+    // بيانات المتاجر حسب الفئة
+    const categoryCounts = storesData?.reduce((acc: any, store) => {
+      const category = store.category || "غير محدد";
+      acc[category] = (acc[category] || 0) + 1;
+      return acc;
+    }, {});
+
+    const categoriesData = Object.entries(categoryCounts || {}).map(([name, value]) => ({
+      name,
+      value,
+    }));
+
+    // بيانات الطلبات حسب الحالة
+    const statusCounts = ordersData?.reduce((acc: any, order) => {
+      const status = order.status || "pending";
+      acc[status] = (acc[status] || 0) + 1;
+      return acc;
+    }, {});
+
+    const ordersData_chart = Object.entries(statusCounts || {}).map(([name, value]) => ({
+      name: name === "pending" ? "قيد الانتظار" : 
+            name === "confirmed" ? "مؤكد" :
+            name === "shipped" ? "تم الشحن" :
+            name === "delivered" ? "تم التسليم" : "ملغي",
+      value,
+    }));
+
+    // بيانات الإيرادات حسب الشهر (آخر 6 أشهر)
+    const last6Months = ordersData
+      ?.filter((order) => {
+        const orderDate = new Date(order.created_at);
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+        return orderDate >= sixMonthsAgo;
+      })
+      .reduce((acc: any, order) => {
+        const month = new Date(order.created_at).toLocaleDateString("ar-SA", {
+          month: "short",
+          year: "numeric",
+        });
+        acc[month] = (acc[month] || 0) + (order.total_amount || 0);
+        return acc;
+      }, {});
+
+    const revenueData = Object.entries(last6Months || {}).map(([name, value]) => ({
+      name,
+      value,
+    }));
+
+    setChartData({
+      categoriesData,
+      ordersData: ordersData_chart,
+      revenueData,
     });
   };
 
@@ -160,7 +244,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* الإحصائيات */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
           <Card className="gradient-border">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -206,6 +290,105 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalOrders}</div>
+            </CardContent>
+          </Card>
+
+          <Card className="gradient-border">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                إجمالي الإيرادات
+              </CardTitle>
+              <ShoppingCart className="h-4 w-4 text-accent" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalRevenue.toFixed(2)} ر.س</div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* الرسوم البيانية */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <Card className="gradient-border">
+            <CardHeader>
+              <CardTitle>المتاجر حسب الفئة</CardTitle>
+              <CardDescription>توزيع المتاجر على الفئات المختلفة</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={chartData.categoriesData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) =>
+                      `${name}: ${(percent * 100).toFixed(0)}%`
+                    }
+                    outerRadius={80}
+                    fill="hsl(var(--primary))"
+                    dataKey="value"
+                  >
+                    {chartData.categoriesData.map((_: any, index: number) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={
+                          index === 0
+                            ? "hsl(var(--primary))"
+                            : index === 1
+                            ? "hsl(var(--secondary))"
+                            : index === 2
+                            ? "hsl(var(--accent))"
+                            : "hsl(var(--muted))"
+                        }
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card className="gradient-border">
+            <CardHeader>
+              <CardTitle>الطلبات حسب الحالة</CardTitle>
+              <CardDescription>توزيع الطلبات على الحالات المختلفة</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={chartData.ordersData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="hsl(var(--primary))" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card className="gradient-border lg:col-span-2">
+            <CardHeader>
+              <CardTitle>الإيرادات الشهرية</CardTitle>
+              <CardDescription>إيرادات آخر 6 أشهر</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={chartData.revenueData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth={2}
+                    name="الإيرادات (ر.س)"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </CardContent>
           </Card>
         </div>
