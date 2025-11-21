@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useForm } from "react-hook-form";
@@ -9,26 +9,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Label } from "@/components/ui/label";
 import { Upload, X } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PlanCard from "@/components/subscription/PlanCard";
 import RegistrationSteps from "@/components/subscription/RegistrationSteps";
 import { ArrowRight, ArrowLeft } from "lucide-react";
@@ -113,11 +100,7 @@ export default function VendorRegistration() {
   };
 
   const loadPlans = async () => {
-    const { data } = await supabase
-      .from("subscription_plans")
-      .select("*")
-      .eq("is_active", true)
-      .order("display_order");
+    const { data } = await supabase.from("subscription_plans").select("*").eq("is_active", true).order("display_order");
     if (data) {
       setPlans(
         data.map((plan) => ({
@@ -126,7 +109,7 @@ export default function VendorRegistration() {
           description_ar: plan.description_ar || "",
           price: plan.price,
           features: (plan.features as string[]) || [],
-        }))
+        })),
       );
     }
   };
@@ -177,19 +160,17 @@ export default function VendorRegistration() {
   };
 
   const uploadImage = async (file: File, bucket: string, path: string) => {
-    const { data, error } = await supabase.storage
-      .from(bucket)
-      .upload(path, file, {
-        cacheControl: '3600',
-        upsert: false
-      });
+    const { data, error } = await supabase.storage.from(bucket).upload(path, file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
 
     if (error) throw error;
-    
-    const { data: { publicUrl } } = supabase.storage
-      .from(bucket)
-      .getPublicUrl(data.path);
-    
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from(bucket).getPublicUrl(data.path);
+
     return publicUrl;
   };
 
@@ -203,19 +184,17 @@ export default function VendorRegistration() {
 
       // رفع صورة الشعار
       if (logoFile) {
-        const logoPath = `${user!.id}/logo-${Date.now()}.${logoFile.name.split('.').pop()}`;
-        logoUrl = await uploadImage(logoFile, 'store-logos', logoPath);
+        const logoPath = `${user!.id}/logo-${Date.now()}.${logoFile.name.split(".").pop()}`;
+        logoUrl = await uploadImage(logoFile, "store-logos", logoPath);
       }
 
       // رفع صورة الهوية
       if (idImageFile) {
-        const idPath = `${user!.id}/id-${Date.now()}.${idImageFile.name.split('.').pop()}`;
-        idImageUrl = await uploadImage(idImageFile, 'id-images', idPath);
+        const idPath = `${user!.id}/id-${Date.now()}.${idImageFile.name.split(".").pop()}`;
+        idImageUrl = await uploadImage(idImageFile, "id-images", idPath);
       }
       // أولاً، نضيف دور التاجر للمستخدم
-      const { error: roleError } = await supabase
-        .from("user_roles")
-        .insert({ user_id: user!.id, role: "vendor" });
+      const { error: roleError } = await supabase.from("user_roles").insert({ user_id: user!.id, role: "vendor" });
 
       if (roleError && !roleError.message.includes("duplicate")) {
         toast({
@@ -295,9 +274,7 @@ export default function VendorRegistration() {
             <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
               انضم إلى منصتنا كتاجر
             </h1>
-            <p className="text-muted-foreground text-lg">
-              ابدأ رحلتك في عالم التجارة الإلكترونية معنا
-            </p>
+            <p className="text-muted-foreground text-lg">ابدأ رحلتك في عالم التجارة الإلكترونية معنا</p>
           </div>
 
           <RegistrationSteps currentStep={currentStep} />
@@ -420,20 +397,11 @@ export default function VendorRegistration() {
                                 {logoFile ? logoFile.name : "اضغط لرفع الشعار"}
                               </p>
                             </div>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              className="hidden"
-                              onChange={handleLogoChange}
-                            />
+                            <input type="file" accept="image/*" className="hidden" onChange={handleLogoChange} />
                           </label>
                           {logoPreview && (
                             <div className="relative w-24 h-24">
-                              <img
-                                src={logoPreview}
-                                alt="معاينة"
-                                className="w-full h-full object-cover rounded-lg"
-                              />
+                              <img src={logoPreview} alt="معاينة" className="w-full h-full object-cover rounded-lg" />
                               <button
                                 type="button"
                                 onClick={() => {
@@ -481,11 +449,7 @@ export default function VendorRegistration() {
                           <FormItem>
                             <FormLabel>رابط المتجر (إن وجد)</FormLabel>
                             <FormControl>
-                              <Input
-                                type="url"
-                                placeholder="https://yourstore.com"
-                                {...field}
-                              />
+                              <Input type="url" placeholder="https://yourstore.com" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -517,11 +481,7 @@ export default function VendorRegistration() {
                           <FormItem>
                             <FormLabel>رقم الهوية *</FormLabel>
                             <FormControl>
-                              <Input
-                                placeholder="1234567890"
-                                maxLength={10}
-                                {...field}
-                              />
+                              <Input placeholder="1234567890" maxLength={10} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -538,12 +498,7 @@ export default function VendorRegistration() {
                                 {idImageFile ? idImageFile.name : "اضغط لرفع صورة الهوية"}
                               </p>
                             </div>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              className="hidden"
-                              onChange={handleIdImageChange}
-                            />
+                            <input type="file" accept="image/*" className="hidden" onChange={handleIdImageChange} />
                           </label>
                           {idImagePreview && (
                             <div className="relative w-24 h-24">
@@ -592,11 +547,7 @@ export default function VendorRegistration() {
                           <FormItem>
                             <FormLabel>رقم الجوال *</FormLabel>
                             <FormControl>
-                              <Input
-                                type="tel"
-                                placeholder="05xxxxxxxx"
-                                {...field}
-                              />
+                              <Input type="tel" placeholder="05xxxxxxxx" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -610,11 +561,7 @@ export default function VendorRegistration() {
                           <FormItem>
                             <FormLabel>البريد الإلكتروني *</FormLabel>
                             <FormControl>
-                              <Input
-                                type="email"
-                                placeholder="your@email.com"
-                                {...field}
-                              />
+                              <Input type="email" placeholder="your@email.com" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -627,21 +574,16 @@ export default function VendorRegistration() {
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">الباقة:</span>
                             <span className="font-medium">
-                              {plans.find((p) => p.id === form.getValues("plan_id"))
-                                ?.name_ar}
+                              {plans.find((p) => p.id === form.getValues("plan_id"))?.name_ar}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">اسم المتجر:</span>
-                            <span className="font-medium">
-                              {form.getValues("name")}
-                            </span>
+                            <span className="font-medium">{form.getValues("name")}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">المدينة:</span>
-                            <span className="font-medium">
-                              {form.getValues("city")}
-                            </span>
+                            <span className="font-medium">{form.getValues("city")}</span>
                           </div>
                         </div>
                       </div>
@@ -650,31 +592,18 @@ export default function VendorRegistration() {
 
                   <div className="flex gap-4 pt-6">
                     {currentStep > 1 && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={prevStep}
-                        className="flex-1"
-                      >
+                      <Button type="button" variant="outline" onClick={prevStep} className="flex-1">
                         <ArrowRight className="ml-2 h-4 w-4" />
                         السابق
                       </Button>
                     )}
                     {currentStep < 4 ? (
-                      <Button
-                        type="button"
-                        onClick={nextStep}
-                        className="flex-1 bg-gradient-primary"
-                      >
+                      <Button type="button" onClick={nextStep} className="flex-1 bg-gradient-primary">
                         التالي
                         <ArrowLeft className="mr-2 h-4 w-4" />
                       </Button>
                     ) : (
-                      <Button
-                        type="submit"
-                        disabled={isSubmitting || uploading}
-                        className="flex-1 bg-gradient-primary"
-                      >
+                      <Button type="submit" disabled={isSubmitting || uploading} className="flex-1 bg-gradient-primary">
                         {uploading ? "جاري رفع الصور..." : isSubmitting ? "جاري التسجيل..." : "إتمام التسجيل"}
                       </Button>
                     )}
