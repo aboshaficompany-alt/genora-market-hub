@@ -2,12 +2,22 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -17,6 +27,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import PlanCard from "@/components/subscription/PlanCard";
+import RegistrationSteps from "@/components/subscription/RegistrationSteps";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 
 const CITIES = [
   "الرياض",
@@ -31,23 +44,56 @@ const CITIES = [
   "الأحساء",
 ];
 
+const formSchema = z.object({
+  plan_id: z.string().min(1, "يجب اختيار باقة"),
+  category: z.string().min(1, "يجب اختيار القسم"),
+  name: z.string().min(3, "اسم المتجر يجب أن يكون 3 أحرف على الأقل"),
+  description: z.string().min(20, "النبذة يجب أن تكون 20 حرف على الأقل"),
+  logo_url: z.string().url("رابط غير صالح").optional().or(z.literal("")),
+  city: z.string().min(1, "يجب اختيار المدينة"),
+  owner_name: z.string().min(3, "اسم المالك يجب أن يكون 3 أحرف على الأقل"),
+  owner_id_number: z.string().length(10, "رقم الهوية يجب أن يكون 10 أرقام"),
+  owner_id_image_url: z.string().url("رابط غير صالح").optional().or(z.literal("")),
+  phone: z.string().regex(/^(05|5)[0-9]{8}$/, "رقم الجوال غير صالح"),
+  email: z.string().email("البريد الإلكتروني غير صالح"),
+  commercial_registration: z.string().optional(),
+  store_url: z.string().optional(),
+});
+
+interface SubscriptionPlan {
+  id: string;
+  name_ar: string;
+  description_ar: string;
+  price: number;
+  features: string[];
+}
+
 export default function VendorRegistration() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
-  const [formData, setFormData] = useState({
-    category: "",
-    name: "",
-    description: "",
-    logo_url: "",
-    city: "",
-    owner_name: "",
-    owner_id_number: "",
-    owner_id_image_url: "",
-    phone: "",
-    email: user?.email || "",
+  const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      plan_id: "",
+      category: "",
+      name: "",
+      description: "",
+      logo_url: "",
+      city: "",
+      owner_name: "",
+      owner_id_number: "",
+      owner_id_image_url: "",
+      phone: "",
+      email: user?.email || "",
+      commercial_registration: "",
+      store_url: "",
+    },
   });
 
   useEffect(() => {
@@ -55,6 +101,7 @@ export default function VendorRegistration() {
       navigate("/auth");
     }
     loadCategories();
+    loadPlans();
   }, [user, authLoading, navigate]);
 
   const loadCategories = async () => {
@@ -62,69 +109,116 @@ export default function VendorRegistration() {
     setCategories(data || []);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const loadPlans = async () => {
+    const { data } = await supabase
+      .from("subscription_plans")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order");
+    if (data) {
+      setPlans(
+        data.map((plan) => ({
+          id: plan.id,
+          name_ar: plan.name_ar,
+          description_ar: plan.description_ar || "",
+          price: plan.price,
+          features: (plan.features as string[]) || [],
+        }))
+      );
+    }
+  };
 
-    if (!formData.category || !formData.name || !formData.description || 
-        !formData.city || !formData.owner_name || !formData.owner_id_number || 
-        !formData.phone) {
-      toast({
-        variant: "destructive",
-        title: "خطأ",
-        description: "يرجى تعبئة جميع الحقول المطلوبة",
-      });
-      return;
+  const nextStep = async () => {
+    let fieldsToValidate: (keyof z.infer<typeof formSchema>)[] = [];
+
+    if (currentStep === 1) {
+      fieldsToValidate = ["plan_id"];
+    } else if (currentStep === 2) {
+      fieldsToValidate = ["category", "name", "description", "city"];
+    } else if (currentStep === 3) {
+      fieldsToValidate = ["owner_name", "owner_id_number"];
     }
 
+    const isValid = await form.trigger(fieldsToValidate);
+    if (isValid) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const prevStep = () => {
+    setCurrentStep(currentStep - 1);
+  };
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
 
-    // أولاً، نضيف دور التاجر للمستخدم
-    const { error: roleError } = await supabase
-      .from("user_roles")
-      .insert({ user_id: user!.id, role: "vendor" });
+    try {
+      // أولاً، نضيف دور التاجر للمستخدم
+      const { error: roleError } = await supabase
+        .from("user_roles")
+        .insert({ user_id: user!.id, role: "vendor" });
 
-    if (roleError && !roleError.message.includes("duplicate")) {
+      if (roleError && !roleError.message.includes("duplicate")) {
+        toast({
+          variant: "destructive",
+          title: "خطأ",
+          description: "فشل تحديث صلاحيات المستخدم",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // حساب تاريخ انتهاء الاشتراك (شهر واحد من الآن)
+      const subscriptionStart = new Date();
+      const subscriptionEnd = new Date();
+      subscriptionEnd.setMonth(subscriptionEnd.getMonth() + 1);
+
+      // ثم ننشئ المتجر
+      const { error: storeError } = await supabase.from("stores").insert({
+        vendor_id: user!.id,
+        plan_id: values.plan_id,
+        subscription_start_date: subscriptionStart.toISOString(),
+        subscription_end_date: subscriptionEnd.toISOString(),
+        name: values.name,
+        description: values.description,
+        category: values.category,
+        image_url: values.logo_url || null,
+        city: values.city,
+        owner_name: values.owner_name,
+        owner_id_number: values.owner_id_number,
+        owner_id_image_url: values.owner_id_image_url || null,
+        phone: values.phone,
+        email: values.email,
+        commercial_registration: values.commercial_registration || null,
+        store_url: values.store_url || null,
+        is_approved: false,
+      });
+
+      if (storeError) {
+        toast({
+          variant: "destructive",
+          title: "خطأ",
+          description: "فشل إنشاء المتجر: " + storeError.message,
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      toast({
+        title: "تم التسجيل بنجاح! 🎉",
+        description: "تم تسجيل متجرك وسيتم مراجعته من قبل الإدارة قريباً",
+      });
+
+      navigate("/vendor-dashboard");
+    } catch (error) {
       toast({
         variant: "destructive",
         title: "خطأ",
-        description: "فشل تحديث صلاحيات المستخدم",
+        description: "حدث خطأ غير متوقع",
       });
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    // ثم ننشئ المتجر
-    const { error: storeError } = await supabase.from("stores").insert({
-      vendor_id: user!.id,
-      name: formData.name,
-      description: formData.description,
-      category: formData.category,
-      image_url: formData.logo_url || null,
-      city: formData.city,
-      owner_name: formData.owner_name,
-      owner_id_number: formData.owner_id_number,
-      owner_id_image_url: formData.owner_id_image_url || null,
-      phone: formData.phone,
-      email: formData.email,
-      is_approved: false,
-    });
-
-    if (storeError) {
-      toast({
-        variant: "destructive",
-        title: "خطأ",
-        description: "فشل إنشاء المتجر: " + storeError.message,
-      });
-      setIsSubmitting(false);
-      return;
-    }
-
-    toast({
-      title: "نجاح",
-      description: "تم تسجيل متجرك بنجاح! سيتم مراجعته قريباً",
-    });
-
-    navigate("/vendor-dashboard");
   };
 
   if (authLoading) {
@@ -132,189 +226,362 @@ export default function VendorRegistration() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-muted/20">
       <Navbar />
 
       <main className="flex-1 container mx-auto px-4 py-8">
-        <Card className="max-w-3xl mx-auto">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold text-center bg-gradient-primary bg-clip-text text-transparent">
-              تسجيل متجر جديد
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* القسم */}
-              <div>
-                <Label htmlFor="category">القسم *</Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, category: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر من القائمة" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.name_ar}>
-                        {cat.name_ar}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
+              انضم إلى منصتنا كتاجر
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              ابدأ رحلتك في عالم التجارة الإلكترونية معنا
+            </p>
+          </div>
 
-              {/* اسم المتجر */}
-              <div>
-                <Label htmlFor="name">اسم المتجر - عربي *</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  required
-                />
-              </div>
+          <RegistrationSteps currentStep={currentStep} />
 
-              {/* نبذة عن النشاط */}
-              <div>
-                <Label htmlFor="description">
-                  نبذة عن نشاط/خدمات المتجر *
-                </Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  required
-                  className="min-h-[100px]"
-                />
-              </div>
+          <Card className="mt-8">
+            <CardHeader>
+              <CardTitle className="text-2xl">
+                {currentStep === 1 && "اختر الباقة المناسبة لك"}
+                {currentStep === 2 && "معلومات المتجر"}
+                {currentStep === 3 && "معلومات المالك"}
+                {currentStep === 4 && "معلومات التواصل"}
+              </CardTitle>
+              <CardDescription>
+                {currentStep === 1 && "اختر الباقة التي تناسب احتياجات متجرك"}
+                {currentStep === 2 && "أدخل المعلومات الأساسية عن متجرك"}
+                {currentStep === 3 && "معلومات مالك المتجر للتوثيق"}
+                {currentStep === 4 && "معلومات التواصل والحساب البنكي"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  {currentStep === 1 && (
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <FormField
+                        control={form.control}
+                        name="plan_id"
+                        render={({ field }) => (
+                          <FormItem className="md:col-span-2">
+                            <FormControl>
+                              <div className="grid md:grid-cols-2 gap-6">
+                                {plans.map((plan, index) => (
+                                  <PlanCard
+                                    key={plan.id}
+                                    id={plan.id}
+                                    nameAr={plan.name_ar}
+                                    descriptionAr={plan.description_ar}
+                                    price={plan.price}
+                                    features={plan.features}
+                                    isSelected={field.value === plan.id}
+                                    onSelect={field.onChange}
+                                    isPopular={index === 2}
+                                  />
+                                ))}
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )}
 
-              {/* صورة الشعار */}
-              <div>
-                <Label htmlFor="logo_url">رابط صورة شعار المتجر</Label>
-                <Input
-                  id="logo_url"
-                  type="url"
-                  value={formData.logo_url}
-                  onChange={(e) =>
-                    setFormData({ ...formData, logo_url: e.target.value })
-                  }
-                  placeholder="ستكون الصورة الإفتراضية في حال عدم رفع الشعار"
-                />
-              </div>
+                  {currentStep === 2 && (
+                    <div className="space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="category"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>القسم *</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="اختر من القائمة" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {categories.map((cat) => (
+                                  <SelectItem key={cat.id} value={cat.name_ar}>
+                                    {cat.name_ar}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-              {/* المدينة */}
-              <div>
-                <Label htmlFor="city">المدينة *</Label>
-                <Select
-                  value={formData.city}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, city: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر من القائمة" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CITIES.map((city) => (
-                      <SelectItem key={city} value={city}>
-                        {city}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>اسم المتجر - عربي *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="اسم متجرك" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-              {/* اسم المالك */}
-              <div>
-                <Label htmlFor="owner_name">اسم المالك - عربي *</Label>
-                <Input
-                  id="owner_name"
-                  value={formData.owner_name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, owner_name: e.target.value })
-                  }
-                  required
-                />
-              </div>
+                      <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>نبذة عن نشاط/خدمات المتجر *</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder="اكتب نبذة تعريفية عن متجرك وخدماته..."
+                                className="min-h-[120px]"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-              {/* رقم الهوية */}
-              <div>
-                <Label htmlFor="owner_id_number">رقم الهوية *</Label>
-                <Input
-                  id="owner_id_number"
-                  value={formData.owner_id_number}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      owner_id_number: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
+                      <FormField
+                        control={form.control}
+                        name="logo_url"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>رابط صورة شعار المتجر</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="url"
+                                placeholder="https://example.com/logo.png"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-              {/* صورة الهوية */}
-              <div>
-                <Label htmlFor="owner_id_image_url">رابط صورة الهوية</Label>
-                <Input
-                  id="owner_id_image_url"
-                  type="url"
-                  value={formData.owner_id_image_url}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      owner_id_image_url: e.target.value,
-                    })
-                  }
-                />
-              </div>
+                      <FormField
+                        control={form.control}
+                        name="city"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>المدينة *</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="اختر من القائمة" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {CITIES.map((city) => (
+                                  <SelectItem key={city} value={city}>
+                                    {city}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-              {/* رقم الجوال */}
-              <div>
-                <Label htmlFor="phone">رقم الجوال *</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  required
-                  placeholder="05xxxxxxxx"
-                />
-              </div>
+                      <FormField
+                        control={form.control}
+                        name="store_url"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>رابط المتجر (إن وجد)</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="url"
+                                placeholder="https://yourstore.com"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )}
 
-              {/* البريد الإلكتروني */}
-              <div>
-                <Label htmlFor="email">البريد الإلكتروني *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  required
-                />
-              </div>
+                  {currentStep === 3 && (
+                    <div className="space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="owner_name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>اسم المالك - عربي *</FormLabel>
+                            <FormControl>
+                              <Input placeholder="الاسم الكامل" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-              <Button
-                type="submit"
-                className="w-full bg-gradient-primary"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "جاري التسجيل..." : "تسجيل المتجر"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+                      <FormField
+                        control={form.control}
+                        name="owner_id_number"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>رقم الهوية *</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="1234567890"
+                                maxLength={10}
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="owner_id_image_url"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>رابط صورة الهوية</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="url"
+                                placeholder="https://example.com/id.jpg"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="commercial_registration"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>رقم السجل التجاري</FormLabel>
+                            <FormControl>
+                              <Input placeholder="اختياري" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )}
+
+                  {currentStep === 4 && (
+                    <div className="space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>رقم الجوال *</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="tel"
+                                placeholder="05xxxxxxxx"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>البريد الإلكتروني *</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="email"
+                                placeholder="your@email.com"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <div className="bg-muted p-6 rounded-lg space-y-4">
+                        <h3 className="font-semibold text-lg">ملخص التسجيل</h3>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">الباقة:</span>
+                            <span className="font-medium">
+                              {plans.find((p) => p.id === form.getValues("plan_id"))
+                                ?.name_ar}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">اسم المتجر:</span>
+                            <span className="font-medium">
+                              {form.getValues("name")}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">المدينة:</span>
+                            <span className="font-medium">
+                              {form.getValues("city")}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex gap-4 pt-6">
+                    {currentStep > 1 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={prevStep}
+                        className="flex-1"
+                      >
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                        السابق
+                      </Button>
+                    )}
+                    {currentStep < 4 ? (
+                      <Button
+                        type="button"
+                        onClick={nextStep}
+                        className="flex-1 bg-gradient-primary"
+                      >
+                        التالي
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="flex-1 bg-gradient-primary"
+                      >
+                        {isSubmitting ? "جاري التسجيل..." : "إتمام التسجيل"}
+                      </Button>
+                    )}
+                  </div>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </div>
       </main>
 
       <Footer />
