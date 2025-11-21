@@ -10,7 +10,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   loading: boolean;
-  hasRole: (role: string) => Promise<boolean>;
+  hasRole: (role: "admin" | "vendor" | "customer") => Promise<boolean>;
   getUserRole: () => Promise<string | null>;
 }
 
@@ -112,17 +112,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const hasRole = async (role: string) => {
+  const hasRole = async (role: "admin" | "vendor" | "customer") => {
     if (!user) return false;
     
     const { data } = await supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", user.id)
+      .eq("role", role)
       .maybeSingle();
     
-    if (!data) return false;
-    return data.role === role;
+    return !!data;
   };
 
   const getUserRole = async () => {
