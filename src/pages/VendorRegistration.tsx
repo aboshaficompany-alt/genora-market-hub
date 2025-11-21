@@ -20,6 +20,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
+import { Upload, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -49,11 +51,9 @@ const formSchema = z.object({
   category: z.string().min(1, "يجب اختيار القسم"),
   name: z.string().min(3, "اسم المتجر يجب أن يكون 3 أحرف على الأقل"),
   description: z.string().min(20, "النبذة يجب أن تكون 20 حرف على الأقل"),
-  logo_url: z.string().url("رابط غير صالح").optional().or(z.literal("")),
   city: z.string().min(1, "يجب اختيار المدينة"),
   owner_name: z.string().min(3, "اسم المالك يجب أن يكون 3 أحرف على الأقل"),
   owner_id_number: z.string().length(10, "رقم الهوية يجب أن يكون 10 أرقام"),
-  owner_id_image_url: z.string().url("رابط غير صالح").optional().or(z.literal("")),
   phone: z.string().regex(/^(05|5)[0-9]{8}$/, "رقم الجوال غير صالح"),
   email: z.string().email("البريد الإلكتروني غير صالح"),
   commercial_registration: z.string().optional(),
@@ -76,6 +76,11 @@ export default function VendorRegistration() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string>("");
+  const [idImageFile, setIdImageFile] = useState<File | null>(null);
+  const [idImagePreview, setIdImagePreview] = useState<string>("");
+  const [uploading, setUploading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -84,11 +89,9 @@ export default function VendorRegistration() {
       category: "",
       name: "",
       description: "",
-      logo_url: "",
       city: "",
       owner_name: "",
       owner_id_number: "",
-      owner_id_image_url: "",
       phone: "",
       email: user?.email || "",
       commercial_registration: "",
@@ -149,10 +152,66 @@ export default function VendorRegistration() {
     setCurrentStep(currentStep - 1);
   };
 
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setLogoFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogoPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleIdImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setIdImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setIdImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async (file: File, bucket: string, path: string) => {
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(path, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) throw error;
+    
+    const { data: { publicUrl } } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(data.path);
+    
+    return publicUrl;
+  };
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
+    setUploading(true);
 
     try {
+      let logoUrl = "";
+      let idImageUrl = "";
+
+      // رفع صورة الشعار
+      if (logoFile) {
+        const logoPath = `${user!.id}/logo-${Date.now()}.${logoFile.name.split('.').pop()}`;
+        logoUrl = await uploadImage(logoFile, 'store-logos', logoPath);
+      }
+
+      // رفع صورة الهوية
+      if (idImageFile) {
+        const idPath = `${user!.id}/id-${Date.now()}.${idImageFile.name.split('.').pop()}`;
+        idImageUrl = await uploadImage(idImageFile, 'id-images', idPath);
+      }
       // أولاً، نضيف دور التاجر للمستخدم
       const { error: roleError } = await supabase
         .from("user_roles")
@@ -182,11 +241,11 @@ export default function VendorRegistration() {
         name: values.name,
         description: values.description,
         category: values.category,
-        image_url: values.logo_url || null,
+        image_url: logoUrl || null,
         city: values.city,
         owner_name: values.owner_name,
         owner_id_number: values.owner_id_number,
-        owner_id_image_url: values.owner_id_image_url || null,
+        owner_id_image_url: idImageUrl || null,
         phone: values.phone,
         email: values.email,
         commercial_registration: values.commercial_registration || null,
@@ -218,6 +277,7 @@ export default function VendorRegistration() {
       });
     } finally {
       setIsSubmitting(false);
+      setUploading(false);
     }
   };
 
@@ -350,23 +410,44 @@ export default function VendorRegistration() {
                         )}
                       />
 
-                      <FormField
-                        control={form.control}
-                        name="logo_url"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>رابط صورة شعار المتجر</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="url"
-                                placeholder="https://example.com/logo.png"
-                                {...field}
+                      <div className="space-y-2">
+                        <Label>صورة شعار المتجر</Label>
+                        <div className="flex items-center gap-4">
+                          <label className="flex-1 cursor-pointer">
+                            <div className="border-2 border-dashed border-border rounded-lg p-6 hover:border-primary transition-colors text-center">
+                              <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                              <p className="text-sm text-muted-foreground">
+                                {logoFile ? logoFile.name : "اضغط لرفع الشعار"}
+                              </p>
+                            </div>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={handleLogoChange}
+                            />
+                          </label>
+                          {logoPreview && (
+                            <div className="relative w-24 h-24">
+                              <img
+                                src={logoPreview}
+                                alt="معاينة"
+                                className="w-full h-full object-cover rounded-lg"
                               />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setLogoFile(null);
+                                  setLogoPreview("");
+                                }}
+                                className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
 
                       <FormField
                         control={form.control}
@@ -447,23 +528,44 @@ export default function VendorRegistration() {
                         )}
                       />
 
-                      <FormField
-                        control={form.control}
-                        name="owner_id_image_url"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>رابط صورة الهوية</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="url"
-                                placeholder="https://example.com/id.jpg"
-                                {...field}
+                      <div className="space-y-2">
+                        <Label>صورة الهوية *</Label>
+                        <div className="flex items-center gap-4">
+                          <label className="flex-1 cursor-pointer">
+                            <div className="border-2 border-dashed border-border rounded-lg p-6 hover:border-primary transition-colors text-center">
+                              <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                              <p className="text-sm text-muted-foreground">
+                                {idImageFile ? idImageFile.name : "اضغط لرفع صورة الهوية"}
+                              </p>
+                            </div>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={handleIdImageChange}
+                            />
+                          </label>
+                          {idImagePreview && (
+                            <div className="relative w-24 h-24">
+                              <img
+                                src={idImagePreview}
+                                alt="معاينة"
+                                className="w-full h-full object-cover rounded-lg"
                               />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setIdImageFile(null);
+                                  setIdImagePreview("");
+                                }}
+                                className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
 
                       <FormField
                         control={form.control}
@@ -570,10 +672,10 @@ export default function VendorRegistration() {
                     ) : (
                       <Button
                         type="submit"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || uploading}
                         className="flex-1 bg-gradient-primary"
                       >
-                        {isSubmitting ? "جاري التسجيل..." : "إتمام التسجيل"}
+                        {uploading ? "جاري رفع الصور..." : isSubmitting ? "جاري التسجيل..." : "إتمام التسجيل"}
                       </Button>
                     )}
                   </div>

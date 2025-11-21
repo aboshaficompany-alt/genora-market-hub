@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Settings, Link as LinkIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -167,12 +168,24 @@ export default function VendorDashboard() {
       
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
-            لوحة تحكم التاجر
-          </h1>
-          <p className="text-muted-foreground">
-            إدارة متجرك ومنتجاتك وطلباتك
-          </p>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-4xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
+                لوحة تحكم التاجر
+              </h1>
+              <p className="text-muted-foreground">
+                إدارة متجرك ومنتجاتك وطلباتك
+              </p>
+            </div>
+            {store && (
+              <Link to="/store-settings">
+                <Button variant="outline" className="font-bold">
+                  <Settings className="ml-2 h-4 w-4" />
+                  إعدادات المتجر
+                </Button>
+              </Link>
+            )}
+          </div>
           
           {!store && (
             <Card className="mt-4 border-orange-500">
@@ -180,12 +193,11 @@ export default function VendorDashboard() {
                 <p className="text-center">
                   ليس لديك متجر مسجل بعد. يرجى تسجيل متجرك أولاً.
                 </p>
-                <Button
-                  className="w-full mt-4 bg-gradient-primary"
-                  onClick={() => navigate("/vendor-registration")}
-                >
-                  تسجيل متجر جديد
-                </Button>
+                <div className="flex gap-4 mt-4">
+                  <Link to="/vendor-registration" className="flex-1">
+                    <Button className="w-full bg-gradient-primary">سجل متجرك الآن</Button>
+                  </Link>
+                </div>
               </CardContent>
             </Card>
           )}
