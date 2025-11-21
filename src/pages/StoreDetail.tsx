@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, ShoppingCart, Heart, Facebook, Instagram, Twitter, Globe } from "lucide-react";
+import { Star, MapPin, ShoppingCart, Heart, Facebook, Instagram, Twitter, Globe, Store } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useToast } from "@/hooks/use-toast";
@@ -100,92 +100,148 @@ export default function StoreDetail() {
                   </div>
                 </div>
                 
-                <p className="text-muted-foreground mb-4">{store.description}</p>
+                <p className="text-muted-foreground mb-6 leading-relaxed">{store.description}</p>
 
-                <div className="space-y-4">
-                  <Badge variant="secondary" className="text-lg px-4 py-2">
-                    {store.category}
-                  </Badge>
-                  
-                  {/* Store Contact Info */}
-                  <div className="mt-6 pt-6 border-t">
-                    <h3 className="font-bold text-lg mb-3">معلومات التواصل</h3>
-                    <div className="space-y-2 text-sm">
-                      {store.phone && (
-                        <p className="flex items-center gap-2">
-                          <span className="font-semibold">الهاتف:</span> {store.phone}
-                        </p>
-                      )}
-                      {store.email && (
-                        <p className="flex items-center gap-2">
-                          <span className="font-semibold">البريد:</span> {store.email}
-                        </p>
-                      )}
-                      {store.city && (
-                        <p className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                          {store.city}
-                        </p>
-                      )}
-                      {store.shipping_method && (
-                        <p className="flex items-center gap-2">
-                          <span className="font-semibold">الشحن:</span>{" "}
-                          {store.shipping_method === "vendor"
-                            ? "بواسطة التاجر"
-                            : "شركة الشحن"}
-                        </p>
-                      )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Store Category */}
+                  <div className="space-y-3">
+                    <h3 className="font-bold text-lg flex items-center gap-2">
+                      <Store className="h-5 w-5 text-primary" />
+                      التصنيف
+                    </h3>
+                    <Badge variant="secondary" className="text-base px-4 py-2">
+                      {store.category}
+                    </Badge>
+                  </div>
+
+                  {/* Shipping Method */}
+                  {store.shipping_method && (
+                    <div className="space-y-3">
+                      <h3 className="font-bold text-lg">طريقة الشحن</h3>
+                      <Badge className="bg-gradient-primary text-base px-4 py-2">
+                        {store.shipping_method === "vendor"
+                          ? "🚚 الشحن بواسطة التاجر"
+                          : "📦 الشحن عبر شركة الشحن"}
+                      </Badge>
                     </div>
-                    
-                    {/* Social Media Links */}
-                    {store.social_media && Object.keys(store.social_media).length > 0 && (
-                      <div className="mt-4">
-                        <h4 className="font-semibold mb-2">تابعنا على:</h4>
-                        <div className="flex gap-3">
-                          {store.social_media.facebook && (
-                            <a 
-                              href={store.social_media.facebook} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-primary hover:text-primary/80"
-                            >
-                              <Facebook className="h-5 w-5" />
-                            </a>
-                          )}
-                          {store.social_media.instagram && (
-                            <a 
-                              href={store.social_media.instagram} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-primary hover:text-primary/80"
-                            >
-                              <Instagram className="h-5 w-5" />
-                            </a>
-                          )}
-                          {store.social_media.twitter && (
-                            <a 
-                              href={store.social_media.twitter} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-primary hover:text-primary/80"
-                            >
-                              <Twitter className="h-5 w-5" />
-                            </a>
-                          )}
-                          {store.social_media.website && (
-                            <a 
-                              href={store.social_media.website} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-primary hover:text-primary/80"
-                            >
-                              <Globe className="h-5 w-5" />
-                            </a>
-                          )}
+                  )}
+                </div>
+                  
+                {/* Store Contact Info */}
+                <div className="mt-8 pt-6 border-t">
+                  <h3 className="font-bold text-xl mb-4 flex items-center gap-2">
+                    <MapPin className="h-6 w-6 text-primary" />
+                    معلومات التواصل
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {store.phone && (
+                      <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <span className="text-xl">📱</span>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">الهاتف</p>
+                          <p className="font-semibold">{store.phone}</p>
+                        </div>
+                      </div>
+                    )}
+                    {store.email && (
+                      <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <span className="text-xl">✉️</span>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">البريد الإلكتروني</p>
+                          <p className="font-semibold text-sm">{store.email}</p>
+                        </div>
+                      </div>
+                    )}
+                    {store.city && (
+                      <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <MapPin className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">المدينة</p>
+                          <p className="font-semibold">{store.city}</p>
+                        </div>
+                      </div>
+                    )}
+                    {store.store_url && (
+                      <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Globe className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">رابط المتجر</p>
+                          <a 
+                            href={store.store_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="font-semibold text-primary hover:underline text-sm"
+                          >
+                            زيارة الموقع
+                          </a>
                         </div>
                       </div>
                     )}
                   </div>
+                  
+                  {/* Social Media Links */}
+                  {store.social_media && Object.keys(store.social_media).filter(key => store.social_media[key]).length > 0 && (
+                    <div className="mt-6 p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg">
+                      <h4 className="font-bold text-lg mb-4 flex items-center gap-2">
+                        <span className="text-xl">🌐</span>
+                        تابعنا على وسائل التواصل
+                      </h4>
+                      <div className="flex flex-wrap gap-3">
+                        {store.social_media.facebook && (
+                          <a 
+                            href={store.social_media.facebook} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-all hover:scale-105"
+                          >
+                            <Facebook className="h-5 w-5 text-[#1877F2]" />
+                            <span className="font-semibold text-sm">Facebook</span>
+                          </a>
+                        )}
+                        {store.social_media.instagram && (
+                          <a 
+                            href={store.social_media.instagram} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-all hover:scale-105"
+                          >
+                            <Instagram className="h-5 w-5 text-[#E4405F]" />
+                            <span className="font-semibold text-sm">Instagram</span>
+                          </a>
+                        )}
+                        {store.social_media.twitter && (
+                          <a 
+                            href={store.social_media.twitter} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-all hover:scale-105"
+                          >
+                            <Twitter className="h-5 w-5 text-[#1DA1F2]" />
+                            <span className="font-semibold text-sm">Twitter</span>
+                          </a>
+                        )}
+                        {store.social_media.website && (
+                          <a 
+                            href={store.social_media.website} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-all hover:scale-105"
+                          >
+                            <Globe className="h-5 w-5 text-primary" />
+                            <span className="font-semibold text-sm">الموقع الإلكتروني</span>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
