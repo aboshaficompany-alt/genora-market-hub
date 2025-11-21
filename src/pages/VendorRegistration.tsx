@@ -86,14 +86,6 @@ export default function VendorRegistration() {
     },
   });
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/auth");
-    }
-    loadCategories();
-    loadPlans();
-  }, [user, authLoading, navigate]);
-
   const loadCategories = async () => {
     const { data } = await supabase.from("categories").select("*");
     setCategories(data || []);
