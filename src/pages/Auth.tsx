@@ -14,11 +14,24 @@ export default function Auth() {
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
 
+  const { getUserRole } = useAuth();
+
   useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user, navigate]);
+    const checkUserRole = async () => {
+      if (user) {
+        const role = await getUserRole();
+        if (role === 'vendor') {
+          navigate("/vendor-dashboard");
+        } else if (role === 'admin') {
+          navigate("/admin-dashboard");
+        } else {
+          navigate("/");
+        }
+      }
+    };
+    
+    checkUserRole();
+  }, [user, navigate, getUserRole]);
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,7 +44,7 @@ export default function Auth() {
     const { error } = await signIn(email, password);
     
     if (!error) {
-      navigate("/");
+      // التوجيه سيتم تلقائياً من useEffect عند تحديث user
     }
     
     setIsLoading(false);
