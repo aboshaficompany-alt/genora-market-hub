@@ -12,6 +12,7 @@ import { CreditCard, Wallet, Building2, MapPin, Phone, User } from "lucide-react
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
+import { LocationInput } from "@/components/LocationInput";
 
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
@@ -28,6 +29,8 @@ const Checkout = () => {
     city: "",
     address: "",
     notes: "",
+    pickupLat: null as number | null,
+    pickupLng: null as number | null,
   });
 
   useEffect(() => {
@@ -212,6 +215,14 @@ const Checkout = () => {
                           value={formData.notes}
                           onChange={(e) => setFormData({...formData, notes: e.target.value})}
                           placeholder="أي ملاحظات للتوصيل"
+                        />
+                      </div>
+                      
+                      <div className="md:col-span-2">
+                        <LocationInput 
+                          onLocationChange={(lat, lng) => 
+                            setFormData({...formData, pickupLat: lat, pickupLng: lng})
+                          } 
                         />
                       </div>
                     </div>
