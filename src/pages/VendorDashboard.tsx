@@ -162,8 +162,8 @@ export default function VendorDashboard() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
-      <div className="flex flex-1">
-        <SidebarProvider>
+      <SidebarProvider>
+        <div className="flex flex-1">
           <VendorSidebar />
           
           <main className="flex-1 overflow-auto">
@@ -388,8 +388,8 @@ export default function VendorDashboard() {
               )}
             </div>
           </main>
-        </SidebarProvider>
-      </div>
+        </div>
+      </SidebarProvider>
 
       <Footer />
     </div>
