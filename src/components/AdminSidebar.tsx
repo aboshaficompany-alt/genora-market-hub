@@ -1,5 +1,4 @@
 import { LayoutDashboard, Store, Users, ShoppingCart, Shield } from "lucide-react";
-import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
   SidebarContent,
@@ -13,10 +12,10 @@ import {
 } from "@/components/ui/sidebar";
 
 const items = [
-  { title: "لوحة التحكم", url: "/admin-dashboard", icon: LayoutDashboard },
-  { title: "المتاجر", url: "/admin-dashboard?tab=stores", icon: Store },
-  { title: "المستخدمين", url: "/admin-dashboard?tab=users", icon: Users },
-  { title: "الطلبات", url: "/admin-dashboard?tab=orders", icon: ShoppingCart },
+  { title: "لوحة التحكم", url: "/admin-dashboard", icon: LayoutDashboard, tab: null },
+  { title: "المتاجر", url: "/admin-dashboard", icon: Store, tab: "stores" },
+  { title: "المستخدمين", url: "/admin-dashboard", icon: Users, tab: "users" },
+  { title: "الطلبات", url: "/admin-dashboard", icon: ShoppingCart, tab: "orders" },
 ];
 
 export function AdminSidebar() {
@@ -35,14 +34,13 @@ export function AdminSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <NavLink 
-                      to={item.url} 
-                      className="hover:bg-muted/50 flex items-center gap-3" 
-                      activeClassName="bg-muted text-primary font-medium"
+                    <a 
+                      href={item.tab ? `${item.url}?tab=${item.tab}` : item.url}
+                      className="hover:bg-muted/50 flex items-center gap-3 cursor-pointer" 
                     >
                       <item.icon className="h-4 w-4" />
                       {open && <span>{item.title}</span>}
-                    </NavLink>
+                    </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

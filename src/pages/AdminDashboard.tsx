@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -45,6 +45,8 @@ export default function AdminDashboard() {
   const { user, hasRole, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const currentTab = searchParams.get("tab") || "stores";
   const [isAdmin, setIsAdmin] = useState(false);
   const [stores, setStores] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
@@ -381,11 +383,11 @@ export default function AdminDashboard() {
               </div>
 
               {/* التبويبات */}
-              <Tabs defaultValue="stores" className="space-y-4">
+              <Tabs value={currentTab} className="space-y-4">
                 <TabsList>
-                  <TabsTrigger value="stores">المتاجر</TabsTrigger>
-                  <TabsTrigger value="users">المستخدمين</TabsTrigger>
-                  <TabsTrigger value="orders">الطلبات</TabsTrigger>
+                  <TabsTrigger value="stores" onClick={() => navigate("/admin-dashboard?tab=stores")}>المتاجر</TabsTrigger>
+                  <TabsTrigger value="users" onClick={() => navigate("/admin-dashboard?tab=users")}>المستخدمين</TabsTrigger>
+                  <TabsTrigger value="orders" onClick={() => navigate("/admin-dashboard?tab=orders")}>الطلبات</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="stores" className="space-y-4">
