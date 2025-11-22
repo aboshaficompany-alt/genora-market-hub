@@ -1,4 +1,5 @@
 import { LayoutDashboard, Package, ShoppingCart, Settings, Store } from "lucide-react";
+import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
   SidebarContent,
@@ -12,10 +13,10 @@ import {
 } from "@/components/ui/sidebar";
 
 const items = [
-  { title: "لوحة التحكم", url: "/vendor-dashboard", icon: LayoutDashboard, tab: null },
-  { title: "المنتجات", url: "/vendor-dashboard", icon: Package, tab: "products" },
-  { title: "الطلبات", url: "/vendor-dashboard", icon: ShoppingCart, tab: "orders" },
-  { title: "إعدادات المتجر", url: "/store-settings", icon: Settings, tab: null },
+  { title: "لوحة التحكم", url: "/vendor-dashboard", icon: LayoutDashboard },
+  { title: "المنتجات", url: "/vendor-dashboard?tab=products", icon: Package },
+  { title: "الطلبات", url: "/vendor-dashboard?tab=orders", icon: ShoppingCart },
+  { title: "إعدادات المتجر", url: "/store-settings", icon: Settings },
 ];
 
 export function VendorSidebar() {
@@ -34,13 +35,14 @@ export function VendorSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a 
-                      href={item.tab ? `${item.url}?tab=${item.tab}` : item.url}
-                      className="hover:bg-muted/50 flex items-center gap-3 cursor-pointer" 
+                    <NavLink 
+                      to={item.url} 
+                      className="hover:bg-muted/50 flex items-center gap-3" 
+                      activeClassName="bg-muted text-primary font-medium"
                     >
                       <item.icon className="h-4 w-4" />
                       {open && <span>{item.title}</span>}
-                    </a>
+                    </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
