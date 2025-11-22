@@ -229,8 +229,8 @@ export default function AdminDashboard() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
-      <SidebarProvider>
-        <div className="flex flex-1 w-full">
+      <div className="flex flex-1">
+        <SidebarProvider>
           <AdminSidebar />
           
           <main className="flex-1 overflow-auto">
@@ -545,8 +545,8 @@ export default function AdminDashboard() {
               </Dialog>
             </div>
           </main>
-        </div>
-      </SidebarProvider>
+        </SidebarProvider>
+      </div>
 
       <Footer />
     </div>
