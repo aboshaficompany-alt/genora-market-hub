@@ -52,6 +52,7 @@ const formSchema = z.object({
   email: z.string().email("البريد الإلكتروني غير صالح"),
   store_url: z.string().optional(),
   shipping_method: z.string().min(1, "يجب اختيار طريقة الشحن"),
+  shipping_cost: z.string().optional(),
   bank_account: z.string().optional(),
   facebook: z.string().url("رابط غير صالح").optional().or(z.literal("")),
   instagram: z.string().url("رابط غير صالح").optional().or(z.literal("")),
@@ -66,6 +67,7 @@ export default function StoreSettings() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [store, setStore] = useState<any>(null);
   const [categories, setCategories] = useState<any[]>([]);
+  const [shippingCompanies, setShippingCompanies] = useState<any[]>([]);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>("");
   const [uploading, setUploading] = useState(false);
@@ -81,6 +83,7 @@ export default function StoreSettings() {
       email: "",
       store_url: "",
       shipping_method: "vendor",
+      shipping_cost: "0",
       bank_account: "",
       facebook: "",
       instagram: "",
@@ -95,12 +98,21 @@ export default function StoreSettings() {
     } else if (user) {
       loadStoreData();
       loadCategories();
+      loadShippingCompanies();
     }
   }, [user, authLoading, navigate]);
 
   const loadCategories = async () => {
     const { data } = await supabase.from("categories").select("*");
     setCategories(data || []);
+  };
+
+  const loadShippingCompanies = async () => {
+    const { data } = await supabase
+      .from("shipping_companies")
+      .select("*")
+      .eq("is_active", true);
+    setShippingCompanies(data || []);
   };
 
   const loadStoreData = async () => {
@@ -122,6 +134,7 @@ export default function StoreSettings() {
         email: data.email || "",
         store_url: data.store_url || "",
         shipping_method: data.shipping_method || "vendor",
+        shipping_cost: String(data.shipping_cost || 0),
         bank_account: data.bank_account || "",
         facebook: socialMedia.facebook || "",
         instagram: socialMedia.instagram || "",
@@ -202,6 +215,7 @@ export default function StoreSettings() {
           email: values.email,
           store_url: values.store_url || null,
           shipping_method: values.shipping_method,
+          shipping_cost: values.shipping_cost ? parseFloat(values.shipping_cost) : 0,
           bank_account: values.bank_account || null,
           social_media: socialMedia,
           image_url: logoUrl,
@@ -400,7 +414,11 @@ export default function StoreSettings() {
                             </FormControl>
                             <SelectContent>
                               <SelectItem value="vendor">بواسطة التاجر</SelectItem>
-                              <SelectItem value="shipping_company">شركة الشحن</SelectItem>
+                              {shippingCompanies.map((company) => (
+                                <SelectItem key={company.id} value={company.id}>
+                                  {company.name} - {company.cost} ر.س
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -408,6 +426,22 @@ export default function StoreSettings() {
                       )}
                     />
                   </div>
+
+                  {form.watch("shipping_method") === "vendor" && (
+                    <FormField
+                      control={form.control}
+                      name="shipping_cost"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>تكلفة الشحن (ر.س)</FormLabel>
+                          <FormControl>
+                            <Input type="number" step="0.01" placeholder="0.00" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
 
                   {/* معلومات التواصل */}
                   <div className="space-y-4 pt-4 border-t">

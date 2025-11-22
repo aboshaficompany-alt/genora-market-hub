@@ -20,6 +20,10 @@ import VendorRegistration from "./pages/VendorRegistration";
 import StoreSettings from "./pages/StoreSettings";
 import AdminDashboard from "./pages/AdminDashboard";
 import OrderHistory from "./pages/OrderHistory";
+import ShippingCompanies from "./pages/ShippingCompanies";
+import WithdrawalRequests from "./pages/WithdrawalRequests";
+import Debts from "./pages/Debts";
+import Banners from "./pages/Banners";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,6 +52,10 @@ const App = () => (
                 <Route path="/store-settings" element={<StoreSettings />} />
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
                 <Route path="/orders" element={<OrderHistory />} />
+                <Route path="/shipping-companies" element={<ShippingCompanies />} />
+                <Route path="/withdrawal-requests" element={<WithdrawalRequests />} />
+                <Route path="/debts" element={<Debts />} />
+                <Route path="/banners" element={<Banners />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

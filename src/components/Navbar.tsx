@@ -14,7 +14,7 @@ const Navbar = () => {
   const { user, signOut } = useAuth();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-soft border-b border-border/30" dir="rtl">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-soft border-b border-border/30" dir="rtl" style={{ fontFamily: 'Cairo, sans-serif' }}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -23,7 +23,7 @@ const Navbar = () => {
               <Store className="w-10 h-10 text-primary group-hover:scale-110 transition-transform" />
               <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
-            <span className="text-3xl font-black bg-gradient-primary bg-clip-text text-transparent">
+            <span className="text-3xl font-black bg-gradient-primary bg-clip-text text-transparent" style={{ fontFamily: 'Cairo, sans-serif' }}>
               Geenora
             </span>
           </Link>
