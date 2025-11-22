@@ -23,7 +23,7 @@ export function VendorSidebar() {
   const { open } = useSidebar();
 
   return (
-    <Sidebar className={open ? "w-60" : "w-14"} collapsible="icon">
+    <Sidebar side="right" className={open ? "w-60" : "w-14"} collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-lg font-bold flex items-center gap-2">
