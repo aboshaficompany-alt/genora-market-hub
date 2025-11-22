@@ -1,4 +1,4 @@
-import { LayoutDashboard, Store, Users, ShoppingCart, Shield } from "lucide-react";
+import { LayoutDashboard, Store, Users, ShoppingCart, Shield, Truck, DollarSign, Image, CreditCard } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
@@ -17,6 +17,10 @@ const items = [
   { title: "المتاجر", url: "/admin-dashboard?tab=stores", icon: Store },
   { title: "المستخدمين", url: "/admin-dashboard?tab=users", icon: Users },
   { title: "الطلبات", url: "/admin-dashboard?tab=orders", icon: ShoppingCart },
+  { title: "شركات الشحن", url: "/shipping-companies", icon: Truck },
+  { title: "طلبات السحب", url: "/withdrawal-requests", icon: DollarSign },
+  { title: "المديونيات", url: "/debts", icon: CreditCard },
+  { title: "البانرات", url: "/banners", icon: Image },
 ];
 
 export function AdminSidebar() {

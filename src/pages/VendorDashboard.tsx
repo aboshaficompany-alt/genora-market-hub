@@ -108,10 +108,39 @@ export default function VendorDashboard() {
 
   const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!store) return;
+    if (!store || !user) return;
 
     setIsAddingProduct(true);
     const formData = new FormData(e.currentTarget);
+    const imageFile = formData.get("image") as File;
+
+    let imageUrl = "";
+    
+    // Upload image if provided
+    if (imageFile && imageFile.size > 0) {
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('product-images')
+        .upload(fileName, imageFile);
+
+      if (uploadError) {
+        toast({
+          variant: "destructive",
+          title: "خطأ",
+          description: "فشل رفع الصورة",
+        });
+        setIsAddingProduct(false);
+        return;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(fileName);
+      
+      imageUrl = publicUrl;
+    }
 
     const { error } = await supabase.from("products").insert({
       store_id: store.id,
@@ -119,7 +148,7 @@ export default function VendorDashboard() {
       description: formData.get("description") as string,
       price: parseFloat(formData.get("price") as string),
       discount_price: formData.get("discount_price") ? parseFloat(formData.get("discount_price") as string) : null,
-      image_url: formData.get("image_url") as string,
+      image_url: imageUrl,
       category: formData.get("category") as string,
     });
 
@@ -134,6 +163,7 @@ export default function VendorDashboard() {
         title: "نجاح",
         description: "تم إضافة المنتج بنجاح",
       });
+      (e.target as HTMLFormElement).reset();
       loadVendorData();
     }
 
@@ -322,8 +352,8 @@ export default function VendorDashboard() {
                             </Select>
                           </div>
                           <div>
-                            <Label htmlFor="image_url">رابط الصورة</Label>
-                            <Input id="image_url" name="image_url" type="url" />
+                            <Label htmlFor="image">صورة المنتج</Label>
+                            <Input id="image" name="image" type="file" accept="image/*" />
                           </div>
                           <Button type="submit" className="w-full" disabled={isAddingProduct}>
                             {isAddingProduct ? "جاري الإضافة..." : "إضافة"}
