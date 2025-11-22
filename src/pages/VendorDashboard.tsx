@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -21,6 +21,8 @@ export default function VendorDashboard() {
   const { user, hasRole, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const currentTab = searchParams.get("tab") || "products";
   const [isVendor, setIsVendor] = useState(false);
   const [store, setStore] = useState<any>(null);
   const [products, setProducts] = useState<any[]>([]);
@@ -256,10 +258,10 @@ export default function VendorDashboard() {
                   </div>
 
                   {/* Tabs */}
-                  <Tabs defaultValue="products" className="space-y-4">
+                  <Tabs value={currentTab} className="space-y-4">
                     <TabsList>
-                      <TabsTrigger value="products">المنتجات</TabsTrigger>
-                      <TabsTrigger value="orders">الطلبات</TabsTrigger>
+                      <TabsTrigger value="products" onClick={() => navigate("/vendor-dashboard?tab=products")}>المنتجات</TabsTrigger>
+                      <TabsTrigger value="orders" onClick={() => navigate("/vendor-dashboard?tab=orders")}>الطلبات</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="products" className="space-y-4">

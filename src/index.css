@@ -110,5 +110,37 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-family: 'Cairo', sans-serif;
+    direction: rtl;
+  }
+
+  /* RTL Support */
+  [dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+  }
+
+  [dir="rtl"] .flex {
+    flex-direction: row-reverse;
+  }
+
+  /* Custom utility classes */
+  .gradient-border {
+    position: relative;
+    background: hsl(var(--card));
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: var(--gradient-primary);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: -1;
   }
 }
