@@ -24,6 +24,19 @@ import ShippingCompanies from "./pages/ShippingCompanies";
 import WithdrawalRequests from "./pages/WithdrawalRequests";
 import Debts from "./pages/Debts";
 import Banners from "./pages/Banners";
+import Users from "./pages/Users";
+import Messages from "./pages/Messages";
+import Offers from "./pages/Offers";
+import PromoCodes from "./pages/PromoCodes";
+import Cities from "./pages/Cities";
+import MerchantServices from "./pages/MerchantServices";
+import AccountingOperations from "./pages/AccountingOperations";
+import Branches from "./pages/Branches";
+import ServiceSubscriptions from "./pages/ServiceSubscriptions";
+import Advertisements from "./pages/Advertisements";
+import AllProducts from "./pages/AllProducts";
+import AllOrders from "./pages/AllOrders";
+import Promotions from "./pages/Promotions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -56,6 +69,19 @@ const App = () => (
                 <Route path="/withdrawal-requests" element={<WithdrawalRequests />} />
                 <Route path="/debts" element={<Debts />} />
                 <Route path="/banners" element={<Banners />} />
+                <Route path="/users" element={<Users />} />
+                <Route path="/messages" element={<Messages />} />
+                <Route path="/offers" element={<Offers />} />
+                <Route path="/promo-codes" element={<PromoCodes />} />
+                <Route path="/cities" element={<Cities />} />
+                <Route path="/merchant-services" element={<MerchantServices />} />
+                <Route path="/accounting-operations" element={<AccountingOperations />} />
+                <Route path="/branches" element={<Branches />} />
+                <Route path="/service-subscriptions" element={<ServiceSubscriptions />} />
+                <Route path="/advertisements" element={<Advertisements />} />
+                <Route path="/all-products" element={<AllProducts />} />
+                <Route path="/all-orders" element={<AllOrders />} />
+                <Route path="/promotions" element={<Promotions />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
