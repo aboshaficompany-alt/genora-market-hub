@@ -1,13 +1,117 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Minus, Plus, Trash2, ShoppingBag, Tag } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Cart = () => {
   const { items, removeFromCart, updateQuantity, totalPrice } = useCart();
+  const { toast } = useToast();
+  const [promoCode, setPromoCode] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<any>(null);
+  const [checkingPromo, setCheckingPromo] = useState(false);
+
+  const applyPromoCode = async () => {
+    if (!promoCode.trim()) {
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: "الرجاء إدخال كود الخصم",
+      });
+      return;
+    }
+
+    setCheckingPromo(true);
+    
+    try {
+      const { data, error } = await supabase
+        .from("promo_codes")
+        .select("*")
+        .eq("code", promoCode.toUpperCase())
+        .eq("is_active", true)
+        .single();
+
+      if (error || !data) {
+        toast({
+          variant: "destructive",
+          title: "كود غير صالح",
+          description: "الكود المدخل غير موجود أو منتهي الصلاحية",
+        });
+        return;
+      }
+
+      // Check if promo code is still valid
+      const now = new Date();
+      const startDate = new Date(data.start_date);
+      const endDate = new Date(data.end_date);
+
+      if (now < startDate || now > endDate) {
+        toast({
+          variant: "destructive",
+          title: "كود منتهي الصلاحية",
+          description: "هذا الكود غير صالح للاستخدام حالياً",
+        });
+        return;
+      }
+
+      if (data.current_uses >= data.max_uses) {
+        toast({
+          variant: "destructive",
+          title: "تم استخدام الكود بالكامل",
+          description: "لقد تم استخدام هذا الكود الحد الأقصى من المرات",
+        });
+        return;
+      }
+
+      if (data.min_order_amount && totalPrice < data.min_order_amount) {
+        toast({
+          variant: "destructive",
+          title: "الحد الأدنى للطلب",
+          description: `يجب أن يكون مجموع الطلب ${data.min_order_amount} ر.س على الأقل`,
+        });
+        return;
+      }
+
+      setAppliedPromo(data);
+      toast({
+        title: "تم تطبيق الكود!",
+        description: "تم تطبيق كود الخصم بنجاح",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: error.message,
+      });
+    } finally {
+      setCheckingPromo(false);
+    }
+  };
+
+  const removePromoCode = () => {
+    setAppliedPromo(null);
+    setPromoCode("");
+  };
+
+  const calculateDiscount = () => {
+    if (!appliedPromo) return 0;
+    
+    if (appliedPromo.discount_percentage) {
+      return (totalPrice * appliedPromo.discount_percentage) / 100;
+    } else if (appliedPromo.discount_amount) {
+      return appliedPromo.discount_amount;
+    }
+    return 0;
+  };
+
+  const discount = calculateDiscount();
+  const finalTotal = totalPrice - discount;
 
   if (items.length === 0) {
     return (
@@ -122,6 +226,49 @@ const Cart = () => {
                     ملخص الطلب
                   </h3>
                   
+                  {/* Promo Code Section */}
+                  <div className="mb-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Tag className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-bold text-charcoal">كود الخصم</span>
+                    </div>
+                    {!appliedPromo ? (
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="أدخل كود الخصم"
+                          value={promoCode}
+                          onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                          className="flex-1"
+                        />
+                        <Button 
+                          onClick={applyPromoCode}
+                          disabled={checkingPromo}
+                          variant="outline"
+                          className="whitespace-nowrap"
+                        >
+                          {checkingPromo ? "جاري التحقق..." : "تطبيق"}
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-3">
+                        <div className="flex items-center gap-2">
+                          <Tag className="w-4 h-4 text-green-600" />
+                          <span className="text-sm font-bold text-green-700">
+                            {appliedPromo.code}
+                          </span>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={removePromoCode}
+                          className="text-red-500 hover:text-red-600"
+                        >
+                          إزالة
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                  
                   <div className="space-y-4 mb-6">
                     <div className="flex justify-between text-charcoal-light">
                       <span>عدد المنتجات</span>
@@ -131,6 +278,12 @@ const Cart = () => {
                       <span>المجموع الفرعي</span>
                       <span>{totalPrice} ر.س</span>
                     </div>
+                    {appliedPromo && (
+                      <div className="flex justify-between text-green-600 font-bold">
+                        <span>الخصم</span>
+                        <span>- {discount.toFixed(2)} ر.س</span>
+                      </div>
+                    )}
                     <div className="flex justify-between text-charcoal-light">
                       <span>الشحن</span>
                       <span>مجاني</span>
@@ -138,7 +291,7 @@ const Cart = () => {
                     <div className="border-t-2 pt-4">
                       <div className="flex justify-between text-2xl font-black">
                         <span className="text-charcoal">الإجمالي</span>
-                        <span className="text-primary">{totalPrice} ر.س</span>
+                        <span className="text-primary">{finalTotal.toFixed(2)} ر.س</span>
                       </div>
                     </div>
                   </div>

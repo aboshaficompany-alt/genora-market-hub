@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CreditCard, Wallet, Building2, MapPin, Phone, User } from "lucide-react";
+import { CreditCard, Wallet, Building2, MapPin, Phone, User, Tag } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
@@ -21,6 +21,9 @@ const Checkout = () => {
   const { toast } = useToast();
   const [paymentMethod, setPaymentMethod] = useState("credit_card");
   const [submitting, setSubmitting] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<any>(null);
+  const [checkingPromo, setCheckingPromo] = useState(false);
   
   const [formData, setFormData] = useState({
     name: "",
@@ -44,6 +47,101 @@ const Checkout = () => {
     }
   }, [user, authLoading, navigate]);
 
+  const applyPromoCode = async () => {
+    if (!promoCode.trim()) {
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: "الرجاء إدخال كود الخصم",
+      });
+      return;
+    }
+
+    setCheckingPromo(true);
+    
+    try {
+      const { data, error } = await supabase
+        .from("promo_codes")
+        .select("*")
+        .eq("code", promoCode.toUpperCase())
+        .eq("is_active", true)
+        .single();
+
+      if (error || !data) {
+        toast({
+          variant: "destructive",
+          title: "كود غير صالح",
+          description: "الكود المدخل غير موجود أو منتهي الصلاحية",
+        });
+        return;
+      }
+
+      const now = new Date();
+      const startDate = new Date(data.start_date);
+      const endDate = new Date(data.end_date);
+
+      if (now < startDate || now > endDate) {
+        toast({
+          variant: "destructive",
+          title: "كود منتهي الصلاحية",
+          description: "هذا الكود غير صالح للاستخدام حالياً",
+        });
+        return;
+      }
+
+      if (data.current_uses >= data.max_uses) {
+        toast({
+          variant: "destructive",
+          title: "تم استخدام الكود بالكامل",
+          description: "لقد تم استخدام هذا الكود الحد الأقصى من المرات",
+        });
+        return;
+      }
+
+      if (data.min_order_amount && totalPrice < data.min_order_amount) {
+        toast({
+          variant: "destructive",
+          title: "الحد الأدنى للطلب",
+          description: `يجب أن يكون مجموع الطلب ${data.min_order_amount} ر.س على الأقل`,
+        });
+        return;
+      }
+
+      setAppliedPromo(data);
+      toast({
+        title: "تم تطبيق الكود!",
+        description: "تم تطبيق كود الخصم بنجاح",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: error.message,
+      });
+    } finally {
+      setCheckingPromo(false);
+    }
+  };
+
+  const removePromoCode = () => {
+    setAppliedPromo(null);
+    setPromoCode("");
+  };
+
+  const calculateDiscount = () => {
+    if (!appliedPromo) return 0;
+    
+    if (appliedPromo.discount_percentage) {
+      return (totalPrice * appliedPromo.discount_percentage) / 100;
+    } else if (appliedPromo.discount_amount) {
+      return appliedPromo.discount_amount;
+    }
+    return 0;
+  };
+
+  const discount = calculateDiscount();
+  const finalTotal = totalPrice - discount;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -57,7 +155,7 @@ const Checkout = () => {
         .from("orders")
         .insert([{
           user_id: user.id,
-          total_amount: totalPrice,
+          total_amount: finalTotal,
           payment_method: paymentMethod as any,
           shipping_name: formData.name,
           shipping_email: formData.email,
@@ -87,6 +185,14 @@ const Checkout = () => {
         .insert(orderItems);
 
       if (itemsError) throw itemsError;
+
+      // Update promo code usage if applied
+      if (appliedPromo) {
+        await supabase
+          .from("promo_codes")
+          .update({ current_uses: appliedPromo.current_uses + 1 })
+          .eq("id", appliedPromo.id);
+      }
 
       toast({
         title: "تم إرسال الطلب بنجاح!",
@@ -289,6 +395,51 @@ const Checkout = () => {
                       ملخص الطلب
                     </h3>
                     
+                    {/* Promo Code Section */}
+                    <div className="mb-6">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Tag className="w-4 h-4 text-primary" />
+                        <span className="text-sm font-bold text-charcoal">كود الخصم</span>
+                      </div>
+                      {!appliedPromo ? (
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="أدخل كود الخصم"
+                            value={promoCode}
+                            onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                            className="flex-1"
+                          />
+                          <Button 
+                            type="button"
+                            onClick={applyPromoCode}
+                            disabled={checkingPromo}
+                            variant="outline"
+                            className="whitespace-nowrap"
+                          >
+                            {checkingPromo ? "جاري التحقق..." : "تطبيق"}
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-3">
+                          <div className="flex items-center gap-2">
+                            <Tag className="w-4 h-4 text-green-600" />
+                            <span className="text-sm font-bold text-green-700">
+                              {appliedPromo.code}
+                            </span>
+                          </div>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            onClick={removePromoCode}
+                            className="text-red-500 hover:text-red-600"
+                          >
+                            إزالة
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                    
                     <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
                       {items.map((item) => (
                         <div key={item.id} className="flex gap-3 pb-4 border-b">
@@ -315,6 +466,12 @@ const Checkout = () => {
                         <span>المجموع الفرعي</span>
                         <span>{totalPrice} ر.س</span>
                       </div>
+                      {appliedPromo && (
+                        <div className="flex justify-between text-green-600 font-bold">
+                          <span>الخصم</span>
+                          <span>- {discount.toFixed(2)} ر.س</span>
+                        </div>
+                      )}
                       <div className="flex justify-between text-charcoal-light">
                         <span>الشحن</span>
                         <span className="text-green-600 font-bold">مجاني</span>
@@ -322,7 +479,7 @@ const Checkout = () => {
                       <div className="border-t-2 pt-3">
                         <div className="flex justify-between text-2xl font-black">
                           <span className="text-charcoal">الإجمالي</span>
-                          <span className="text-primary">{totalPrice} ر.س</span>
+                          <span className="text-primary">{finalTotal.toFixed(2)} ر.س</span>
                         </div>
                       </div>
                     </div>
