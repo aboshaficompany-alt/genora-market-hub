@@ -27,13 +27,13 @@
         transition: all $transition-fast;
         
         &:hover {
-          border-color: $primary-blue;
-          color: $primary-blue;
+          border-color: $primary-orange;
+          color: $primary-orange;
         }
         
         &.active {
-          background: $primary-blue;
-          border-color: $primary-blue;
+          background: $primary-orange;
+          border-color: $primary-orange;
           color: $text-white;
         }
       }
@@ -64,7 +64,7 @@
           color: $text-primary;
           
           span {
-            color: $primary-blue;
+            color: $primary-orange;
           }
         }
         
@@ -90,8 +90,8 @@
           }
           
           &.shipped {
-            background: rgba(74, 111, 165, 0.1);
-            color: $primary-blue;
+            background: rgba(255, 127, 0, 0.1);
+            color: $primary-orange;
           }
           
           &.delivered {
@@ -152,7 +152,7 @@
               .item-price {
                 font-size: $font-size-base;
                 font-weight: $font-weight-semibold;
-                color: $primary-blue;
+                color: $primary-orange;
               }
             }
           }
@@ -173,7 +173,7 @@
           .total-value {
             font-size: $font-size-xl;
             font-weight: $font-weight-bold;
-            color: $primary-blue;
+            color: $primary-orange;
           }
         }
       }
@@ -275,8 +275,8 @@
         
         &.completed {
           .timeline-marker {
-            background: $primary-blue;
-            border-color: $primary-blue;
+            background: $primary-orange;
+            border-color: $primary-orange;
             
             &::after {
               content: '✓';
@@ -292,15 +292,15 @@
           
           .timeline-content {
             .timeline-title {
-              color: $primary-blue;
+              color: $primary-orange;
             }
           }
         }
         
         &.active {
           .timeline-marker {
-            background: $accent-gold;
-            border-color: $accent-gold;
+            background: $yellow-warm;
+            border-color: $yellow-warm;
             animation: pulse 2s ease-in-out infinite;
           }
         }

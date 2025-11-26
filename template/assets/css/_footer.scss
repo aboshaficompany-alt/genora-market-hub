@@ -3,7 +3,7 @@
 // ========================================
 
 .footer {
-  background: $secondary-dark;
+  background: $bg-gradient-dark;
   color: rgba(255, 255, 255, 0.8);
   padding: $spacing-2xl 0 $spacing-md;
   margin-top: $spacing-2xl;
@@ -62,7 +62,7 @@
         transition: all $transition-base;
         
         &:hover {
-          background: $primary-blue;
+          background: $primary-orange;
           transform: translateY(-2px);
         }
       }

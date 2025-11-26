@@ -31,7 +31,7 @@
     gap: $spacing-sm;
     font-size: $font-size-2xl;
     font-weight: $font-weight-bold;
-    color: $primary-blue;
+    color: $primary-orange;
     text-decoration: none;
     transition: transform $transition-fast;
     
@@ -91,13 +91,13 @@
         left: 0;
         width: 0;
         height: 2px;
-        background: $primary-blue;
+        background: $primary-orange;
         transition: width $transition-base;
       }
       
       &:hover,
       &.active {
-        color: $primary-blue;
+        color: $primary-orange;
         
         &::after {
           width: 100%;

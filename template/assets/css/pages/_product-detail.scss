@@ -37,8 +37,8 @@
         position: absolute;
         top: $spacing-md;
         right: $spacing-md;
-        background: $accent-gold;
-        color: $text-white;
+        background: $yellow-warm;
+        color: $charcoal;
         padding: $spacing-xs $spacing-md;
         border-radius: $border-radius-sm;
         font-size: $font-size-sm;
@@ -65,7 +65,7 @@
           transition: all $transition-fast;
           
           &:hover {
-            background: $primary-blue;
+            background: $primary-orange;
             color: $text-white;
             transform: scale(1.1);
           }
@@ -85,7 +85,7 @@
         transition: all $transition-fast;
         
         &:hover {
-          background: $primary-blue;
+          background: $primary-orange;
           color: $text-white;
         }
       }
@@ -112,7 +112,7 @@
         
         &.active,
         &:hover {
-          border-color: $primary-blue;
+          border-color: $primary-orange;
         }
       }
     }
@@ -144,7 +144,7 @@
       .stars {
         display: flex;
         gap: 4px;
-        color: $accent-gold;
+        color: $yellow-warm;
         font-size: $font-size-lg;
       }
       
@@ -155,7 +155,7 @@
       
       .reviews-count {
         font-size: $font-size-sm;
-        color: $primary-blue;
+        color: $primary-orange;
         cursor: pointer;
         
         &:hover {
@@ -173,7 +173,7 @@
       .price-current {
         font-size: $font-size-3xl;
         font-weight: $font-weight-bold;
-        color: $primary-blue;
+        color: $primary-orange;
       }
       
       .price-old {
@@ -183,7 +183,7 @@
       }
       
       .price-discount {
-        background: #dc3545;
+        background: $pink-accent;
         color: $text-white;
         padding: 4px 12px;
         border-radius: $border-radius-sm;
@@ -233,12 +233,12 @@
             transition: all $transition-fast;
             
             &:hover {
-              border-color: $primary-blue;
+              border-color: $primary-orange;
             }
             
             &.active {
-              background: $primary-blue;
-              border-color: $primary-blue;
+              background: $primary-orange;
+              border-color: $primary-orange;
               color: $text-white;
             }
             

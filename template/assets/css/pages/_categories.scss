@@ -4,7 +4,7 @@
 
 .page-header {
   padding: $spacing-xl 0;
-  background: $bg-gradient-light;
+  background: $bg-gradient-card;
   text-align: center;
   margin-bottom: $spacing-xl;
   
@@ -35,7 +35,7 @@
     font-size: $font-size-sm;
     
     a {
-      color: $primary-blue;
+      color: $primary-orange;
       
       &:hover {
         text-decoration: underline;
@@ -85,7 +85,7 @@
         button {
           @include button-reset;
           font-size: $font-size-sm;
-          color: $primary-blue;
+          color: $primary-orange;
           
           &:hover {
             text-decoration: underline;

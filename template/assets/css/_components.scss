@@ -27,7 +27,7 @@
   
   // Primary Button
   &.btn-primary {
-    background: $bg-gradient;
+    background: $bg-gradient-primary;
     color: $text-white;
     box-shadow: $shadow-sm;
     
@@ -40,11 +40,11 @@
   // Secondary Button
   &.btn-secondary {
     background: $bg-primary;
-    color: $primary-blue;
-    border-color: $primary-blue;
+    color: $primary-orange;
+    border-color: $primary-orange;
     
     &:hover:not(:disabled) {
-      background: $primary-blue;
+      background: $primary-orange;
       color: $text-white;
     }
   }
@@ -52,23 +52,24 @@
   // Outline Button
   &.btn-outline {
     background: transparent;
-    color: $primary-blue;
+    color: $primary-orange;
     border-color: $border-color;
     
     &:hover:not(:disabled) {
       background: $bg-secondary;
-      border-color: $primary-blue;
+      border-color: $primary-orange;
     }
   }
   
   // Gold Button
   &.btn-gold {
-    background: $accent-gold;
+    background: $bg-gradient-warm;
     color: $text-white;
+    box-shadow: $shadow-glow;
     
     &:hover:not(:disabled) {
-      background: darken($accent-gold, 10%);
-      box-shadow: $shadow-lg;
+      box-shadow: $shadow-hover;
+      transform: translateY(-2px);
     }
   }
   
@@ -152,8 +153,8 @@
       position: absolute;
       top: $spacing-sm;
       right: $spacing-sm;
-      background: $accent-gold;
-      color: $text-white;
+      background: $yellow-warm;
+      color: $charcoal;
       padding: 4px 12px;
       border-radius: $border-radius-sm;
       font-size: $font-size-xs;
@@ -183,7 +184,7 @@
         transition: all $transition-base;
         
         &:hover {
-          background: $primary-blue;
+          background: $primary-orange;
           color: $text-white;
           transform: scale(1.1);
         }
@@ -229,7 +230,7 @@
       .stars {
         display: flex;
         gap: 2px;
-        color: $accent-gold;
+        color: $yellow-warm;
       }
       
       .rating-count {
@@ -247,7 +248,7 @@
       .price-current {
         font-size: $font-size-xl;
         font-weight: $font-weight-bold;
-        color: $primary-blue;
+        color: $primary-orange;
       }
       
       .price-old {
@@ -301,7 +302,7 @@
     .stars {
       display: flex;
       gap: 2px;
-      color: $accent-gold;
+      color: $yellow-warm;
     }
   }
   
@@ -317,7 +318,7 @@
       .stat-value {
         font-size: $font-size-lg;
         font-weight: $font-weight-bold;
-        color: $primary-blue;
+        color: $primary-orange;
         display: block;
       }
       
