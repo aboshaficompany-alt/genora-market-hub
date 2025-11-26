@@ -34,7 +34,7 @@
           width: 32px;
           height: 32px;
           @include flex-center;
-          background: $primary-blue;
+          background: $primary-orange;
           color: $text-white;
           border-radius: 50%;
           font-weight: $font-weight-bold;
@@ -78,12 +78,12 @@
           transition: all $transition-fast;
           
           &:hover {
-            border-color: $primary-blue;
+            border-color: $primary-orange;
           }
           
           &.active {
-            background: rgba(74, 111, 165, 0.05);
-            border-color: $primary-blue;
+            background: rgba(255, 127, 0, 0.05);
+            border-color: $primary-orange;
           }
           
           .address-title {
@@ -116,12 +116,12 @@
           transition: all $transition-fast;
           
           &:hover {
-            border-color: $primary-blue;
+            border-color: $primary-orange;
           }
           
           &.active {
-            background: rgba(74, 111, 165, 0.05);
-            border-color: $primary-blue;
+            background: rgba(255, 127, 0, 0.05);
+            border-color: $primary-orange;
           }
           
           input[type="radio"] {
@@ -227,7 +227,7 @@
           
           .item-price {
             font-weight: $font-weight-semibold;
-            color: $primary-blue;
+            color: $primary-orange;
           }
         }
       }
@@ -270,7 +270,7 @@
             font-weight: $font-weight-bold;
             
             .total-value {
-              color: $primary-blue;
+              color: $primary-orange;
             }
           }
         }

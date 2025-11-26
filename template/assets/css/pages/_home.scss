@@ -6,8 +6,8 @@
 .hero {
   position: relative;
   padding: $spacing-2xl 0;
-  background: $bg-gradient;
-  color: $text-white;
+  background: $bg-gradient-hero;
+  color: $charcoal;
   overflow: hidden;
   
   @include respond-to(md) {
@@ -52,7 +52,7 @@
     .hero-subtitle {
       font-size: $font-size-lg;
       font-weight: $font-weight-medium;
-      color: rgba(255, 255, 255, 0.9);
+      color: $charcoal-light;
       margin-bottom: $spacing-sm;
       @include fade-in;
     }
@@ -70,14 +70,14 @@
       }
       
       .highlight {
-        color: $accent-gold;
+        color: $primary-orange;
       }
     }
     
     .hero-description {
       font-size: $font-size-lg;
       line-height: 1.8;
-      color: rgba(255, 255, 255, 0.85);
+      color: $charcoal;
       margin-bottom: $spacing-xl;
       max-width: 500px;
       margin-left: auto;

@@ -3,42 +3,53 @@
 // فلسفة تمكينية وإنسانية
 // ========================================
 
-// الألوان الأساسية - Colors Palette
-$primary-blue: #4a6fa5;           // أزرق رمادي هادئ
-$primary-purple: #7c6ba5;         // بنفسجي راقي
-$accent-gold: #d4af37;            // ذهبي رمزي
-$accent-rose: #e8b4b8;            // وردي ناعم
+// الألوان الأساسية - Colors Palette (matching React app)
+$primary-orange: hsl(25, 95%, 53%);     // برتقالي نابض
+$orange-vibrant: hsl(15, 90%, 55%);     // برتقالي حيوي
+$orange-bright: hsl(30, 100%, 60%);     // برتقالي مشرق
+$yellow-warm: hsl(45, 93%, 58%);        // أصفر دافئ
+$yellow-light: hsl(50, 100%, 70%);      // أصفر فاتح
+$yellow-glow: hsl(48, 100%, 88%);       // أصفر متوهج
+$pink-accent: hsl(340, 82%, 52%);       // وردي لامع
+$pink-light: hsl(340, 70%, 90%);        // وردي فاتح
+$teal-accent: hsl(180, 70%, 50%);       // تيل لامع
 
 // الألوان الثانوية
+$charcoal: hsl(0, 0%, 15%);             // فحمي
+$charcoal-light: hsl(0, 0%, 30%);       // فحمي فاتح
 $secondary-light: #f8f9fa;
 $secondary-gray: #6c757d;
-$secondary-dark: #2c3e50;
 
-// خلفيات هادئة
-$bg-primary: #ffffff;
-$bg-secondary: #f5f7fa;
-$bg-soft: #fafbfc;
-$bg-gradient: linear-gradient(135deg, #4a6fa5 0%, #7c6ba5 100%);
-$bg-gradient-light: linear-gradient(135deg, rgba(74, 111, 165, 0.05) 0%, rgba(124, 107, 165, 0.05) 100%);
+// خلفيات (matching React app)
+$bg-primary: hsl(0, 0%, 100%);
+$bg-secondary: hsl(45, 100%, 97%);
+$bg-soft: hsl(50, 100%, 98%);
+$bg-gradient-primary: linear-gradient(135deg, hsl(25, 95%, 53%), hsl(45, 93%, 58%), hsl(340, 82%, 52%));
+$bg-gradient-warm: linear-gradient(180deg, hsl(50, 100%, 70%), hsl(25, 95%, 53%));
+$bg-gradient-hero: linear-gradient(135deg, hsl(48, 100%, 88%), hsl(50, 100%, 70%), hsl(45, 93%, 58%));
+$bg-gradient-card: linear-gradient(135deg, hsla(45, 93%, 58%, 0.1), hsla(340, 82%, 52%, 0.1));
+$bg-gradient-glow: radial-gradient(circle at 50% 0%, hsla(45, 93%, 58%, 0.3), transparent 70%);
+$bg-gradient-dark: linear-gradient(180deg, hsl(0, 0%, 15%), hsl(0, 0%, 10%));
 
 // النصوص
-$text-primary: #2c3e50;
-$text-secondary: #6c757d;
-$text-muted: #95a5a6;
-$text-white: #ffffff;
+$text-primary: hsl(0, 0%, 10%);
+$text-secondary: hsl(0, 0%, 40%);
+$text-muted: hsl(0, 0%, 65%);
+$text-white: hsl(0, 0%, 100%);
 
 // الحدود
-$border-color: #e0e6ed;
-$border-light: #f0f3f7;
-$border-radius: 12px;
-$border-radius-sm: 8px;
-$border-radius-lg: 16px;
+$border-color: hsl(45, 30%, 90%);
+$border-light: hsl(45, 40%, 95%);
+$border-radius: 1.5rem;
+$border-radius-sm: 1rem;
+$border-radius-lg: 2rem;
 
-// الظلال
-$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-$shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
-$shadow-hover: 0 12px 48px rgba(74, 111, 165, 0.15);
+// الظلال (matching React app)
+$shadow-sm: 0 2px 12px hsla(25, 95%, 53%, 0.08);
+$shadow-md: 0 4px 24px hsla(25, 95%, 53%, 0.12);
+$shadow-lg: 0 10px 40px hsla(25, 95%, 53%, 0.15);
+$shadow-hover: 0 20px 60px hsla(25, 95%, 53%, 0.2);
+$shadow-glow: 0 0 40px hsla(45, 93%, 58%, 0.4);
 
 // المسافات
 $spacing-xs: 0.5rem;   // 8px
@@ -72,8 +83,8 @@ $font-weight-bold: 700;
 
 // الانتقالات
 $transition-fast: 0.2s ease;
-$transition-base: 0.3s ease;
-$transition-slow: 0.5s ease;
+$transition-base: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slow: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
 // نقاط التوقف للشاشات
 $breakpoint-xs: 576px;
