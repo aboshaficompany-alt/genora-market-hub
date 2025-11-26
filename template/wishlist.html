@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قائمة الأمنيات - جينورا</title>
+  <meta name="description" content="قائمة المنتجات المفضلة لديك في منصة جينورا">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <div class="navbar-logo">
+          <a href="index.html">
+            <h1>جينورا</h1>
+            <p class="logo-tagline">منصة التمكين الرقمي</p>
+          </a>
+        </div>
+        
+        <ul class="navbar-menu">
+          <li><a href="index.html" class="nav-link">الرئيسية</a></li>
+          <li><a href="categories.html" class="nav-link">الأصناف</a></li>
+          <li><a href="#" class="nav-link">المتاجر</a></li>
+          <li><a href="#" class="nav-link">من نحن</a></li>
+          <li><a href="#" class="nav-link">تواصل معنا</a></li>
+        </ul>
+        
+        <div class="navbar-actions">
+          <button class="icon-btn" aria-label="البحث">
+            <i class="fas fa-search"></i>
+          </button>
+          <a href="wishlist.html" class="icon-btn" aria-label="المفضلة">
+            <i class="fas fa-heart"></i>
+            <span class="badge">3</span>
+          </a>
+          <a href="#" class="icon-btn" aria-label="السلة">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="badge cart-count">0</span>
+          </a>
+          <button class="btn btn-primary">تسجيل الدخول</button>
+        </div>
+        
+        <button class="mobile-menu-toggle" aria-label="القائمة">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="wishlist-page">
+    <div class="container">
+      <!-- Page Header -->
+      <div class="wishlist-header">
+        <div>
+          <h1>قائمة الأمنيات</h1>
+          <p class="text-muted">لديك 3 منتجات في قائمتك</p>
+        </div>
+        <div class="wishlist-actions">
+          <button class="btn btn-outline">مشاركة القائمة</button>
+          <button class="btn btn-outline-danger">حذف الكل</button>
+        </div>
+      </div>
+
+      <!-- Wishlist Grid -->
+      <div class="wishlist-grid">
+        <!-- Product Card 1 -->
+        <div class="wishlist-item">
+          <button class="remove-btn" aria-label="إزالة من المفضلة">
+            <i class="fas fa-times"></i>
+          </button>
+          
+          <div class="product-card">
+            <div class="product-image">
+              <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" alt="سماعات لاسلكية">
+              <span class="product-badge sale">خصم 30%</span>
+            </div>
+            
+            <div class="product-info">
+              <div class="product-category">إلكترونيات</div>
+              <h3 class="product-title">سماعات بلوتوث لاسلكية عالية الجودة</h3>
+              
+              <div class="product-rating">
+                <div class="rating-stars" data-rating="4.5">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+                <span class="rating-count">(128)</span>
+              </div>
+              
+              <div class="product-price">
+                <span class="price-original">850 ر.س</span>
+                <span class="price-current">595 ر.س</span>
+              </div>
+              
+              <div class="product-actions">
+                <button class="btn btn-primary btn-block" onclick="addToCart(1)">
+                  <i class="fas fa-shopping-cart"></i>
+                  إضافة للسلة
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Card 2 -->
+        <div class="wishlist-item">
+          <button class="remove-btn" aria-label="إزالة من المفضلة">
+            <i class="fas fa-times"></i>
+          </button>
+          
+          <div class="product-card">
+            <div class="product-image">
+              <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" alt="ساعة ذكية">
+              <span class="product-badge new">جديد</span>
+            </div>
+            
+            <div class="product-info">
+              <div class="product-category">إكسسوارات</div>
+              <h3 class="product-title">ساعة ذكية متطورة مع شاشة AMOLED</h3>
+              
+              <div class="product-rating">
+                <div class="rating-stars" data-rating="5">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+                <span class="rating-count">(96)</span>
+              </div>
+              
+              <div class="product-price">
+                <span class="price-current">1,299 ر.س</span>
+              </div>
+              
+              <div class="product-actions">
+                <button class="btn btn-primary btn-block" onclick="addToCart(2)">
+                  <i class="fas fa-shopping-cart"></i>
+                  إضافة للسلة
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Card 3 -->
+        <div class="wishlist-item">
+          <button class="remove-btn" aria-label="إزالة من المفضلة">
+            <i class="fas fa-times"></i>
+          </button>
+          
+          <div class="product-card">
+            <div class="product-image">
+              <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400" alt="حقيبة جلدية">
+              <span class="product-badge hot">الأكثر مبيعاً</span>
+            </div>
+            
+            <div class="product-info">
+              <div class="product-category">حقائب</div>
+              <h3 class="product-title">حقيبة ظهر جلدية فاخرة للأعمال</h3>
+              
+              <div class="product-rating">
+                <div class="rating-stars" data-rating="4">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+                <span class="rating-count">(74)</span>
+              </div>
+              
+              <div class="product-price">
+                <span class="price-original">650 ر.س</span>
+                <span class="price-current">520 ر.س</span>
+              </div>
+              
+              <div class="product-actions">
+                <button class="btn btn-primary btn-block" onclick="addToCart(3)">
+                  <i class="fas fa-shopping-cart"></i>
+                  إضافة للسلة
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State (Hidden by default) -->
+      <div class="wishlist-empty" style="display: none;">
+        <div class="empty-icon">
+          <i class="fas fa-heart-broken"></i>
+        </div>
+        <h2>قائمة الأمنيات فارغة</h2>
+        <p>لم تقم بإضافة أي منتجات إلى قائمة الأمنيات بعد</p>
+        <a href="categories.html" class="btn btn-primary">تصفح المنتجات</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <!-- About Section -->
+        <div class="footer-section">
+          <h3>جينورا</h3>
+          <p class="footer-description">
+            منصة رقمية تمكينية تجمع أفضل المتاجر والمنتجات في مكان واحد، نؤمن بقوة التجارة الإلكترونية في تحسين حياة الناس.
+          </p>
+          <div class="footer-social">
+            <a href="#" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
+            <a href="#" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="إنستجرام"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="لينكد إن"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section">
+          <h4>روابط سريعة</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="categories.html">الأصناف</a></li>
+            <li><a href="#">المتاجر</a></li>
+            <li><a href="#">من نحن</a></li>
+            <li><a href="#">تواصل معنا</a></li>
+          </ul>
+        </div>
+
+        <!-- Customer Service -->
+        <div class="footer-section">
+          <h4>خدمة العملاء</h4>
+          <ul class="footer-links">
+            <li><a href="#">الأسئلة الشائعة</a></li>
+            <li><a href="#">سياسة الاسترجاع</a></li>
+            <li><a href="#">الشحن والتوصيل</a></li>
+            <li><a href="#">طرق الدفع</a></li>
+            <li><a href="#">الشروط والأحكام</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="footer-section">
+          <h4>تواصل معنا</h4>
+          <ul class="footer-contact">
+            <li>
+              <i class="fas fa-map-marker-alt"></i>
+              <span>الرياض، المملكة العربية السعودية</span>
+            </li>
+            <li>
+              <i class="fas fa-phone"></i>
+              <span dir="ltr">+966 50 123 4567</span>
+            </li>
+            <li>
+              <i class="fas fa-envelope"></i>
+              <span>info@geenora.com</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 جينورا. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

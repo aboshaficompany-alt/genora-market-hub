@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إتمام الطلب - جينورا</title>
+  <meta name="description" content="أكمل طلبك بسهولة وأمان في منصة جينورا">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <div class="navbar-logo">
+          <a href="index.html">
+            <h1>جينورا</h1>
+            <p class="logo-tagline">منصة التمكين الرقمي</p>
+          </a>
+        </div>
+        
+        <ul class="navbar-menu">
+          <li><a href="index.html" class="nav-link">الرئيسية</a></li>
+          <li><a href="categories.html" class="nav-link">الأصناف</a></li>
+          <li><a href="#" class="nav-link">المتاجر</a></li>
+          <li><a href="#" class="nav-link">من نحن</a></li>
+          <li><a href="#" class="nav-link">تواصل معنا</a></li>
+        </ul>
+        
+        <div class="navbar-actions">
+          <button class="icon-btn" aria-label="البحث">
+            <i class="fas fa-search"></i>
+          </button>
+          <a href="wishlist.html" class="icon-btn" aria-label="المفضلة">
+            <i class="fas fa-heart"></i>
+            <span class="badge">3</span>
+          </a>
+          <a href="#" class="icon-btn" aria-label="السلة">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="badge cart-count">3</span>
+          </a>
+          <button class="btn btn-primary">تسجيل الدخول</button>
+        </div>
+        
+        <button class="mobile-menu-toggle" aria-label="القائمة">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="checkout-page">
+    <div class="container">
+      <div class="checkout-container">
+        <!-- Checkout Form -->
+        <div class="checkout-form">
+          <!-- Shipping Information -->
+          <div class="form-section">
+            <div class="section-header">
+              <span class="section-number">1</span>
+              <h3>معلومات الشحن</h3>
+            </div>
+            
+            <form>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="fullName">الاسم الكامل *</label>
+                  <input type="text" id="fullName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="phone">رقم الجوال *</label>
+                  <input type="tel" id="phone" class="form-control" dir="ltr" required>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">البريد الإلكتروني *</label>
+                  <input type="email" id="email" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="city">المدينة *</label>
+                  <select id="city" class="form-control" required>
+                    <option value="">اختر المدينة</option>
+                    <option value="riyadh">الرياض</option>
+                    <option value="jeddah">جدة</option>
+                    <option value="dammam">الدمام</option>
+                    <option value="mecca">مكة المكرمة</option>
+                    <option value="medina">المدينة المنورة</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-row full-width">
+                <div class="form-group">
+                  <label for="address">العنوان التفصيلي *</label>
+                  <textarea id="address" class="form-control" rows="3" required></textarea>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="postalCode">الرمز البريدي</label>
+                  <input type="text" id="postalCode" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                  <label for="district">الحي</label>
+                  <input type="text" id="district" class="form-control">
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Payment Method -->
+          <div class="form-section">
+            <div class="section-header">
+              <span class="section-number">2</span>
+              <h3>طريقة الدفع</h3>
+            </div>
+            
+            <div class="payment-methods">
+              <label class="payment-method active">
+                <input type="radio" name="payment" value="cod" checked>
+                <div class="payment-icon">
+                  <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="payment-info">
+                  <div class="payment-title">الدفع عند الاستلام</div>
+                  <div class="payment-description">ادفع نقداً عند استلام الطلب</div>
+                </div>
+              </label>
+              
+              <label class="payment-method">
+                <input type="radio" name="payment" value="card">
+                <div class="payment-icon">
+                  <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="payment-info">
+                  <div class="payment-title">بطاقة ائتمان</div>
+                  <div class="payment-description">فيزا، ماستركارد، أمريكان اكسبريس</div>
+                </div>
+              </label>
+              
+              <label class="payment-method">
+                <input type="radio" name="payment" value="mada">
+                <div class="payment-icon">
+                  <i class="fas fa-university"></i>
+                </div>
+                <div class="payment-info">
+                  <div class="payment-title">مدى</div>
+                  <div class="payment-description">الدفع عبر بطاقة مدى</div>
+                </div>
+              </label>
+              
+              <label class="payment-method">
+                <input type="radio" name="payment" value="applepay">
+                <div class="payment-icon">
+                  <i class="fab fa-apple-pay"></i>
+                </div>
+                <div class="payment-info">
+                  <div class="payment-title">Apple Pay</div>
+                  <div class="payment-description">الدفع السريع عبر آبل باي</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Promo Code -->
+          <div class="form-section">
+            <div class="section-header">
+              <span class="section-number">3</span>
+              <h3>كود الخصم</h3>
+            </div>
+            
+            <div class="promo-code">
+              <input type="text" class="form-control" placeholder="أدخل كود الخصم">
+              <button class="btn btn-primary">تطبيق</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+          <div class="summary-card">
+            <h3>ملخص الطلب</h3>
+            
+            <div class="summary-items">
+              <div class="summary-item">
+                <div class="item-image">
+                  <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100" alt="سماعات">
+                </div>
+                <div class="item-details">
+                  <div class="item-name">سماعات بلوتوث لاسلكية</div>
+                  <div class="item-quantity">الكمية: 1</div>
+                </div>
+                <div class="item-price">595 ر.س</div>
+              </div>
+              
+              <div class="summary-item">
+                <div class="item-image">
+                  <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100" alt="ساعة">
+                </div>
+                <div class="item-details">
+                  <div class="item-name">ساعة ذكية متطورة</div>
+                  <div class="item-quantity">الكمية: 1</div>
+                </div>
+                <div class="item-price">1,299 ر.س</div>
+              </div>
+              
+              <div class="summary-item">
+                <div class="item-image">
+                  <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=100" alt="حقيبة">
+                </div>
+                <div class="item-details">
+                  <div class="item-name">حقيبة ظهر جلدية</div>
+                  <div class="item-quantity">الكمية: 1</div>
+                </div>
+                <div class="item-price">520 ر.س</div>
+              </div>
+            </div>
+            
+            <div class="summary-totals">
+              <div class="total-row subtotal">
+                <span class="total-label">المجموع الفرعي:</span>
+                <span class="total-value">2,414 ر.س</span>
+              </div>
+              
+              <div class="total-row shipping">
+                <span class="total-label">الشحن:</span>
+                <span class="total-value">مجاني</span>
+              </div>
+              
+              <div class="total-row discount">
+                <span class="total-label">الخصم:</span>
+                <span class="total-value">- 0 ر.س</span>
+              </div>
+              
+              <div class="total-row total">
+                <span class="total-label">الإجمالي:</span>
+                <span class="total-value">2,414 ر.س</span>
+              </div>
+            </div>
+            
+            <button class="btn btn-primary btn-place-order">
+              <i class="fas fa-lock"></i>
+              إتمام الطلب بأمان
+            </button>
+            
+            <div class="security-note">
+              <i class="fas fa-shield-alt"></i>
+              معلوماتك محمية بتقنية التشفير SSL
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <!-- About Section -->
+        <div class="footer-section">
+          <h3>جينورا</h3>
+          <p class="footer-description">
+            منصة رقمية تمكينية تجمع أفضل المتاجر والمنتجات في مكان واحد، نؤمن بقوة التجارة الإلكترونية في تحسين حياة الناس.
+          </p>
+          <div class="footer-social">
+            <a href="#" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
+            <a href="#" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="إنستجرام"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="لينكد إن"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section">
+          <h4>روابط سريعة</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="categories.html">الأصناف</a></li>
+            <li><a href="#">المتاجر</a></li>
+            <li><a href="#">من نحن</a></li>
+            <li><a href="#">تواصل معنا</a></li>
+          </ul>
+        </div>
+
+        <!-- Customer Service -->
+        <div class="footer-section">
+          <h4>خدمة العملاء</h4>
+          <ul class="footer-links">
+            <li><a href="#">الأسئلة الشائعة</a></li>
+            <li><a href="#">سياسة الاسترجاع</a></li>
+            <li><a href="#">الشحن والتوصيل</a></li>
+            <li><a href="#">طرق الدفع</a></li>
+            <li><a href="#">الشروط والأحكام</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="footer-section">
+          <h4>تواصل معنا</h4>
+          <ul class="footer-contact">
+            <li>
+              <i class="fas fa-map-marker-alt"></i>
+              <span>الرياض، المملكة العربية السعودية</span>
+            </li>
+            <li>
+              <i class="fas fa-phone"></i>
+              <span dir="ltr">+966 50 123 4567</span>
+            </li>
+            <li>
+              <i class="fas fa-envelope"></i>
+              <span>info@geenora.com</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 جينورا. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الأصناف - جينورا</title>
+  <meta name="description" content="تصفح جميع المنتجات والأصناف في منصة جينورا">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <div class="navbar-logo">
+          <a href="index.html">
+            <h1>جينورا</h1>
+            <p class="logo-tagline">منصة التمكين الرقمي</p>
+          </a>
+        </div>
+        
+        <ul class="navbar-menu">
+          <li><a href="index.html" class="nav-link">الرئيسية</a></li>
+          <li><a href="categories.html" class="nav-link active">الأصناف</a></li>
+          <li><a href="#" class="nav-link">المتاجر</a></li>
+          <li><a href="#" class="nav-link">من نحن</a></li>
+          <li><a href="#" class="nav-link">تواصل معنا</a></li>
+        </ul>
+        
+        <div class="navbar-actions">
+          <button class="icon-btn" aria-label="البحث">
+            <i class="fas fa-search"></i>
+          </button>
+          <a href="wishlist.html" class="icon-btn" aria-label="المفضلة">
+            <i class="fas fa-heart"></i>
+            <span class="badge">3</span>
+          </a>
+          <a href="#" class="icon-btn" aria-label="السلة">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="badge cart-count">0</span>
+          </a>
+          <button class="btn btn-primary">تسجيل الدخول</button>
+        </div>
+        
+        <button class="mobile-menu-toggle" aria-label="القائمة">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">الأصناف</h1>
+      <p class="page-description">اكتشف آلاف المنتجات من أفضل المتاجر</p>
+      <nav class="breadcrumb">
+        <a href="index.html">الرئيسية</a>
+        <span class="separator">/</span>
+        <span>الأصناف</span>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="products-page">
+    <div class="container">
+      <div class="products-container">
+        <!-- Filters Sidebar -->
+        <aside class="filters-sidebar">
+          <div class="filters-card">
+            <div class="filters-header">
+              <h3>الفلاتر</h3>
+              <button>مسح الكل</button>
+            </div>
+            
+            <!-- Category Filter -->
+            <div class="filter-group">
+              <h4 class="filter-title">التصنيف</h4>
+              <div class="filter-options">
+                <label>
+                  <input type="checkbox" checked>
+                  <span>الكل</span>
+                  <span class="count">(486)</span>
+                </label>
+                <label>
+                  <input type="checkbox">
+                  <span>إلكترونيات</span>
+                  <span class="count">(124)</span>
+                </label>
+                <label>
+                  <input type="checkbox">
+                  <span>أزياء وموضة</span>
+                  <span class="count">(98)</span>
+                </label>
+                <label>
+                  <input type="checkbox">
+                  <span>منزل ومطبخ</span>
+                  <span class="count">(76)</span>
+                </label>
+                <label>
+                  <input type="checkbox">
+                  <span>رياضة ولياقة</span>
+                  <span class="count">(54)</span>
+                </label>
+                <label>
+                  <input type="checkbox">
+                  <span>صحة وجمال</span>
+                  <span class="count">(67)</span>
+                </label>
+                <label>
+                  <input type="checkbox">
+                  <span>كتب وقرطاسية</span>
+                  <span class="count">(43)</span>
+                </label>
+                <label>
+                  <input type="checkbox">
+                  <span>ألعاب وهوايات</span>
+                  <span class="count">(24)</span>
+                </label>
+              </div>
+            </div>
+            
+            <!-- Price Range Filter -->
+            <div class="filter-group">
+              <h4 class="filter-title">السعر</h4>
+              <div class="price-range">
+                <input type="number" placeholder="من" class="form-control">
+                <span>-</span>
+                <input type="number" placeholder="إلى" class="form-control">
+              </div>
+              <button class="btn btn-outline btn-block">تطبيق</button>
+            </div>
+            
+            <!-- Rating Filter -->
+            <div class="filter-group">
+              <h4 class="filter-title">التقييم</h4>
+              <div class="filter-options">
+                <label>
+                  <input type="checkbox">
+                  <div class="rating-stars small" data-rating="5">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <span>فأكثر</span>
+                </label>
+                <label>
+                  <input type="checkbox">
+                  <div class="rating-stars small" data-rating="4">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                  </div>
+                  <span>فأكثر</span>
+                </label>
+                <label>
+                  <input type="checkbox">
+                  <div class="rating-stars small" data-rating="3">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                  </div>
+                  <span>فأكثر</span>
+                </label>
+              </div>
+            </div>
+            
+            <!-- Availability Filter -->
+            <div class="filter-group">
+              <h4 class="filter-title">التوفر</h4>
+              <div class="filter-options">
+                <label>
+                  <input type="checkbox" checked>
+                  <span>متوفر فقط</span>
+                </label>
+                <label>
+                  <input type="checkbox">
+                  <span>شحن مجاني</span>
+                </label>
+                <label>
+                  <input type="checkbox">
+                  <span>عروض وخصومات</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Products Area -->
+        <div class="products-area">
+          <!-- Toolbar -->
+          <div class="products-toolbar">
+            <button class="btn btn-outline filters-toggle-mobile">
+              <i class="fas fa-filter"></i>
+              الفلاتر
+            </button>
+            
+            <span class="products-count">عرض 1-12 من 486 منتج</span>
+            
+            <div class="toolbar-actions">
+              <div class="view-toggle">
+                <button class="active" aria-label="عرض شبكي">
+                  <i class="fas fa-th"></i>
+                </button>
+                <button aria-label="عرض قائمة">
+                  <i class="fas fa-list"></i>
+                </button>
+              </div>
+              
+              <select class="form-control">
+                <option>الأحدث</option>
+                <option>الأكثر مبيعاً</option>
+                <option>السعر: من الأقل للأعلى</option>
+                <option>السعر: من الأعلى للأقل</option>
+                <option>التقييم الأعلى</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Products Grid -->
+          <div class="products-grid">
+            <!-- Product Card 1 -->
+            <div class="product-card">
+              <div class="product-image">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" alt="سماعات لاسلكية">
+                <span class="product-badge sale">خصم 30%</span>
+                <button class="wishlist-btn" aria-label="إضافة للمفضلة">
+                  <i class="far fa-heart"></i>
+                </button>
+              </div>
+              
+              <div class="product-info">
+                <div class="product-category">إلكترونيات</div>
+                <h3 class="product-title">
+                  <a href="product-detail.html">سماعات بلوتوث لاسلكية عالية الجودة</a>
+                </h3>
+                
+                <div class="product-rating">
+                  <div class="rating-stars" data-rating="4.5">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                  </div>
+                  <span class="rating-count">(128)</span>
+                </div>
+                
+                <div class="product-price">
+                  <span class="price-original">850 ر.س</span>
+                  <span class="price-current">595 ر.س</span>
+                </div>
+                
+                <div class="product-actions">
+                  <button class="btn btn-primary btn-block" onclick="addToCart(1)">
+                    <i class="fas fa-shopping-cart"></i>
+                    إضافة للسلة
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 2 -->
+            <div class="product-card">
+              <div class="product-image">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" alt="ساعة ذكية">
+                <span class="product-badge new">جديد</span>
+                <button class="wishlist-btn active" aria-label="إزالة من المفضلة">
+                  <i class="fas fa-heart"></i>
+                </button>
+              </div>
+              
+              <div class="product-info">
+                <div class="product-category">إكسسوارات</div>
+                <h3 class="product-title">
+                  <a href="product-detail.html">ساعة ذكية متطورة مع شاشة AMOLED</a>
+                </h3>
+                
+                <div class="product-rating">
+                  <div class="rating-stars" data-rating="5">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <span class="rating-count">(96)</span>
+                </div>
+                
+                <div class="product-price">
+                  <span class="price-current">1,299 ر.س</span>
+                </div>
+                
+                <div class="product-actions">
+                  <button class="btn btn-primary btn-block" onclick="addToCart(2)">
+                    <i class="fas fa-shopping-cart"></i>
+                    إضافة للسلة
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 3 -->
+            <div class="product-card">
+              <div class="product-image">
+                <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400" alt="حقيبة جلدية">
+                <span class="product-badge hot">الأكثر مبيعاً</span>
+                <button class="wishlist-btn" aria-label="إضافة للمفضلة">
+                  <i class="far fa-heart"></i>
+                </button>
+              </div>
+              
+              <div class="product-info">
+                <div class="product-category">حقائب</div>
+                <h3 class="product-title">
+                  <a href="product-detail.html">حقيبة ظهر جلدية فاخرة للأعمال</a>
+                </h3>
+                
+                <div class="product-rating">
+                  <div class="rating-stars" data-rating="4">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                  </div>
+                  <span class="rating-count">(74)</span>
+                </div>
+                
+                <div class="product-price">
+                  <span class="price-original">650 ر.س</span>
+                  <span class="price-current">520 ر.س</span>
+                </div>
+                
+                <div class="product-actions">
+                  <button class="btn btn-primary btn-block" onclick="addToCart(3)">
+                    <i class="fas fa-shopping-cart"></i>
+                    إضافة للسلة
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 4 -->
+            <div class="product-card">
+              <div class="product-image">
+                <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400" alt="حذاء رياضي">
+                <button class="wishlist-btn" aria-label="إضافة للمفضلة">
+                  <i class="far fa-heart"></i>
+                </button>
+              </div>
+              
+              <div class="product-info">
+                <div class="product-category">رياضة</div>
+                <h3 class="product-title">
+                  <a href="product-detail.html">حذاء رياضي مريح للمشي والجري</a>
+                </h3>
+                
+                <div class="product-rating">
+                  <div class="rating-stars" data-rating="4.5">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                  </div>
+                  <span class="rating-count">(89)</span>
+                </div>
+                
+                <div class="product-price">
+                  <span class="price-current">380 ر.س</span>
+                </div>
+                
+                <div class="product-actions">
+                  <button class="btn btn-primary btn-block" onclick="addToCart(4)">
+                    <i class="fas fa-shopping-cart"></i>
+                    إضافة للسلة
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 5 -->
+            <div class="product-card">
+              <div class="product-image">
+                <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400" alt="كتاب">
+                <button class="wishlist-btn" aria-label="إضافة للمفضلة">
+                  <i class="far fa-heart"></i>
+                </button>
+              </div>
+              
+              <div class="product-info">
+                <div class="product-category">كتب</div>
+                <h3 class="product-title">
+                  <a href="product-detail.html">كتاب فن التسويق الرقمي</a>
+                </h3>
+                
+                <div class="product-rating">
+                  <div class="rating-stars" data-rating="5">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <span class="rating-count">(52)</span>
+                </div>
+                
+                <div class="product-price">
+                  <span class="price-current">80 ر.س</span>
+                </div>
+                
+                <div class="product-actions">
+                  <button class="btn btn-primary btn-block" onclick="addToCart(5)">
+                    <i class="fas fa-shopping-cart"></i>
+                    إضافة للسلة
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Card 6 -->
+            <div class="product-card">
+              <div class="product-image">
+                <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400" alt="كاميرا">
+                <span class="product-badge sale">خصم 15%</span>
+                <button class="wishlist-btn" aria-label="إضافة للمفضلة">
+                  <i class="far fa-heart"></i>
+                </button>
+              </div>
+              
+              <div class="product-info">
+                <div class="product-category">تصوير</div>
+                <h3 class="product-title">
+                  <a href="product-detail.html">كاميرا رقمية احترافية مع عدسة</a>
+                </h3>
+                
+                <div class="product-rating">
+                  <div class="rating-stars" data-rating="4.5">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                  </div>
+                  <span class="rating-count">(112)</span>
+                </div>
+                
+                <div class="product-price">
+                  <span class="price-original">3,500 ر.س</span>
+                  <span class="price-current">2,975 ر.س</span>
+                </div>
+                
+                <div class="product-actions">
+                  <button class="btn btn-primary btn-block" onclick="addToCart(6)">
+                    <i class="fas fa-shopping-cart"></i>
+                    إضافة للسلة
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- More products... -->
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination">
+            <button disabled>
+              <i class="fas fa-chevron-right"></i>
+            </button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>4</button>
+            <button>5</button>
+            <span>...</span>
+            <button>15</button>
+            <button>
+              <i class="fas fa-chevron-left"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>جينورا</h3>
+          <p class="footer-description">
+            منصة رقمية تمكينية تجمع أفضل المتاجر والمنتجات في مكان واحد، نؤمن بقوة التجارة الإلكترونية في تحسين حياة الناس.
+          </p>
+          <div class="footer-social">
+            <a href="#" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
+            <a href="#" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="إنستجرام"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="لينكد إن"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h4>روابط سريعة</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="categories.html">الأصناف</a></li>
+            <li><a href="#">المتاجر</a></li>
+            <li><a href="#">من نحن</a></li>
+            <li><a href="#">تواصل معنا</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>خدمة العملاء</h4>
+          <ul class="footer-links">
+            <li><a href="#">الأسئلة الشائعة</a></li>
+            <li><a href="#">سياسة الاسترجاع</a></li>
+            <li><a href="#">الشحن والتوصيل</a></li>
+            <li><a href="#">طرق الدفع</a></li>
+            <li><a href="#">الشروط والأحكام</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>تواصل معنا</h4>
+          <ul class="footer-contact">
+            <li>
+              <i class="fas fa-map-marker-alt"></i>
+              <span>الرياض، المملكة العربية السعودية</span>
+            </li>
+            <li>
+              <i class="fas fa-phone"></i>
+              <span dir="ltr">+966 50 123 4567</span>
+            </li>
+            <li>
+              <i class="fas fa-envelope"></i>
+              <span>info@geenora.com</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 جينورا. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تفاصيل المنتج - جينورا</title>
+  <meta name="description" content="عرض تفاصيل المنتج مع الصور والمواصفات والتقييمات">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <div class="navbar-logo">
+          <a href="index.html">
+            <h1>جينورا</h1>
+            <p class="logo-tagline">منصة التمكين الرقمي</p>
+          </a>
+        </div>
+        
+        <ul class="navbar-menu">
+          <li><a href="index.html" class="nav-link">الرئيسية</a></li>
+          <li><a href="categories.html" class="nav-link">الأصناف</a></li>
+          <li><a href="#" class="nav-link">المتاجر</a></li>
+          <li><a href="#" class="nav-link">من نحن</a></li>
+          <li><a href="#" class="nav-link">تواصل معنا</a></li>
+        </ul>
+        
+        <div class="navbar-actions">
+          <button class="icon-btn" aria-label="البحث">
+            <i class="fas fa-search"></i>
+          </button>
+          <a href="wishlist.html" class="icon-btn" aria-label="المفضلة">
+            <i class="fas fa-heart"></i>
+            <span class="badge">3</span>
+          </a>
+          <a href="#" class="icon-btn" aria-label="السلة">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="badge cart-count">0</span>
+          </a>
+          <button class="btn btn-primary">تسجيل الدخول</button>
+        </div>
+        
+        <button class="mobile-menu-toggle" aria-label="القائمة">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="product-detail-page">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb">
+        <a href="index.html">الرئيسية</a>
+        <span class="separator">/</span>
+        <a href="categories.html">إلكترونيات</a>
+        <span class="separator">/</span>
+        <span>سماعات بلوتوث</span>
+      </nav>
+
+      <!-- Product Details -->
+      <div class="product-detail-container">
+        <!-- Product Gallery -->
+        <div class="product-gallery">
+          <div class="main-image">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600" alt="سماعات لاسلكية" id="mainImage">
+            <span class="product-badge sale">خصم 30%</span>
+            <button class="wishlist-btn" aria-label="إضافة للمفضلة">
+              <i class="far fa-heart"></i>
+            </button>
+          </div>
+          
+          <div class="thumbnail-images">
+            <button class="thumbnail active">
+              <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150" alt="صورة 1">
+            </button>
+            <button class="thumbnail">
+              <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?w=150" alt="صورة 2">
+            </button>
+            <button class="thumbnail">
+              <img src="https://images.unsplash.com/photo-1545127398-14699f92334b?w=150" alt="صورة 3">
+            </button>
+            <button class="thumbnail">
+              <img src="https://images.unsplash.com/photo-1577174881658-0f30157e0e53?w=150" alt="صورة 4">
+            </button>
+          </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-info-section">
+          <div class="product-category">إلكترونيات</div>
+          <h1 class="product-title">سماعات بلوتوث لاسلكية عالية الجودة مع إلغاء الضوضاء النشط</h1>
+          
+          <div class="product-rating-section">
+            <div class="rating-stars" data-rating="4.5">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <span class="rating-text">4.5 من 5</span>
+            <span class="rating-count">(128 تقييم)</span>
+            <span class="reviews-link">| <a href="#reviews">مشاهدة التقييمات</a></span>
+          </div>
+          
+          <div class="product-price-section">
+            <div class="price-wrapper">
+              <span class="price-original">850 ر.س</span>
+              <span class="price-current">595 ر.س</span>
+              <span class="price-save">وفر 255 ر.س</span>
+            </div>
+            <div class="price-note">شامل ضريبة القيمة المضافة</div>
+          </div>
+          
+          <div class="product-variants">
+            <div class="variant-group">
+              <label>اللون:</label>
+              <div class="color-options">
+                <button class="color-option active" data-color="black" style="background: #000"></button>
+                <button class="color-option" data-color="blue" style="background: #4A6FA5"></button>
+                <button class="color-option" data-color="red" style="background: #E07856"></button>
+                <button class="color-option" data-color="white" style="background: #fff; border: 1px solid #ddd"></button>
+              </div>
+            </div>
+            
+            <div class="variant-group">
+              <label>الحجم:</label>
+              <div class="size-options">
+                <button class="size-option">صغير</button>
+                <button class="size-option active">متوسط</button>
+                <button class="size-option">كبير</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="product-quantity">
+            <label>الكمية:</label>
+            <div class="quantity-selector">
+              <button class="qty-btn minus">-</button>
+              <input type="number" class="qty-input" value="1" min="1" max="10">
+              <button class="qty-btn plus">+</button>
+            </div>
+            <span class="stock-status available">متوفر في المخزون</span>
+          </div>
+          
+          <div class="product-actions">
+            <button class="btn btn-primary btn-large" onclick="addToCart(1)">
+              <i class="fas fa-shopping-cart"></i>
+              إضافة إلى السلة
+            </button>
+            <button class="btn btn-outline btn-large">
+              <i class="fas fa-bolt"></i>
+              شراء سريع
+            </button>
+          </div>
+          
+          <div class="product-features">
+            <div class="feature-item">
+              <i class="fas fa-truck"></i>
+              <div>
+                <strong>شحن مجاني</strong>
+                <p>للطلبات فوق 200 ر.س</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-undo"></i>
+              <div>
+                <strong>إرجاع مجاني</strong>
+                <p>خلال 14 يوم</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-shield-alt"></i>
+              <div>
+                <strong>ضمان سنة</strong>
+                <p>ضمان الوكيل المعتمد</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-headset"></i>
+              <div>
+                <strong>دعم 24/7</strong>
+                <p>فريق الدعم جاهز للمساعدة</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="store-info">
+            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=60" alt="متجر الإلكترونيات" class="store-logo">
+            <div class="store-details">
+              <h4>متجر التقنية الذكية</h4>
+              <div class="store-rating">
+                <i class="fas fa-star"></i>
+                <span>4.8</span>
+                <span class="text-muted">(542 تقييم)</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-outline-sm">زيارة المتجر</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Tabs -->
+      <div class="product-tabs">
+        <div class="tabs-nav">
+          <button class="tab-btn active" data-tab="description">الوصف</button>
+          <button class="tab-btn" data-tab="specifications">المواصفات</button>
+          <button class="tab-btn" data-tab="reviews">التقييمات (128)</button>
+          <button class="tab-btn" data-tab="qa">الأسئلة والأجوبة</button>
+        </div>
+        
+        <div class="tabs-content">
+          <!-- Description Tab -->
+          <div class="tab-pane active" id="description">
+            <h3>وصف المنتج</h3>
+            <p>استمتع بتجربة صوتية استثنائية مع سماعات البلوتوث اللاسلكية عالية الجودة. تتميز هذه السماعات بتقنية إلغاء الضوضاء النشط التي توفر لك تجربة استماع غامرة دون أي تشويش خارجي.</p>
+            
+            <h4>المميزات الرئيسية:</h4>
+            <ul>
+              <li>تقنية إلغاء الضوضاء النشط (ANC) المتطورة</li>
+              <li>بطارية تدوم حتى 30 ساعة من الاستماع المتواصل</li>
+              <li>شحن سريع - 5 دقائق شحن = 3 ساعات تشغيل</li>
+              <li>صوت عالي الدقة بتقنية Hi-Res Audio</li>
+              <li>وسائد أذن مريحة مصنوعة من الجلد الصناعي الفاخر</li>
+              <li>قابلة للطي مع حقيبة حمل أنيقة</li>
+              <li>دعم المساعد الصوتي (Siri & Google Assistant)</li>
+              <li>مقاومة للماء والعرق (IPX4)</li>
+            </ul>
+          </div>
+          
+          <!-- Specifications Tab -->
+          <div class="tab-pane" id="specifications">
+            <h3>المواصفات التقنية</h3>
+            <table class="specs-table">
+              <tr>
+                <td>نوع السماعة</td>
+                <td>Over-Ear</td>
+              </tr>
+              <tr>
+                <td>الاتصال</td>
+                <td>Bluetooth 5.3</td>
+              </tr>
+              <tr>
+                <td>مدى الاتصال</td>
+                <td>حتى 10 أمتار</td>
+              </tr>
+              <tr>
+                <td>عمر البطارية</td>
+                <td>30 ساعة (مع ANC) / 40 ساعة (بدون ANC)</td>
+              </tr>
+              <tr>
+                <td>وقت الشحن</td>
+                <td>2.5 ساعة</td>
+              </tr>
+              <tr>
+                <td>استجابة التردد</td>
+                <td>20Hz - 40kHz</td>
+              </tr>
+              <tr>
+                <td>الوزن</td>
+                <td>250 جرام</td>
+              </tr>
+              <tr>
+                <td>المحتويات</td>
+                <td>سماعة، كابل USB-C، كابل صوت 3.5 مم، حقيبة حمل، دليل المستخدم</td>
+              </tr>
+            </table>
+          </div>
+          
+          <!-- Reviews Tab -->
+          <div class="tab-pane" id="reviews">
+            <div class="reviews-summary">
+              <div class="summary-rating">
+                <div class="rating-number">4.5</div>
+                <div class="rating-stars large" data-rating="4.5">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="rating-text">بناءً على 128 تقييم</div>
+              </div>
+              
+              <div class="rating-breakdown">
+                <div class="rating-bar">
+                  <span>5 نجوم</span>
+                  <div class="bar">
+                    <div class="fill" style="width: 75%"></div>
+                  </div>
+                  <span>96</span>
+                </div>
+                <div class="rating-bar">
+                  <span>4 نجوم</span>
+                  <div class="bar">
+                    <div class="fill" style="width: 15%"></div>
+                  </div>
+                  <span>19</span>
+                </div>
+                <div class="rating-bar">
+                  <span>3 نجوم</span>
+                  <div class="bar">
+                    <div class="fill" style="width: 6%"></div>
+                  </div>
+                  <span>8</span>
+                </div>
+                <div class="rating-bar">
+                  <span>2 نجوم</span>
+                  <div class="bar">
+                    <div class="fill" style="width: 3%"></div>
+                  </div>
+                  <span>4</span>
+                </div>
+                <div class="rating-bar">
+                  <span>1 نجمة</span>
+                  <div class="bar">
+                    <div class="fill" style="width: 1%"></div>
+                  </div>
+                  <span>1</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="reviews-list">
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="https://i.pravatar.cc/50?img=1" alt="أحمد محمد" class="reviewer-avatar">
+                  <div class="reviewer-info">
+                    <h4>أحمد محمد</h4>
+                    <div class="rating-stars small" data-rating="5">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                    </div>
+                    <span class="review-date">منذ 3 أيام</span>
+                  </div>
+                </div>
+                <div class="review-content">
+                  <h5>منتج رائع بجودة عالية</h5>
+                  <p>سماعات ممتازة جداً، الصوت واضح وقوي، وميزة إلغاء الضوضاء تعمل بشكل مثالي. البطارية تدوم لفترة طويلة جداً. أنصح بها بشدة!</p>
+                </div>
+                <div class="review-actions">
+                  <button class="review-btn"><i class="far fa-thumbs-up"></i> مفيد (24)</button>
+                  <button class="review-btn"><i class="far fa-comment"></i> رد</button>
+                </div>
+              </div>
+              
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="https://i.pravatar.cc/50?img=5" alt="سارة أحمد" class="reviewer-avatar">
+                  <div class="reviewer-info">
+                    <h4>سارة أحمد</h4>
+                    <div class="rating-stars small" data-rating="5">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                    </div>
+                    <span class="review-date">منذ أسبوع</span>
+                  </div>
+                </div>
+                <div class="review-content">
+                  <h5>مريحة جداً للاستخدام الطويل</h5>
+                  <p>أستخدمها يومياً لساعات طويلة في العمل ولا أشعر بأي ألم أو إزعاج. الجودة ممتازة والسعر مناسب جداً.</p>
+                </div>
+                <div class="review-actions">
+                  <button class="review-btn"><i class="far fa-thumbs-up"></i> مفيد (18)</button>
+                  <button class="review-btn"><i class="far fa-comment"></i> رد</button>
+                </div>
+              </div>
+              
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="https://i.pravatar.cc/50?img=12" alt="خالد علي" class="reviewer-avatar">
+                  <div class="reviewer-info">
+                    <h4>خالد علي</h4>
+                    <div class="rating-stars small" data-rating="4">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="far fa-star"></i>
+                    </div>
+                    <span class="review-date">منذ أسبوعين</span>
+                  </div>
+                </div>
+                <div class="review-content">
+                  <h5>جيدة جداً</h5>
+                  <p>منتج جيد بشكل عام. الصوت ممتاز لكن كنت أتمنى أن تكون أخف قليلاً. بشكل عام راضي عن الشراء.</p>
+                </div>
+                <div class="review-actions">
+                  <button class="review-btn"><i class="far fa-thumbs-up"></i> مفيد (12)</button>
+                  <button class="review-btn"><i class="far fa-comment"></i> رد</button>
+                </div>
+              </div>
+            </div>
+            
+            <button class="btn btn-outline">عرض المزيد من التقييمات</button>
+          </div>
+          
+          <!-- Q&A Tab -->
+          <div class="tab-pane" id="qa">
+            <h3>الأسئلة والأجوبة</h3>
+            <div class="qa-list">
+              <div class="qa-item">
+                <div class="question">
+                  <i class="fas fa-question-circle"></i>
+                  <div>
+                    <h4>هل تدعم السماعات الاتصال بأجهزة متعددة في نفس الوقت؟</h4>
+                    <span class="qa-meta">سؤال من محمد - منذ 5 أيام</span>
+                  </div>
+                </div>
+                <div class="answer">
+                  <i class="fas fa-check-circle"></i>
+                  <div>
+                    <p>نعم، تدعم السماعات الاتصال بجهازين في نفس الوقت عبر تقنية Multipoint Bluetooth.</p>
+                    <span class="qa-meta">إجابة من البائع - منذ 4 أيام</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="qa-item">
+                <div class="question">
+                  <i class="fas fa-question-circle"></i>
+                  <div>
+                    <h4>ما هي مدة الضمان؟</h4>
+                    <span class="qa-meta">سؤال من فاطمة - منذ أسبوع</span>
+                  </div>
+                </div>
+                <div class="answer">
+                  <i class="fas fa-check-circle"></i>
+                  <div>
+                    <p>الضمان سنة كاملة من الوكيل المعتمد يشمل جميع عيوب التصنيع.</p>
+                    <span class="qa-meta">إجابة من البائع - منذ أسبوع</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="ask-question">
+              <h4>لديك سؤال؟</h4>
+              <form>
+                <textarea class="form-control" rows="4" placeholder="اكتب سؤالك هنا..."></textarea>
+                <button type="submit" class="btn btn-primary">إرسال السؤال</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Products -->
+      <section class="related-products">
+        <h2>منتجات ذات صلة</h2>
+        <div class="products-grid">
+          <!-- Related product cards would go here -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>جينورا</h3>
+          <p class="footer-description">
+            منصة رقمية تمكينية تجمع أفضل المتاجر والمنتجات في مكان واحد، نؤمن بقوة التجارة الإلكترونية في تحسين حياة الناس.
+          </p>
+          <div class="footer-social">
+            <a href="#" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
+            <a href="#" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="إنستجرام"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="لينكد إن"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h4>روابط سريعة</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="categories.html">الأصناف</a></li>
+            <li><a href="#">المتاجر</a></li>
+            <li><a href="#">من نحن</a></li>
+            <li><a href="#">تواصل معنا</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>خدمة العملاء</h4>
+          <ul class="footer-links">
+            <li><a href="#">الأسئلة الشائعة</a></li>
+            <li><a href="#">سياسة الاسترجاع</a></li>
+            <li><a href="#">الشحن والتوصيل</a></li>
+            <li><a href="#">طرق الدفع</a></li>
+            <li><a href="#">الشروط والأحكام</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>تواصل معنا</h4>
+          <ul class="footer-contact">
+            <li>
+              <i class="fas fa-map-marker-alt"></i>
+              <span>الرياض، المملكة العربية السعودية</span>
+            </li>
+            <li>
+              <i class="fas fa-phone"></i>
+              <span dir="ltr">+966 50 123 4567</span>
+            </li>
+            <li>
+              <i class="fas fa-envelope"></i>
+              <span>info@geenora.com</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 جينورا. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
