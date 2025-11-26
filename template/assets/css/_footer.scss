@@ -1,0 +1,204 @@
+// ========================================
+// Geenora Platform - Footer
+// ========================================
+
+.footer {
+  background: $secondary-dark;
+  color: rgba(255, 255, 255, 0.8);
+  padding: $spacing-2xl 0 $spacing-md;
+  margin-top: $spacing-2xl;
+  
+  .footer-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-xl;
+    margin-bottom: $spacing-xl;
+    
+    @include respond-to(sm) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include respond-to(md) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  // Footer Brand
+  .footer-brand {
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: $text-white;
+      margin-bottom: $spacing-md;
+      
+      .logo-icon {
+        width: 36px;
+        height: 36px;
+      }
+    }
+    
+    .footer-description {
+      font-size: $font-size-base;
+      line-height: 1.7;
+      margin-bottom: $spacing-md;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .footer-social {
+      display: flex;
+      gap: $spacing-sm;
+      
+      a {
+        @include button-reset;
+        width: 40px;
+        height: 40px;
+        @include flex-center;
+        background: rgba(255, 255, 255, 0.1);
+        color: $text-white;
+        border-radius: 50%;
+        transition: all $transition-base;
+        
+        &:hover {
+          background: $primary-blue;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+  
+  // Footer Section
+  .footer-section {
+    .footer-title {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      color: $text-white;
+      margin-bottom: $spacing-md;
+    }
+    
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+      
+      a {
+        font-size: $font-size-base;
+        color: rgba(255, 255, 255, 0.7);
+        transition: color $transition-fast;
+        
+        &:hover {
+          color: $text-white;
+          padding-right: 4px;
+        }
+      }
+    }
+    
+    .footer-contact {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-md;
+      
+      .contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: $spacing-sm;
+        
+        .contact-icon {
+          flex-shrink: 0;
+          width: 20px;
+          height: 20px;
+          color: $primary-blue;
+          margin-top: 2px;
+        }
+        
+        .contact-text {
+          font-size: $font-size-base;
+          color: rgba(255, 255, 255, 0.7);
+          line-height: 1.6;
+        }
+      }
+    }
+  }
+  
+  // Footer Bottom
+  .footer-bottom {
+    padding-top: $spacing-lg;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    
+    .footer-bottom-content {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-md;
+      text-align: center;
+      
+      @include respond-to(md) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+      }
+      
+      .footer-copyright {
+        font-size: $font-size-sm;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      
+      .footer-payment {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: $spacing-sm;
+        
+        @include respond-to(md) {
+          justify-content: flex-start;
+        }
+        
+        span {
+          font-size: $font-size-sm;
+          color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .payment-icons {
+          display: flex;
+          gap: $spacing-xs;
+          
+          img {
+            height: 24px;
+            opacity: 0.7;
+            transition: opacity $transition-fast;
+            
+            &:hover {
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Footer Mobile Adjustments
+  @include respond-to(xs) {
+    .footer-main {
+      text-align: center;
+      
+      .footer-brand {
+        .footer-logo {
+          justify-content: center;
+        }
+        
+        .footer-social {
+          justify-content: center;
+        }
+      }
+      
+      .footer-section {
+        .footer-links,
+        .footer-contact {
+          align-items: center;
+        }
+      }
+    }
+  }
+}

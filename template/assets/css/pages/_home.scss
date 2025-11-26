@@ -1,0 +1,302 @@
+// ========================================
+// Home Page Styles
+// ========================================
+
+// Hero Section
+.hero {
+  position: relative;
+  padding: $spacing-2xl 0;
+  background: $bg-gradient;
+  color: $text-white;
+  overflow: hidden;
+  
+  @include respond-to(md) {
+    padding: 5rem 0;
+  }
+  
+  // Animated Background
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: float 20s linear infinite;
+    opacity: 0.3;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-xl;
+    align-items: center;
+    
+    @include respond-to(md) {
+      grid-template-columns: 1fr 1fr;
+      gap: $spacing-2xl;
+    }
+  }
+  
+  .hero-text {
+    text-align: center;
+    
+    @include respond-to(md) {
+      text-align: right;
+    }
+    
+    .hero-subtitle {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-medium;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: $spacing-sm;
+      @include fade-in;
+    }
+    
+    .hero-title {
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-bold;
+      line-height: 1.2;
+      margin-bottom: $spacing-md;
+      @include slide-up;
+      animation-delay: 0.2s;
+      
+      @include respond-to(md) {
+        font-size: $font-size-4xl;
+      }
+      
+      .highlight {
+        color: $accent-gold;
+      }
+    }
+    
+    .hero-description {
+      font-size: $font-size-lg;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: $spacing-xl;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      @include fade-in;
+      animation-delay: 0.4s;
+      
+      @include respond-to(md) {
+        margin-right: 0;
+      }
+    }
+    
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-md;
+      justify-content: center;
+      @include fade-in;
+      animation-delay: 0.6s;
+      
+      @include respond-to(md) {
+        justify-content: flex-start;
+      }
+    }
+    
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: $spacing-lg;
+      margin-top: $spacing-xl;
+      padding-top: $spacing-xl;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      @include fade-in;
+      animation-delay: 0.8s;
+      
+      .stat {
+        text-align: center;
+        
+        .stat-value {
+          font-size: $font-size-2xl;
+          font-weight: $font-weight-bold;
+          color: $accent-gold;
+          display: block;
+          margin-bottom: $spacing-xs;
+        }
+        
+        .stat-label {
+          font-size: $font-size-sm;
+          color: rgba(255, 255, 255, 0.8);
+        }
+      }
+    }
+  }
+  
+  .hero-image {
+    position: relative;
+    @include fade-in;
+    animation-delay: 0.5s;
+    
+    img {
+      width: 100%;
+      border-radius: $border-radius-lg;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .hero-badge {
+      position: absolute;
+      top: $spacing-md;
+      left: $spacing-md;
+      background: $accent-gold;
+      color: $text-white;
+      padding: $spacing-sm $spacing-md;
+      border-radius: $border-radius;
+      font-weight: $font-weight-bold;
+      box-shadow: $shadow-lg;
+      animation: pulse 2s ease-in-out infinite;
+    }
+  }
+}
+
+// Features Section
+.features {
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+    
+    @include respond-to(sm) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include respond-to(md) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .feature-card {
+    @include card-style;
+    padding: $spacing-xl;
+    text-align: center;
+    
+    .feature-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto $spacing-md;
+      @include flex-center;
+      background: $bg-gradient-light;
+      border-radius: 50%;
+      color: $primary-blue;
+      font-size: $font-size-3xl;
+    }
+    
+    .feature-title {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin-bottom: $spacing-sm;
+    }
+    
+    .feature-description {
+      color: $text-secondary;
+      line-height: 1.7;
+    }
+  }
+}
+
+// Stores Section
+.stores {
+  background: $bg-soft;
+  
+  .stores-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+    
+    @include respond-to(sm) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include respond-to(md) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    @include respond-to(lg) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+// Products Section
+.products {
+  .products-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+    
+    @include respond-to(sm) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include respond-to(md) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    @include respond-to(lg) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+// CTA Section
+.cta {
+  position: relative;
+  padding: $spacing-2xl 0;
+  background: $bg-gradient;
+  color: $text-white;
+  text-align: center;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,...') repeat;
+    opacity: 0.1;
+  }
+  
+  .cta-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    margin: 0 auto;
+    
+    .cta-title {
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-bold;
+      margin-bottom: $spacing-md;
+      
+      @include respond-to(md) {
+        font-size: $font-size-4xl;
+      }
+    }
+    
+    .cta-description {
+      font-size: $font-size-lg;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: $spacing-xl;
+    }
+    
+    .cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-md;
+      justify-content: center;
+    }
+  }
+}

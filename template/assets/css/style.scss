@@ -1,0 +1,81 @@
+// ========================================
+// Geenora Platform - Main Stylesheet
+// منصة رقمية ذات فلسفة تمكينية وإنسانية
+// ========================================
+
+// Google Fonts Import
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Lato:wght@300;400;700&family=Open+Sans:wght@300;400;600;700&display=swap');
+
+// Variables & Mixins
+@import 'variables';
+@import 'mixins';
+
+// Base Styles
+@import 'base';
+
+// Animations
+@import 'animations';
+
+// Components
+@import 'components';
+
+// Layout
+@import 'header';
+@import 'footer';
+
+// Pages
+@import 'pages/home';
+@import 'pages/categories';
+@import 'pages/product-detail';
+@import 'pages/checkout';
+@import 'pages/wishlist';
+@import 'pages/orders';
+
+// ========================================
+// Additional Global Styles
+// ========================================
+
+// Scrollbar Styling
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: $bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $primary-blue;
+  border-radius: 5px;
+  
+  &:hover {
+    background: $primary-purple;
+  }
+}
+
+// Selection
+::selection {
+  background: rgba(74, 111, 165, 0.2);
+  color: $text-primary;
+}
+
+// Focus Visible
+:focus-visible {
+  outline: 2px solid $primary-blue;
+  outline-offset: 2px;
+}
+
+// Print Styles
+@media print {
+  .header,
+  .footer,
+  .btn,
+  .product-actions {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+  }
+}
