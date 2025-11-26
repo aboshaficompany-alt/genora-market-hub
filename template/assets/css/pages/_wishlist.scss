@@ -1,0 +1,89 @@
+// ========================================
+// Wishlist Page Styles
+// ========================================
+
+.wishlist-page {
+  padding: $spacing-xl 0;
+  
+  .wishlist-header {
+    @include flex-between;
+    margin-bottom: $spacing-xl;
+    
+    h1 {
+      margin: 0;
+    }
+    
+    .wishlist-actions {
+      display: flex;
+      gap: $spacing-sm;
+    }
+  }
+  
+  .wishlist-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+    
+    @include respond-to(sm) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include respond-to(md) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    @include respond-to(lg) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  .wishlist-item {
+    position: relative;
+    
+    .remove-btn {
+      position: absolute;
+      top: $spacing-sm;
+      left: $spacing-sm;
+      z-index: 3;
+      @include button-reset;
+      width: 36px;
+      height: 36px;
+      @include flex-center;
+      background: $bg-primary;
+      border-radius: 50%;
+      box-shadow: $shadow-md;
+      transition: all $transition-fast;
+      
+      &:hover {
+        background: #dc3545;
+        color: $text-white;
+        transform: scale(1.1);
+      }
+    }
+  }
+  
+  .wishlist-empty {
+    text-align: center;
+    padding: $spacing-2xl;
+    
+    .empty-icon {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto $spacing-lg;
+      @include flex-center;
+      background: $bg-secondary;
+      border-radius: 50%;
+      font-size: 4rem;
+      color: $text-muted;
+    }
+    
+    h2 {
+      margin-bottom: $spacing-sm;
+    }
+    
+    p {
+      color: $text-secondary;
+      margin-bottom: $spacing-lg;
+    }
+  }
+}

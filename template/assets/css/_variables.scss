@@ -1,0 +1,97 @@
+// ========================================
+// Geenora Platform - SCSS Variables
+// فلسفة تمكينية وإنسانية
+// ========================================
+
+// الألوان الأساسية - Colors Palette
+$primary-blue: #4a6fa5;           // أزرق رمادي هادئ
+$primary-purple: #7c6ba5;         // بنفسجي راقي
+$accent-gold: #d4af37;            // ذهبي رمزي
+$accent-rose: #e8b4b8;            // وردي ناعم
+
+// الألوان الثانوية
+$secondary-light: #f8f9fa;
+$secondary-gray: #6c757d;
+$secondary-dark: #2c3e50;
+
+// خلفيات هادئة
+$bg-primary: #ffffff;
+$bg-secondary: #f5f7fa;
+$bg-soft: #fafbfc;
+$bg-gradient: linear-gradient(135deg, #4a6fa5 0%, #7c6ba5 100%);
+$bg-gradient-light: linear-gradient(135deg, rgba(74, 111, 165, 0.05) 0%, rgba(124, 107, 165, 0.05) 100%);
+
+// النصوص
+$text-primary: #2c3e50;
+$text-secondary: #6c757d;
+$text-muted: #95a5a6;
+$text-white: #ffffff;
+
+// الحدود
+$border-color: #e0e6ed;
+$border-light: #f0f3f7;
+$border-radius: 12px;
+$border-radius-sm: 8px;
+$border-radius-lg: 16px;
+
+// الظلال
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+$shadow-hover: 0 12px 48px rgba(74, 111, 165, 0.15);
+
+// المسافات
+$spacing-xs: 0.5rem;   // 8px
+$spacing-sm: 1rem;     // 16px
+$spacing-md: 1.5rem;   // 24px
+$spacing-lg: 2rem;     // 32px
+$spacing-xl: 3rem;     // 48px
+$spacing-2xl: 4rem;    // 64px
+
+// الخطوط
+$font-primary: 'Cairo', sans-serif;
+$font-secondary: 'Lato', sans-serif;
+$font-accent: 'Open Sans', sans-serif;
+
+// أحجام الخطوط
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;   // 14px
+$font-size-base: 1rem;     // 16px
+$font-size-lg: 1.125rem;   // 18px
+$font-size-xl: 1.25rem;    // 20px
+$font-size-2xl: 1.5rem;    // 24px
+$font-size-3xl: 2rem;      // 32px
+$font-size-4xl: 2.5rem;    // 40px
+
+// أوزان الخطوط
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// الانتقالات
+$transition-fast: 0.2s ease;
+$transition-base: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// نقاط التوقف للشاشات
+$breakpoint-xs: 576px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 992px;
+$breakpoint-lg: 1200px;
+$breakpoint-xl: 1400px;
+
+// الارتفاعات
+$header-height: 80px;
+$header-mobile-height: 64px;
+$footer-height: auto;
+
+// Z-Index
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;

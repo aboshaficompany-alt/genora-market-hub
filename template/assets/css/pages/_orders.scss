@@ -1,0 +1,332 @@
+// ========================================
+// Orders History Page Styles
+// ========================================
+
+.orders-page {
+  padding: $spacing-xl 0;
+  
+  .orders-header {
+    margin-bottom: $spacing-xl;
+    
+    h1 {
+      margin-bottom: $spacing-md;
+    }
+    
+    .orders-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-sm;
+      
+      .filter-btn {
+        @include button-reset;
+        padding: $spacing-xs $spacing-md;
+        border: 2px solid $border-color;
+        border-radius: $border-radius-sm;
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        transition: all $transition-fast;
+        
+        &:hover {
+          border-color: $primary-blue;
+          color: $primary-blue;
+        }
+        
+        &.active {
+          background: $primary-blue;
+          border-color: $primary-blue;
+          color: $text-white;
+        }
+      }
+    }
+  }
+  
+  .orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+    
+    .order-card {
+      @include card-style;
+      padding: 0;
+      overflow: hidden;
+      
+      .order-header {
+        @include flex-between;
+        padding: $spacing-md $spacing-lg;
+        background: $bg-secondary;
+        border-bottom: 1px solid $border-light;
+        flex-wrap: wrap;
+        gap: $spacing-md;
+        
+        .order-number {
+          font-size: $font-size-base;
+          font-weight: $font-weight-semibold;
+          color: $text-primary;
+          
+          span {
+            color: $primary-blue;
+          }
+        }
+        
+        .order-date {
+          font-size: $font-size-sm;
+          color: $text-muted;
+        }
+        
+        .order-status {
+          padding: 4px 12px;
+          border-radius: $border-radius-sm;
+          font-size: $font-size-xs;
+          font-weight: $font-weight-semibold;
+          
+          &.pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+          }
+          
+          &.confirmed {
+            background: rgba(23, 162, 184, 0.1);
+            color: #17a2b8;
+          }
+          
+          &.shipped {
+            background: rgba(74, 111, 165, 0.1);
+            color: $primary-blue;
+          }
+          
+          &.delivered {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+          }
+          
+          &.cancelled {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+          }
+        }
+      }
+      
+      .order-body {
+        padding: $spacing-lg;
+        
+        .order-items {
+          display: flex;
+          flex-direction: column;
+          gap: $spacing-md;
+          margin-bottom: $spacing-lg;
+          
+          .order-item {
+            display: flex;
+            gap: $spacing-md;
+            
+            .item-image {
+              width: 80px;
+              height: 80px;
+              border-radius: $border-radius-sm;
+              overflow: hidden;
+              flex-shrink: 0;
+              
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
+            }
+            
+            .item-details {
+              flex: 1;
+              
+              .item-name {
+                font-size: $font-size-base;
+                font-weight: $font-weight-semibold;
+                color: $text-primary;
+                margin-bottom: 4px;
+              }
+              
+              .item-quantity {
+                font-size: $font-size-sm;
+                color: $text-muted;
+                margin-bottom: 4px;
+              }
+              
+              .item-price {
+                font-size: $font-size-base;
+                font-weight: $font-weight-semibold;
+                color: $primary-blue;
+              }
+            }
+          }
+        }
+        
+        .order-total {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: $spacing-md;
+          border-top: 1px solid $border-light;
+          
+          .total-label {
+            font-size: $font-size-base;
+            color: $text-secondary;
+          }
+          
+          .total-value {
+            font-size: $font-size-xl;
+            font-weight: $font-weight-bold;
+            color: $primary-blue;
+          }
+        }
+      }
+      
+      .order-footer {
+        padding: $spacing-md $spacing-lg;
+        background: $bg-soft;
+        border-top: 1px solid $border-light;
+        display: flex;
+        justify-content: flex-end;
+        gap: $spacing-sm;
+        flex-wrap: wrap;
+      }
+    }
+  }
+  
+  .orders-empty {
+    text-align: center;
+    padding: $spacing-2xl;
+    
+    .empty-icon {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto $spacing-lg;
+      @include flex-center;
+      background: $bg-secondary;
+      border-radius: 50%;
+      font-size: 4rem;
+      color: $text-muted;
+    }
+    
+    h2 {
+      margin-bottom: $spacing-sm;
+    }
+    
+    p {
+      color: $text-secondary;
+      margin-bottom: $spacing-lg;
+    }
+  }
+}
+
+// Order Tracking
+.order-tracking {
+  padding: $spacing-xl 0;
+  
+  .tracking-card {
+    @include card-style;
+    padding: $spacing-xl;
+    max-width: 800px;
+    margin: 0 auto;
+    
+    .tracking-header {
+      text-align: center;
+      margin-bottom: $spacing-2xl;
+      
+      h2 {
+        margin-bottom: $spacing-sm;
+      }
+      
+      .order-number {
+        color: $text-secondary;
+      }
+    }
+    
+    .tracking-timeline {
+      position: relative;
+      padding-right: $spacing-xl;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 24px;
+        right: 11px;
+        width: 2px;
+        height: calc(100% - 48px);
+        background: $border-light;
+      }
+      
+      .timeline-item {
+        position: relative;
+        padding-bottom: $spacing-xl;
+        
+        &:last-child {
+          padding-bottom: 0;
+        }
+        
+        .timeline-marker {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          border: 3px solid $border-color;
+          background: $bg-primary;
+          z-index: 2;
+        }
+        
+        &.completed {
+          .timeline-marker {
+            background: $primary-blue;
+            border-color: $primary-blue;
+            
+            &::after {
+              content: '✓';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              color: $text-white;
+              font-size: 12px;
+              font-weight: bold;
+            }
+          }
+          
+          .timeline-content {
+            .timeline-title {
+              color: $primary-blue;
+            }
+          }
+        }
+        
+        &.active {
+          .timeline-marker {
+            background: $accent-gold;
+            border-color: $accent-gold;
+            animation: pulse 2s ease-in-out infinite;
+          }
+        }
+        
+        .timeline-content {
+          padding-right: $spacing-xl;
+          
+          .timeline-title {
+            font-size: $font-size-lg;
+            font-weight: $font-weight-semibold;
+            color: $text-primary;
+            margin-bottom: $spacing-xs;
+          }
+          
+          .timeline-description {
+            font-size: $font-size-sm;
+            color: $text-secondary;
+            margin-bottom: $spacing-xs;
+          }
+          
+          .timeline-date {
+            font-size: $font-size-xs;
+            color: $text-muted;
+          }
+        }
+      }
+    }
+  }
+}
