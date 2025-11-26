@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الطلبات السابقة - جينورا</title>
+  <meta name="description" content="عرض وإدارة طلباتك السابقة في منصة جينورا">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <div class="navbar-logo">
+          <a href="index.html">
+            <h1>جينورا</h1>
+            <p class="logo-tagline">منصة التمكين الرقمي</p>
+          </a>
+        </div>
+        
+        <ul class="navbar-menu">
+          <li><a href="index.html" class="nav-link">الرئيسية</a></li>
+          <li><a href="categories.html" class="nav-link">الأصناف</a></li>
+          <li><a href="#" class="nav-link">المتاجر</a></li>
+          <li><a href="#" class="nav-link">من نحن</a></li>
+          <li><a href="#" class="nav-link">تواصل معنا</a></li>
+        </ul>
+        
+        <div class="navbar-actions">
+          <button class="icon-btn" aria-label="البحث">
+            <i class="fas fa-search"></i>
+          </button>
+          <a href="wishlist.html" class="icon-btn" aria-label="المفضلة">
+            <i class="fas fa-heart"></i>
+            <span class="badge">3</span>
+          </a>
+          <a href="#" class="icon-btn" aria-label="السلة">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="badge cart-count">0</span>
+          </a>
+          <button class="btn btn-primary">تسجيل الدخول</button>
+        </div>
+        
+        <button class="mobile-menu-toggle" aria-label="القائمة">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="orders-page">
+    <div class="container">
+      <!-- Page Header -->
+      <div class="orders-header">
+        <h1>الطلبات السابقة</h1>
+        
+        <!-- Filters -->
+        <div class="orders-filters">
+          <button class="filter-btn active">الكل</button>
+          <button class="filter-btn">قيد المعالجة</button>
+          <button class="filter-btn">مؤكد</button>
+          <button class="filter-btn">جاري الشحن</button>
+          <button class="filter-btn">تم التوصيل</button>
+          <button class="filter-btn">ملغي</button>
+        </div>
+      </div>
+
+      <!-- Orders List -->
+      <div class="orders-list">
+        <!-- Order 1 - Delivered -->
+        <div class="order-card">
+          <div class="order-header">
+            <div class="order-number">
+              طلب رقم <span>#45892</span>
+            </div>
+            <div class="order-date">
+              <i class="far fa-calendar"></i>
+              15 مارس 2024
+            </div>
+            <span class="order-status delivered">تم التوصيل</span>
+          </div>
+          
+          <div class="order-body">
+            <div class="order-items">
+              <div class="order-item">
+                <div class="item-image">
+                  <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150" alt="سماعات لاسلكية">
+                </div>
+                <div class="item-details">
+                  <div class="item-name">سماعات بلوتوث لاسلكية عالية الجودة</div>
+                  <div class="item-quantity">الكمية: 1</div>
+                  <div class="item-price">595 ر.س</div>
+                </div>
+              </div>
+              
+              <div class="order-item">
+                <div class="item-image">
+                  <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150" alt="ساعة ذكية">
+                </div>
+                <div class="item-details">
+                  <div class="item-name">ساعة ذكية متطورة مع شاشة AMOLED</div>
+                  <div class="item-quantity">الكمية: 1</div>
+                  <div class="item-price">1,299 ر.س</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="order-total">
+              <span class="total-label">الإجمالي:</span>
+              <span class="total-value">1,894 ر.س</span>
+            </div>
+          </div>
+          
+          <div class="order-footer">
+            <button class="btn btn-outline">تتبع الطلب</button>
+            <button class="btn btn-outline">تفاصيل الفاتورة</button>
+            <button class="btn btn-primary">إعادة الطلب</button>
+          </div>
+        </div>
+
+        <!-- Order 2 - Shipped -->
+        <div class="order-card">
+          <div class="order-header">
+            <div class="order-number">
+              طلب رقم <span>#45891</span>
+            </div>
+            <div class="order-date">
+              <i class="far fa-calendar"></i>
+              18 مارس 2024
+            </div>
+            <span class="order-status shipped">جاري الشحن</span>
+          </div>
+          
+          <div class="order-body">
+            <div class="order-items">
+              <div class="order-item">
+                <div class="item-image">
+                  <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=150" alt="حقيبة جلدية">
+                </div>
+                <div class="item-details">
+                  <div class="item-name">حقيبة ظهر جلدية فاخرة للأعمال</div>
+                  <div class="item-quantity">الكمية: 1</div>
+                  <div class="item-price">520 ر.س</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="order-total">
+              <span class="total-label">الإجمالي:</span>
+              <span class="total-value">520 ر.س</span>
+            </div>
+          </div>
+          
+          <div class="order-footer">
+            <button class="btn btn-primary">تتبع الطلب</button>
+            <button class="btn btn-outline">تفاصيل الفاتورة</button>
+          </div>
+        </div>
+
+        <!-- Order 3 - Confirmed -->
+        <div class="order-card">
+          <div class="order-header">
+            <div class="order-number">
+              طلب رقم <span>#45890</span>
+            </div>
+            <div class="order-date">
+              <i class="far fa-calendar"></i>
+              20 مارس 2024
+            </div>
+            <span class="order-status confirmed">مؤكد</span>
+          </div>
+          
+          <div class="order-body">
+            <div class="order-items">
+              <div class="order-item">
+                <div class="item-image">
+                  <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=150" alt="حذاء رياضي">
+                </div>
+                <div class="item-details">
+                  <div class="item-name">حذاء رياضي مريح للمشي والجري</div>
+                  <div class="item-quantity">الكمية: 2</div>
+                  <div class="item-price">760 ر.س</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="order-total">
+              <span class="total-label">الإجمالي:</span>
+              <span class="total-value">760 ر.س</span>
+            </div>
+          </div>
+          
+          <div class="order-footer">
+            <button class="btn btn-outline">تفاصيل الفاتورة</button>
+            <button class="btn btn-outline-danger">إلغاء الطلب</button>
+          </div>
+        </div>
+
+        <!-- Order 4 - Pending -->
+        <div class="order-card">
+          <div class="order-header">
+            <div class="order-number">
+              طلب رقم <span>#45889</span>
+            </div>
+            <div class="order-date">
+              <i class="far fa-calendar"></i>
+              22 مارس 2024
+            </div>
+            <span class="order-status pending">قيد المعالجة</span>
+          </div>
+          
+          <div class="order-body">
+            <div class="order-items">
+              <div class="order-item">
+                <div class="item-image">
+                  <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=150" alt="كتاب">
+                </div>
+                <div class="item-details">
+                  <div class="item-name">كتاب فن التسويق الرقمي</div>
+                  <div class="item-quantity">الكمية: 3</div>
+                  <div class="item-price">240 ر.س</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="order-total">
+              <span class="total-label">الإجمالي:</span>
+              <span class="total-value">240 ر.س</span>
+            </div>
+          </div>
+          
+          <div class="order-footer">
+            <button class="btn btn-outline">تفاصيل الفاتورة</button>
+            <button class="btn btn-outline-danger">إلغاء الطلب</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State (Hidden by default) -->
+      <div class="orders-empty" style="display: none;">
+        <div class="empty-icon">
+          <i class="fas fa-box-open"></i>
+        </div>
+        <h2>لا توجد طلبات</h2>
+        <p>لم تقم بإجراء أي طلبات بعد</p>
+        <a href="categories.html" class="btn btn-primary">ابدأ التسوق الآن</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <!-- About Section -->
+        <div class="footer-section">
+          <h3>جينورا</h3>
+          <p class="footer-description">
+            منصة رقمية تمكينية تجمع أفضل المتاجر والمنتجات في مكان واحد، نؤمن بقوة التجارة الإلكترونية في تحسين حياة الناس.
+          </p>
+          <div class="footer-social">
+            <a href="#" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
+            <a href="#" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="إنستجرام"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="لينكد إن"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section">
+          <h4>روابط سريعة</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="categories.html">الأصناف</a></li>
+            <li><a href="#">المتاجر</a></li>
+            <li><a href="#">من نحن</a></li>
+            <li><a href="#">تواصل معنا</a></li>
+          </ul>
+        </div>
+
+        <!-- Customer Service -->
+        <div class="footer-section">
+          <h4>خدمة العملاء</h4>
+          <ul class="footer-links">
+            <li><a href="#">الأسئلة الشائعة</a></li>
+            <li><a href="#">سياسة الاسترجاع</a></li>
+            <li><a href="#">الشحن والتوصيل</a></li>
+            <li><a href="#">طرق الدفع</a></li>
+            <li><a href="#">الشروط والأحكام</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="footer-section">
+          <h4>تواصل معنا</h4>
+          <ul class="footer-contact">
+            <li>
+              <i class="fas fa-map-marker-alt"></i>
+              <span>الرياض، المملكة العربية السعودية</span>
+            </li>
+            <li>
+              <i class="fas fa-phone"></i>
+              <span dir="ltr">+966 50 123 4567</span>
+            </li>
+            <li>
+              <i class="fas fa-envelope"></i>
+              <span>info@geenora.com</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 جينورا. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
