@@ -119,7 +119,7 @@
         .stat-value {
           font-size: $font-size-2xl;
           font-weight: $font-weight-bold;
-          color: $accent-gold;
+          color: $yellow-warm;
           display: block;
           margin-bottom: $spacing-xs;
         }
@@ -148,8 +148,8 @@
       position: absolute;
       top: $spacing-md;
       left: $spacing-md;
-      background: $accent-gold;
-      color: $text-white;
+      background: $yellow-warm;
+      color: $charcoal;
       padding: $spacing-sm $spacing-md;
       border-radius: $border-radius;
       font-weight: $font-weight-bold;
@@ -185,9 +185,9 @@
       height: 80px;
       margin: 0 auto $spacing-md;
       @include flex-center;
-      background: $bg-gradient-light;
+      background: $bg-gradient-card;
       border-radius: 50%;
-      color: $primary-blue;
+      color: $primary-orange;
       font-size: $font-size-3xl;
     }
     
@@ -253,7 +253,7 @@
 .cta {
   position: relative;
   padding: $spacing-2xl 0;
-  background: $bg-gradient;
+  background: $bg-gradient-primary;
   color: $text-white;
   text-align: center;
   overflow: hidden;
