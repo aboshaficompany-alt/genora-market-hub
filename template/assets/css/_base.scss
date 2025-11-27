@@ -50,12 +50,12 @@ p {
 }
 
 a {
-  color: $primary-blue;
+  color: $primary-orange;
   text-decoration: none;
   transition: color $transition-fast;
   
   &:hover {
-    color: $primary-purple;
+    color: $pink-accent;
   }
 }
 

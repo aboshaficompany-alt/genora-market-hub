@@ -279,7 +279,7 @@
           
           &:hover:not(:disabled) {
             background: $bg-secondary;
-            color: $primary-blue;
+            color: $primary-orange;
           }
           
           &:disabled {
@@ -367,13 +367,13 @@
           left: 0;
           width: 0;
           height: 2px;
-          background: $primary-blue;
+          background: $primary-orange;
           transition: width $transition-base;
         }
         
         &:hover,
         &.active {
-          color: $primary-blue;
+          color: $primary-orange;
         }
         
         &.active::after {
@@ -413,7 +413,7 @@
                 width: 44px;
                 height: 44px;
                 border-radius: 50%;
-                background: $primary-blue;
+                background: $primary-orange;
                 color: $text-white;
                 @include flex-center;
                 font-weight: $font-weight-bold;
@@ -434,7 +434,7 @@
           .review-rating {
             display: flex;
             gap: 4px;
-            color: $accent-gold;
+            color: $yellow-warm;
             margin-bottom: $spacing-sm;
           }
           
