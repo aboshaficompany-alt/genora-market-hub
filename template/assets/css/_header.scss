@@ -128,7 +128,7 @@
       
       &:hover {
         background: $bg-secondary;
-        color: $primary-blue;
+        color: $primary-orange;
       }
       
       .badge-count {
@@ -138,8 +138,8 @@
         min-width: 18px;
         height: 18px;
         @include flex-center;
-        background: $accent-gold;
-        color: $text-white;
+        background: $yellow-warm;
+        color: $charcoal;
         font-size: $font-size-xs;
         font-weight: $font-weight-semibold;
         border-radius: 9px;
@@ -225,7 +225,7 @@
       &:hover,
       &.active {
         background: $bg-secondary;
-        color: $primary-blue;
+        color: $primary-orange;
       }
     }
   }

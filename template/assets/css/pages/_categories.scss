@@ -209,8 +209,8 @@
             
             &.active,
             &:hover {
-              background: $primary-blue;
-              border-color: $primary-blue;
+              background: $primary-orange;
+              border-color: $primary-orange;
               color: $text-white;
             }
           }
@@ -292,14 +292,14 @@
         transition: all $transition-fast;
         
         &:hover:not(:disabled) {
-          background: $primary-blue;
-          border-color: $primary-blue;
+          background: $primary-orange;
+          border-color: $primary-orange;
           color: $text-white;
         }
         
         &.active {
-          background: $primary-blue;
-          border-color: $primary-blue;
+          background: $primary-orange;
+          border-color: $primary-orange;
           color: $text-white;
         }
         

@@ -46,23 +46,23 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $primary-blue;
+  background: $primary-orange;
   border-radius: 5px;
   
   &:hover {
-    background: $primary-purple;
+    background: $pink-accent;
   }
 }
 
 // Selection
 ::selection {
-  background: rgba(74, 111, 165, 0.2);
+  background: rgba(255, 135, 50, 0.2);
   color: $text-primary;
 }
 
 // Focus Visible
 :focus-visible {
-  outline: 2px solid $primary-blue;
+  outline: 2px solid $primary-orange;
   outline-offset: 2px;
 }
 
