@@ -115,7 +115,7 @@ $pageDescription = $store['description'];
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Enhanced Header -->
   <header class="header">
     <div class="container">
       <div class="header-container">
@@ -128,24 +128,85 @@ $pageDescription = $store['description'];
         </a>
 
         <nav class="nav">
-          <a href="index.html" class="nav-link">الرئيسية</a>
-          <a href="categories.html" class="nav-link">الأصناف</a>
-          <a href="stores.html" class="nav-link active">المتاجر</a>
-          <a href="terms.html" class="nav-link">الشروط</a>
+          <a href="index.html" class="nav-link">
+            الرئيسية
+          </a>
+          <a href="categories.html" class="nav-link">
+            الأصناف
+          </a>
+          <a href="stores.html" class="nav-link active">
+            المتاجر
+          </a>
+          <a href="terms.html" class="nav-link">
+            الشروط
+          </a>
         </nav>
 
         <div class="header-actions">
-          <a href="wishlist.html" class="header-action">
+          <a href="wishlist.html" class="header-action" title="قائمة المفضلة">
             <i class="far fa-heart"></i>
+            <span class="badge-count">3</span>
           </a>
-          <a href="cart.html" class="header-action">
+          <a href="cart.html" class="header-action" title="سلة التسوق">
             <i class="fas fa-shopping-cart"></i>
+            <span class="badge-count">2</span>
           </a>
           <a href="login.php" class="btn btn-primary btn-sm">تسجيل الدخول</a>
         </div>
+
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Enhanced Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-header">
+      <div class="mobile-logo">
+        <i class="fas fa-store"></i>
+        <span>جينورا</span>
+      </div>
+      <button class="mobile-close" id="mobileMenuClose">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <nav class="mobile-nav">
+      <a href="index.html" class="mobile-nav-link">
+        <i class="fas fa-home"></i>
+        <span>الرئيسية</span>
+      </a>
+      <a href="categories.html" class="mobile-nav-link">
+        <i class="fas fa-th-large"></i>
+        <span>الأصناف</span>
+      </a>
+      <a href="stores.html" class="mobile-nav-link active">
+        <i class="fas fa-store"></i>
+        <span>المتاجر</span>
+      </a>
+      <a href="wishlist.html" class="mobile-nav-link">
+        <i class="fas fa-heart"></i>
+        <span>المفضلة</span>
+      </a>
+      <a href="cart.html" class="mobile-nav-link">
+        <i class="fas fa-shopping-cart"></i>
+        <span>السلة</span>
+      </a>
+      <a href="terms.html" class="mobile-nav-link">
+        <i class="fas fa-file-contract"></i>
+        <span>الشروط</span>
+      </a>
+    </nav>
+    
+    <div class="mobile-actions">
+      <a href="login.php" class="btn btn-primary btn-block">تسجيل الدخول</a>
+      <a href="register.html" class="btn btn-outline btn-block">إنشاء حساب</a>
+    </div>
+  </div>
 
   <!-- Store Header -->
   <section class="store-header-section">
@@ -368,36 +429,73 @@ $pageDescription = $store['description'];
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- Enhanced Footer -->
   <footer class="footer">
     <div class="container">
       <div class="footer-content">
+        <!-- Brand Column -->
         <div class="footer-col">
           <h3 class="footer-title">عن جينورا</h3>
-          <p class="footer-description">منصة رقمية ذات فلسفة تمكينية وإنسانية تجمع عدة متاجر متنوعة في مكان واحد</p>
+          <p class="footer-description">
+            منصة رقمية ذات فلسفة تمكينية وإنسانية تجمع عدة متاجر متنوعة في مكان واحد. 
+            نوفر تجربة تسوق سلسة وآمنة لجميع عملائنا
+          </p>
+          <div class="footer-social">
+            <a href="#" title="فيسبوك" aria-label="فيسبوك">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" title="تويتر" aria-label="تويتر">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" title="انستجرام" aria-label="انستجرام">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" title="لينكد إن" aria-label="لينكد إن">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+          </div>
         </div>
+
+        <!-- Quick Links Column -->
         <div class="footer-col">
           <h3 class="footer-title">روابط سريعة</h3>
           <ul class="footer-links">
             <li><a href="index.html">الرئيسية</a></li>
             <li><a href="categories.html">الأصناف</a></li>
             <li><a href="stores.html">المتاجر</a></li>
-            <li><a href="terms.html">الشروط</a></li>
+            <li><a href="orders.html">الطلبات</a></li>
+            <li><a href="wishlist.html">المفضلة</a></li>
+            <li><a href="terms.html">الشروط والأحكام</a></li>
           </ul>
         </div>
+
+        <!-- Contact Column -->
         <div class="footer-col">
           <h3 class="footer-title">تواصل معنا</h3>
           <ul class="footer-contact">
-            <li>📧 support@geenora.com</li>
-            <li>📞 920000000</li>
-            <li>📍 الرياض، السعودية</li>
+            <li>
+              📧 info@geenora.net
+            </li>
+            <li>
+              📞 123-456-7890
+            </li>
+            <li>
+              📍 الرياض، المملكة العربية السعودية
+            </li>
+            <li>
+              🕐 الأحد - الخميس: 9 صباحاً - 6 مساءً
+            </li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
         <div class="footer-bottom-content">
-          <p class="footer-copyright">© 2024 جينورا. جميع الحقوق محفوظة</p>
+          <p class="footer-copyright">
+            © 2024 جينورا
+            <span style="margin: 0 0.5rem; color: var(--primary-orange);">•</span>
+            جميع الحقوق محفوظة
+          </p>
           <p class="footer-made-with">
             صنع بـ <i class="fas fa-heart"></i> في المملكة العربية السعودية
           </p>
@@ -405,6 +503,11 @@ $pageDescription = $store['description'];
       </div>
     </div>
   </footer>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" aria-label="العودة للأعلى">
+    <i class="fas fa-arrow-up"></i>
+  </button>
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
