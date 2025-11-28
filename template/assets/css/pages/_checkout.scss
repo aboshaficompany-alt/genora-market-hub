@@ -308,7 +308,7 @@
     color: $text-white;
     border-radius: 50%;
     font-size: 3rem;
-    @include scale-in;
+    animation: scaleIn 0.5s ease-out;
   }
   
   h1 {
