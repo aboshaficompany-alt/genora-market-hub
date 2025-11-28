@@ -59,10 +59,10 @@ $spacing-lg: 2rem;     // 32px
 $spacing-xl: 3rem;     // 48px
 $spacing-2xl: 4rem;    // 64px
 
-// الخطوط
+// الخطوط (matching React app - Cairo only)
 $font-primary: 'Cairo', sans-serif;
-$font-secondary: 'Lato', sans-serif;
-$font-accent: 'Open Sans', sans-serif;
+$font-secondary: 'Cairo', sans-serif;
+$font-accent: 'Cairo', sans-serif;
 
 // أحجام الخطوط
 $font-size-xs: 0.75rem;    // 12px
