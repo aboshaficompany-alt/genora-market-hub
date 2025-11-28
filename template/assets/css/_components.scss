@@ -130,95 +130,202 @@
   }
 }
 
-// Product Card
+// Enhanced Product Card
 .product-card {
   @include card-style;
   overflow: hidden;
+  position: relative;
+  border: 3px solid transparent;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    background: $bg-gradient-primary;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    border-radius: $border-radius;
+  }
+  
+  &:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(255, 135, 50, 0.3);
+    
+    &::before {
+      opacity: 1;
+    }
+    
+    .product-image {
+      img {
+        transform: scale(1.15);
+      }
+      
+      .product-actions {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      
+      &::after {
+        opacity: 1;
+      }
+    }
+    
+    .btn-wishlist {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
   
   .product-image {
     position: relative;
     overflow: hidden;
     border-radius: $border-radius $border-radius 0 0;
     aspect-ratio: 1 / 1;
-    background: $bg-secondary;
+    background: linear-gradient(135deg, $bg-secondary, lighten($bg-secondary, 3%));
+    
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
     
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform $transition-slow;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
     .product-badge {
       position: absolute;
       top: $spacing-sm;
       right: $spacing-sm;
-      background: $yellow-warm;
-      color: $charcoal;
-      padding: 4px 12px;
-      border-radius: $border-radius-sm;
+      background: $bg-gradient-primary;
+      color: $text-white;
+      padding: 6px 14px;
+      border-radius: 20px;
       font-size: $font-size-xs;
-      font-weight: $font-weight-semibold;
-      z-index: 2;
+      font-weight: $font-weight-bold;
+      z-index: 3;
+      box-shadow: 0 4px 12px rgba(255, 135, 50, 0.4);
+      animation: badgePulse 2s ease-in-out infinite;
+      
+      &.sale-badge {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+      }
+      
+      &.new-badge {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+      }
+    }
+    
+    .btn-wishlist {
+      position: absolute;
+      top: $spacing-sm;
+      left: $spacing-sm;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $charcoal;
+      z-index: 3;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform: scale(0.8);
+      opacity: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      
+      i {
+        font-size: 1.125rem;
+        transition: all 0.3s ease;
+      }
+      
+      &:hover {
+        transform: scale(1.1);
+        background: white;
+      }
+      
+      &.active {
+        background: $pink-accent;
+        color: white;
+        
+        i {
+          transform: scale(1.2);
+        }
+      }
     }
     
     .product-actions {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) scale(0.8);
       display: flex;
       gap: $spacing-sm;
       opacity: 0;
-      transition: opacity $transition-base;
-      z-index: 2;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 3;
       
       button {
         @include button-reset;
-        width: 44px;
-        height: 44px;
-        background: $bg-primary;
+        width: 50px;
+        height: 50px;
+        background: white;
+        backdrop-filter: blur(10px);
         border-radius: 50%;
         @include flex-center;
-        box-shadow: $shadow-md;
-        transition: all $transition-base;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        
+        i {
+          font-size: 1.25rem;
+          color: $charcoal;
+        }
         
         &:hover {
           background: $primary-orange;
-          color: $text-white;
-          transform: scale(1.1);
+          transform: scale(1.15);
+          
+          i {
+            color: white;
+          }
         }
-      }
-    }
-  }
-  
-  &:hover {
-    .product-image {
-      img {
-        transform: scale(1.1);
-      }
-      
-      .product-actions {
-        opacity: 1;
       }
     }
   }
   
   .product-info {
     padding: $spacing-md;
+    position: relative;
+    z-index: 1;
+    background: white;
     
     .product-category {
       font-size: $font-size-sm;
-      color: $text-muted;
+      color: $primary-orange;
       margin-bottom: $spacing-xs;
+      font-weight: $font-weight-semibold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     
-    .product-title {
+    .product-name {
       font-size: $font-size-lg;
-      font-weight: $font-weight-semibold;
-      color: $text-primary;
+      font-weight: $font-weight-bold;
+      color: $charcoal;
       margin-bottom: $spacing-xs;
       @include truncate(2);
+      line-height: 1.4;
     }
     
     .product-rating {
@@ -227,77 +334,255 @@
       gap: $spacing-xs;
       margin-bottom: $spacing-sm;
       
-      .stars {
-        display: flex;
-        gap: 2px;
+      i {
         color: $yellow-warm;
+        font-size: 0.875rem;
+        
+        &.fa-star {
+          color: $yellow-warm;
+        }
+        
+        &.fa-star-half-alt {
+          color: $yellow-warm;
+        }
       }
       
-      .rating-count {
+      span {
         font-size: $font-size-sm;
         color: $text-muted;
+        font-weight: $font-weight-medium;
       }
     }
     
     .product-price {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       gap: $spacing-sm;
       margin-bottom: $spacing-md;
       
-      .price-current {
-        font-size: $font-size-xl;
+      .current-price,
+      .discount-price {
+        font-size: $font-size-2xl;
         font-weight: $font-weight-bold;
-        color: $primary-orange;
+        background: $bg-gradient-primary;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
       
-      .price-old {
+      .original-price {
         font-size: $font-size-base;
         color: $text-muted;
         text-decoration: line-through;
       }
     }
+    
+    .btn-add-cart {
+      width: 100%;
+      background: $bg-gradient-primary;
+      border: none;
+      padding: 0.875rem;
+      border-radius: 10px;
+      color: white;
+      font-weight: $font-weight-bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 14px rgba(255, 135, 50, 0.3);
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 135, 50, 0.5);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
   }
 }
 
-// Store Card
+// Enhanced Store Card
 .store-card {
   @include card-style;
   text-align: center;
-  padding: $spacing-lg;
+  padding: $spacing-xl;
+  position: relative;
+  overflow: hidden;
+  border: 3px solid transparent;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    background: $bg-gradient-primary;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    border-radius: $border-radius;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 135, 50, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  &:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(255, 135, 50, 0.3);
+    
+    &::before {
+      opacity: 1;
+    }
+    
+    &::after {
+      opacity: 1;
+    }
+    
+    .store-logo {
+      transform: scale(1.1) rotate(5deg);
+      border-color: $primary-orange;
+    }
+    
+    .store-stats {
+      .stat {
+        transform: translateY(-3px);
+      }
+    }
+  }
   
   .store-logo {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto $spacing-md;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto $spacing-lg;
     border-radius: 50%;
     overflow: hidden;
-    border: 3px solid $border-light;
+    border: 4px solid $border-color;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      background: $bg-gradient-primary;
+      border-radius: 50%;
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.3s ease;
+    }
     
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+  }
+  
+  .verified-badge {
+    position: absolute;
+    top: $spacing-md;
+    right: $spacing-md;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+    z-index: 2;
+    
+    i {
+      font-size: 1rem;
     }
   }
   
   .store-name {
-    font-size: $font-size-xl;
+    font-size: $font-size-2xl;
     font-weight: $font-weight-bold;
-    color: $text-primary;
+    color: $charcoal;
     margin-bottom: $spacing-xs;
   }
   
   .store-category {
+    display: inline-block;
     font-size: $font-size-sm;
-    color: $text-muted;
-    margin-bottom: $spacing-sm;
+    color: $primary-orange;
+    background: rgba(255, 135, 50, 0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: $spacing-md;
+    font-weight: $font-weight-semibold;
   }
   
   .store-rating {
     @include flex-center;
     gap: $spacing-xs;
     margin-bottom: $spacing-md;
+    
+    i {
+      color: $yellow-warm;
+      font-size: 1rem;
+    }
+    
+    span {
+      font-weight: $font-weight-bold;
+      color: $charcoal;
+    }
+    
+    .rating-count {
+      color: $text-muted;
+      font-weight: $font-weight-medium;
+    }
+  }
+  
+  .store-stats {
+    display: flex;
+    justify-content: center;
+    gap: $spacing-lg;
+    margin-bottom: $spacing-lg;
+    padding-top: $spacing-md;
+    border-top: 2px solid $border-color;
+    
+    .stat {
+      text-align: center;
+      transition: transform 0.3s ease;
+      
+      .stat-value {
+        display: block;
+        font-size: $font-size-xl;
+        font-weight: $font-weight-bold;
+        color: $primary-orange;
+        margin-bottom: 0.25rem;
+      }
+      
+      .stat-label {
+        display: block;
+        font-size: $font-size-sm;
+        color: $text-muted;
+      }
+    }
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
     
     .stars {
       display: flex;

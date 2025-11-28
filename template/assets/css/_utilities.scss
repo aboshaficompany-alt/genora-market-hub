@@ -1,0 +1,234 @@
+// ========================================
+// Utility Classes & Animations
+// ========================================
+
+// Back to Top Button
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  width: 50px;
+  height: 50px;
+  background: $bg-gradient-primary;
+  color: $text-white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(255, 135, 50, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100px);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 999;
+  
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  &:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 8px 30px rgba(255, 135, 50, 0.6);
+  }
+  
+  i {
+    font-size: 1.25rem;
+  }
+}
+
+// Toast Notifications
+.toast {
+  position: fixed;
+  top: 100px;
+  right: 2rem;
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateX(400px);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 9999;
+  border: 3px solid;
+  max-width: 400px;
+  
+  &.show {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  i {
+    font-size: 1.5rem;
+  }
+  
+  &.toast-success {
+    border-color: #22c55e;
+    
+    i {
+      color: #22c55e;
+    }
+  }
+  
+  &.toast-error {
+    border-color: #ef4444;
+    
+    i {
+      color: #ef4444;
+    }
+  }
+  
+  &.toast-info {
+    border-color: $primary-orange;
+    
+    i {
+      color: $primary-orange;
+    }
+  }
+}
+
+// Animation Classes
+@keyframes pulse-animation {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes bounce-animation {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+}
+
+.pulse-animation {
+  animation: pulse-animation 0.6s ease;
+}
+
+.bounce-animation {
+  animation: bounce-animation 0.6s ease;
+}
+
+// Loading States
+.loading {
+  position: relative;
+  pointer-events: none;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: inherit;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 3px solid $primary-orange;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    z-index: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Form Error States
+.error {
+  border-color: #ef4444 !important;
+  
+  &:focus {
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
+  }
+}
+
+.error-message {
+  display: block;
+  color: #ef4444;
+  font-size: $font-size-sm;
+  margin-top: 0.25rem;
+  font-weight: $font-weight-medium;
+}
+
+// Scroll Reveal Animations
+.animate-fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &.animated {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &.animated {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &.animated {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Image Loaded State
+img {
+  &[data-src] {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  
+  &.loaded {
+    opacity: 1;
+  }
+}
+
+// Success State
+.success {
+  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+  color: white !important;
+}
