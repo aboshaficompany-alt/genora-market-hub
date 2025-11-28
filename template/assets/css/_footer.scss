@@ -1,204 +1,362 @@
 // ========================================
-// Geenora Platform - Footer
+// Geenora Platform - Enhanced Footer
 // ========================================
 
 .footer {
-  background: $bg-gradient-dark;
-  color: rgba(255, 255, 255, 0.8);
-  padding: $spacing-2xl 0 $spacing-md;
-  margin-top: $spacing-2xl;
+  background: linear-gradient(180deg, 
+    $charcoal 0%, 
+    lighten($charcoal, 5%) 50%,
+    $charcoal 100%
+  );
+  color: rgba(255, 255, 255, 0.9);
+  padding: 5rem 0 2rem;
+  margin-top: 4rem;
+  position: relative;
+  overflow: hidden;
   
-  .footer-main {
+  // Decorative Background Elements
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255, 135, 50, 0.15), transparent);
+    filter: blur(80px);
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255, 199, 0, 0.12), transparent);
+    filter: blur(80px);
+    animation: float 8s ease-in-out infinite reverse;
+  }
+  
+  .container {
+    position: relative;
+    z-index: 1;
+  }
+  
+  // Enhanced Footer Content
+  .footer-content {
     display: grid;
     grid-template-columns: 1fr;
-    gap: $spacing-xl;
-    margin-bottom: $spacing-xl;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     
     @include respond-to(sm) {
       grid-template-columns: repeat(2, 1fr);
     }
     
     @include respond-to(md) {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 2fr repeat(2, 1fr);
+      gap: 4rem;
     }
   }
   
-  // Footer Brand
-  .footer-brand {
-    .footer-logo {
-      display: flex;
-      align-items: center;
-      gap: $spacing-sm;
+  // Enhanced Footer Column
+  .footer-col {
+    animation: fadeInUp 0.6s ease forwards;
+    
+    @for $i from 1 through 4 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.1}s;
+      }
+    }
+    
+    .footer-title {
       font-size: $font-size-xl;
       font-weight: $font-weight-bold;
       color: $text-white;
-      margin-bottom: $spacing-md;
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
       
-      .logo-icon {
-        width: 36px;
-        height: 36px;
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        right: 0;
+        width: 60%;
+        height: 3px;
+        background: $bg-gradient-primary;
+        border-radius: 3px;
       }
     }
     
     .footer-description {
       font-size: $font-size-base;
-      line-height: 1.7;
-      margin-bottom: $spacing-md;
-      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      color: rgba(255, 255, 255, 0.75);
     }
     
-    .footer-social {
-      display: flex;
-      gap: $spacing-sm;
-      
-      a {
-        @include button-reset;
-        width: 40px;
-        height: 40px;
-        @include flex-center;
-        background: rgba(255, 255, 255, 0.1);
-        color: $text-white;
-        border-radius: 50%;
-        transition: all $transition-base;
-        
-        &:hover {
-          background: $primary-orange;
-          transform: translateY(-2px);
-        }
-      }
-    }
-  }
-  
-  // Footer Section
-  .footer-section {
-    .footer-title {
-      font-size: $font-size-lg;
-      font-weight: $font-weight-bold;
-      color: $text-white;
-      margin-bottom: $spacing-md;
-    }
-    
+    // Enhanced Footer Links
     .footer-links {
       display: flex;
       flex-direction: column;
-      gap: $spacing-sm;
+      gap: 1rem;
+      
+      li {
+        transform: translateX(0);
+        transition: transform 0.3s ease;
+        
+        &:hover {
+          transform: translateX(-8px);
+        }
+      }
       
       a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
         font-size: $font-size-base;
-        color: rgba(255, 255, 255, 0.7);
-        transition: color $transition-fast;
+        color: rgba(255, 255, 255, 0.75);
+        transition: all 0.3s ease;
+        position: relative;
+        padding-right: 1.5rem;
+        
+        &::before {
+          content: '◀';
+          position: absolute;
+          right: 0;
+          opacity: 0;
+          transform: translateX(-10px);
+          transition: all 0.3s ease;
+          color: $primary-orange;
+        }
         
         &:hover {
           color: $text-white;
-          padding-right: 4px;
+          padding-right: 2rem;
+          
+          &::before {
+            opacity: 1;
+            transform: translateX(0);
+          }
         }
       }
     }
     
+    // Enhanced Footer Contact
     .footer-contact {
       display: flex;
       flex-direction: column;
-      gap: $spacing-md;
+      gap: 1rem;
       
-      .contact-item {
+      li {
         display: flex;
-        align-items: flex-start;
-        gap: $spacing-sm;
+        align-items: center;
+        gap: 1rem;
+        font-size: $font-size-base;
+        color: rgba(255, 255, 255, 0.75);
+        padding: 0.75rem;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.03);
+        transition: all 0.3s ease;
         
-        .contact-icon {
-          flex-shrink: 0;
-          width: 20px;
-          height: 20px;
-          color: $primary-orange;
-          margin-top: 2px;
-        }
-        
-        .contact-text {
-          font-size: $font-size-base;
-          color: rgba(255, 255, 255, 0.7);
-          line-height: 1.6;
+        &:hover {
+          background: rgba(255, 255, 255, 0.08);
+          transform: translateX(-5px);
+          color: $text-white;
         }
       }
     }
   }
   
-  // Footer Bottom
+  // Enhanced Social Links
+  .footer-social {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    
+    a {
+      @include button-reset;
+      width: 48px;
+      height: 48px;
+      @include flex-center;
+      background: rgba(255, 255, 255, 0.05);
+      color: $text-white;
+      border-radius: 50%;
+      font-size: 1.25rem;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid transparent;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        inset: -20px;
+        background: $bg-gradient-primary;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      i {
+        position: relative;
+        z-index: 1;
+      }
+      
+      &:hover {
+        background: $primary-orange;
+        border-color: $yellow-warm;
+        transform: translateY(-5px) scale(1.1);
+        box-shadow: 0 8px 20px rgba(255, 135, 50, 0.4);
+        
+        &::before {
+          opacity: 0.3;
+        }
+      }
+      
+      // Individual Social Icons Colors
+      &:nth-child(1):hover {
+        background: #1877f2; // Facebook
+      }
+      
+      &:nth-child(2):hover {
+        background: #1DA1F2; // Twitter
+      }
+      
+      &:nth-child(3):hover {
+        background: linear-gradient(45deg, #f09433, #e6683c, #dc2743);
+      }
+    }
+  }
+  
+  // Enhanced Footer Bottom
   .footer-bottom {
-    padding-top: $spacing-lg;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 2rem;
     
     .footer-bottom-content {
       display: flex;
       flex-direction: column;
-      gap: $spacing-md;
+      gap: 1rem;
+      align-items: center;
       text-align: center;
       
       @include respond-to(md) {
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
         text-align: right;
       }
       
       .footer-copyright {
         font-size: $font-size-sm;
         color: rgba(255, 255, 255, 0.6);
-      }
-      
-      .footer-payment {
         display: flex;
         align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
         justify-content: center;
-        gap: $spacing-sm;
         
         @include respond-to(md) {
           justify-content: flex-start;
         }
+      }
+      
+      .footer-made-with {
+        font-size: $font-size-sm;
+        color: rgba(255, 255, 255, 0.6);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
         
-        span {
-          font-size: $font-size-sm;
-          color: rgba(255, 255, 255, 0.6);
-        }
-        
-        .payment-icons {
-          display: flex;
-          gap: $spacing-xs;
-          
-          img {
-            height: 24px;
-            opacity: 0.7;
-            transition: opacity $transition-fast;
-            
-            &:hover {
-              opacity: 1;
-            }
-          }
+        i {
+          color: $pink-accent;
+          animation: heartBeat 1.5s ease-in-out infinite;
         }
       }
     }
   }
   
-  // Footer Mobile Adjustments
-  @include respond-to(xs) {
-    .footer-main {
-      text-align: center;
+  // Newsletter Section (optional enhancement)
+  .footer-newsletter {
+    max-width: 400px;
+    
+    .newsletter-form {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
       
-      .footer-brand {
-        .footer-logo {
-          justify-content: center;
+      input {
+        flex: 1;
+        padding: 0.875rem 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        color: $text-white;
+        font-family: $font-primary;
+        transition: all 0.3s ease;
+        
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.5);
         }
         
-        .footer-social {
-          justify-content: center;
+        &:focus {
+          outline: none;
+          border-color: $primary-orange;
+          background: rgba(255, 255, 255, 0.08);
         }
       }
       
-      .footer-section {
-        .footer-links,
-        .footer-contact {
-          align-items: center;
+      button {
+        padding: 0.875rem 1.5rem;
+        background: $bg-gradient-primary;
+        border: none;
+        border-radius: 8px;
+        color: $text-white;
+        font-weight: $font-weight-semibold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(255, 135, 50, 0.4);
         }
       }
     }
+  }
+}
+
+// Animations
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+  }
+}
+
+@keyframes heartBeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10%, 30% {
+    transform: scale(1.1);
+  }
+  20%, 40% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
