@@ -1,0 +1,419 @@
+// ========================================
+// Store Detail Page Styles
+// ========================================
+
+.store-header-section {
+  position: relative;
+  padding: 8rem 0 4rem;
+  margin-bottom: 3rem;
+  overflow: hidden;
+
+  .store-header-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(10px) brightness(0.7);
+    transform: scale(1.1);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, 
+      rgba($charcoal, 0.8) 0%, 
+      rgba($charcoal, 0.6) 50%,
+      $bg-primary 100%
+    );
+  }
+}
+
+.store-header-content {
+  position: relative;
+  z-index: 1;
+}
+
+.store-header-info {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+
+  @media (max-width: $breakpoint-md) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.store-logo {
+  position: relative;
+  flex-shrink: 0;
+
+  img {
+    width: 150px;
+    height: 150px;
+    border-radius: $border-radius-lg;
+    object-fit: cover;
+    border: 4px solid $text-white;
+    box-shadow: $shadow-lg;
+  }
+
+  .verified-badge {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid $text-white;
+    box-shadow: $shadow-md;
+
+    i {
+      color: $text-white;
+      font-size: 1.25rem;
+    }
+  }
+}
+
+.store-info {
+  flex: 1;
+
+  .store-name {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: $font-weight-bold;
+    color: $text-white;
+    margin-bottom: 1rem;
+  }
+
+  .store-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    @media (max-width: $breakpoint-md) {
+      justify-content: center;
+    }
+
+    .store-rating,
+    .store-category,
+    .store-location {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: $text-white;
+      font-weight: $font-weight-medium;
+
+      i {
+        color: $yellow-warm;
+      }
+
+      .reviews-count {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .store-description {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: $font-size-lg;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    max-width: 700px;
+
+    @media (max-width: $breakpoint-md) {
+      margin: 0 auto 2rem;
+    }
+  }
+
+  .store-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    @media (max-width: $breakpoint-md) {
+      justify-content: center;
+    }
+  }
+}
+
+.store-content-section {
+  padding-bottom: 4rem;
+}
+
+.store-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.store-sidebar {
+  .sidebar-card {
+    background: $bg-primary;
+    border-radius: $border-radius-lg;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 3px solid $primary-orange;
+    box-shadow: $shadow-sm;
+
+    .sidebar-title {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      color: $charcoal;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      i {
+        color: $primary-orange;
+      }
+    }
+  }
+
+  .contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: $bg-secondary;
+      border-radius: $border-radius;
+      color: $charcoal-light;
+      text-decoration: none;
+      transition: $transition-base;
+      border: 2px solid transparent;
+
+      &:hover {
+        border-color: $primary-orange;
+        color: $charcoal;
+        transform: translateX(-5px);
+      }
+
+      i {
+        color: $primary-orange;
+        font-size: 1.125rem;
+      }
+    }
+  }
+
+  .social-links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    .social-link {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: $text-white;
+      font-size: 1.5rem;
+      transition: $transition-base;
+      border: 3px solid;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: $shadow-md;
+      }
+
+      &.facebook {
+        background: #1877f2;
+        border-color: #1877f2;
+      }
+
+      &.instagram {
+        background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        border-color: #e6683c;
+      }
+
+      &.twitter {
+        background: #1da1f2;
+        border-color: #1da1f2;
+      }
+    }
+  }
+}
+
+.store-main-content {
+  .store-section {
+    margin-bottom: 3rem;
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid $primary-orange;
+
+      @media (max-width: $breakpoint-sm) {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .section-title {
+        font-size: $font-size-2xl;
+        font-weight: $font-weight-bold;
+        color: $charcoal;
+        margin: 0;
+      }
+
+      .section-filters {
+        .form-select {
+          padding: 0.625rem 1rem;
+          border: 2px solid $border-color;
+          border-radius: $border-radius;
+          font-family: $font-primary;
+          font-size: $font-size-base;
+          background: $bg-primary;
+          cursor: pointer;
+          transition: $transition-base;
+
+          &:focus {
+            outline: none;
+            border-color: $primary-orange;
+          }
+        }
+      }
+    }
+  }
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+
+  @media (max-width: $breakpoint-xs) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.reviews-summary {
+  background: $bg-gradient-primary;
+  padding: 2rem;
+  border-radius: $border-radius-lg;
+  margin-bottom: 2rem;
+  text-align: center;
+
+  .overall-rating {
+    .rating-number {
+      font-size: 4rem;
+      font-weight: $font-weight-bold;
+      color: $text-white;
+      margin-bottom: 0.5rem;
+    }
+
+    .rating-stars {
+      margin-bottom: 0.5rem;
+
+      i {
+        color: $text-white;
+        font-size: 1.5rem;
+        margin: 0 0.125rem;
+        opacity: 0.3;
+
+        &.active {
+          opacity: 1;
+        }
+      }
+    }
+
+    .rating-count {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: $font-size-base;
+    }
+  }
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .review-card {
+    background: $bg-primary;
+    border-radius: $border-radius-lg;
+    padding: 1.5rem;
+    border: 2px solid $border-color;
+    transition: $transition-base;
+
+    &:hover {
+      border-color: $primary-orange;
+      box-shadow: $shadow-sm;
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+
+      @media (max-width: $breakpoint-xs) {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .reviewer-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        .reviewer-avatar {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 2px solid $primary-orange;
+        }
+
+        .reviewer-name {
+          font-size: $font-size-base;
+          font-weight: $font-weight-bold;
+          color: $charcoal;
+          margin-bottom: 0.25rem;
+        }
+
+        .review-date {
+          font-size: $font-size-sm;
+          color: $text-muted;
+        }
+      }
+
+      .review-rating {
+        i {
+          color: $text-muted;
+          font-size: 1rem;
+
+          &.active {
+            color: $yellow-warm;
+          }
+        }
+      }
+    }
+
+    .review-comment {
+      color: $charcoal-light;
+      font-size: $font-size-base;
+      line-height: 1.6;
+      margin: 0;
+    }
+  }
+}
