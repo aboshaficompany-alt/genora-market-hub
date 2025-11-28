@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>المتاجر - جنورا</title>
+  <meta name="description" content="تصفح جميع المتاجر المعتمدة على منصة جنورا واختر من بين أفضل البائعين">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <div class="navbar-brand">
+          <a href="index.html" class="logo">جنورا</a>
+        </div>
+        <ul class="navbar-menu">
+          <li><a href="index.html">الرئيسية</a></li>
+          <li><a href="categories.html">المنتجات</a></li>
+          <li><a href="stores.html" class="active">المتاجر</a></li>
+          <li><a href="terms.html">الشروط والأحكام</a></li>
+        </ul>
+        <div class="navbar-actions">
+          <a href="wishlist.html" class="nav-icon">
+            <span class="icon">♥</span>
+            <span class="badge">0</span>
+          </a>
+          <a href="checkout.html" class="nav-icon">
+            <span class="icon">🛒</span>
+            <span class="badge">0</span>
+          </a>
+          <a href="#" class="btn btn-primary">تسجيل الدخول</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Stores Page -->
+  <main class="stores-page">
+    <!-- Page Hero -->
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="page-title">تصفح المتاجر</h1>
+        <p class="page-subtitle">اكتشف أفضل المتاجر والبائعين الموثوقين على منصتنا</p>
+      </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section class="stores-filters">
+      <div class="container">
+        <div class="filters-wrapper card">
+          <div class="filters-header">
+            <h3>تصفية النتائج</h3>
+            <button class="btn-reset" onclick="resetFilters()">إعادة تعيين</button>
+          </div>
+          
+          <div class="filters-grid">
+            <!-- Search -->
+            <div class="filter-group">
+              <label class="filter-label">البحث عن متجر</label>
+              <input type="text" class="filter-input" id="searchStore" placeholder="اسم المتجر..." onkeyup="filterStores()">
+            </div>
+
+            <!-- Category Filter -->
+            <div class="filter-group">
+              <label class="filter-label">التصنيف</label>
+              <select class="filter-select" id="categoryFilter" onchange="filterStores()">
+                <option value="">جميع التصنيفات</option>
+                <option value="electronics">إلكترونيات</option>
+                <option value="fashion">أزياء وموضة</option>
+                <option value="home">منزل ومفروشات</option>
+                <option value="sports">رياضة ولياقة</option>
+                <option value="beauty">جمال وعناية</option>
+                <option value="books">كتب وقرطاسية</option>
+                <option value="food">أطعمة ومشروبات</option>
+                <option value="toys">ألعاب وأطفال</option>
+              </select>
+            </div>
+
+            <!-- Rating Filter -->
+            <div class="filter-group">
+              <label class="filter-label">التقييم</label>
+              <select class="filter-select" id="ratingFilter" onchange="filterStores()">
+                <option value="">جميع التقييمات</option>
+                <option value="5">⭐⭐⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐ وأعلى</option>
+                <option value="3">⭐⭐⭐ وأعلى</option>
+              </select>
+            </div>
+
+            <!-- City Filter -->
+            <div class="filter-group">
+              <label class="filter-label">المدينة</label>
+              <select class="filter-select" id="cityFilter" onchange="filterStores()">
+                <option value="">جميع المدن</option>
+                <option value="riyadh">الرياض</option>
+                <option value="jeddah">جدة</option>
+                <option value="dammam">الدمام</option>
+                <option value="makkah">مكة المكرمة</option>
+                <option value="madinah">المدينة المنورة</option>
+              </select>
+            </div>
+
+            <!-- Sort -->
+            <div class="filter-group">
+              <label class="filter-label">ترتيب حسب</label>
+              <select class="filter-select" id="sortFilter" onchange="sortStores()">
+                <option value="featured">الأكثر شهرة</option>
+                <option value="rating">الأعلى تقييماً</option>
+                <option value="products">الأكثر منتجات</option>
+                <option value="newest">الأحدث</option>
+              </select>
+            </div>
+
+            <!-- Verified Only -->
+            <div class="filter-group filter-checkbox">
+              <label class="checkbox-label">
+                <input type="checkbox" id="verifiedFilter" onchange="filterStores()">
+                <span>متاجر موثقة فقط ✓</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stores Grid -->
+    <section class="stores-section">
+      <div class="container">
+        <div class="stores-header">
+          <h2 class="section-title">جميع المتاجر</h2>
+          <p class="stores-count" id="storesCount">عرض <strong>12</strong> متجر</p>
+        </div>
+
+        <div class="stores-grid" id="storesGrid">
+          <!-- Store Card 1 -->
+          <article class="store-card" data-category="electronics" data-rating="5" data-city="riyadh" data-verified="true">
+            <div class="store-badge verified">✓ موثق</div>
+            <div class="store-logo">
+              <img src="https://via.placeholder.com/100" alt="متجر التقنية الحديثة">
+            </div>
+            <h3 class="store-name">متجر التقنية الحديثة</h3>
+            <p class="store-category">إلكترونيات</p>
+            <div class="store-rating">
+              <span class="stars">⭐⭐⭐⭐⭐</span>
+              <span class="rating-value">(5.0)</span>
+            </div>
+            <p class="store-description">متخصصون في بيع أحدث الأجهزة الإلكترونية والتقنية</p>
+            <div class="store-stats">
+              <div class="stat">
+                <span class="stat-value">250+</span>
+                <span class="stat-label">منتج</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">1.2k</span>
+                <span class="stat-label">عميل</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">الرياض</span>
+                <span class="stat-label">الموقع</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-primary btn-block">زيارة المتجر</a>
+          </article>
+
+          <!-- Store Card 2 -->
+          <article class="store-card" data-category="fashion" data-rating="4.8" data-city="jeddah" data-verified="true">
+            <div class="store-badge verified">✓ موثق</div>
+            <div class="store-logo">
+              <img src="https://via.placeholder.com/100" alt="أزياء العصر">
+            </div>
+            <h3 class="store-name">أزياء العصر</h3>
+            <p class="store-category">أزياء وموضة</p>
+            <div class="store-rating">
+              <span class="stars">⭐⭐⭐⭐⭐</span>
+              <span class="rating-value">(4.8)</span>
+            </div>
+            <p class="store-description">أحدث صيحات الموضة والأزياء العصرية للرجال والنساء</p>
+            <div class="store-stats">
+              <div class="stat">
+                <span class="stat-value">180+</span>
+                <span class="stat-label">منتج</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">850</span>
+                <span class="stat-label">عميل</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">جدة</span>
+                <span class="stat-label">الموقع</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-primary btn-block">زيارة المتجر</a>
+          </article>
+
+          <!-- Store Card 3 -->
+          <article class="store-card" data-category="home" data-rating="4.6" data-city="dammam" data-verified="false">
+            <div class="store-logo">
+              <img src="https://via.placeholder.com/100" alt="ديكور المنزل">
+            </div>
+            <h3 class="store-name">ديكور المنزل</h3>
+            <p class="store-category">منزل ومفروشات</p>
+            <div class="store-rating">
+              <span class="stars">⭐⭐⭐⭐</span>
+              <span class="rating-value">(4.6)</span>
+            </div>
+            <p class="store-description">كل ما تحتاجه لجعل منزلك أكثر جمالاً وراحة</p>
+            <div class="store-stats">
+              <div class="stat">
+                <span class="stat-value">320+</span>
+                <span class="stat-label">منتج</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">650</span>
+                <span class="stat-label">عميل</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">الدمام</span>
+                <span class="stat-label">الموقع</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-primary btn-block">زيارة المتجر</a>
+          </article>
+
+          <!-- Store Card 4 -->
+          <article class="store-card" data-category="sports" data-rating="4.9" data-city="riyadh" data-verified="true">
+            <div class="store-badge verified">✓ موثق</div>
+            <div class="store-logo">
+              <img src="https://via.placeholder.com/100" alt="الرياضي المحترف">
+            </div>
+            <h3 class="store-name">الرياضي المحترف</h3>
+            <p class="store-category">رياضة ولياقة</p>
+            <div class="store-rating">
+              <span class="stars">⭐⭐⭐⭐⭐</span>
+              <span class="rating-value">(4.9)</span>
+            </div>
+            <p class="store-description">معدات وملابس رياضية عالية الجودة</p>
+            <div class="store-stats">
+              <div class="stat">
+                <span class="stat-value">150+</span>
+                <span class="stat-label">منتج</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">980</span>
+                <span class="stat-label">عميل</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">الرياض</span>
+                <span class="stat-label">الموقع</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-primary btn-block">زيارة المتجر</a>
+          </article>
+
+          <!-- Store Card 5 -->
+          <article class="store-card" data-category="beauty" data-rating="4.7" data-city="jeddah" data-verified="true">
+            <div class="store-badge verified">✓ موثق</div>
+            <div class="store-logo">
+              <img src="https://via.placeholder.com/100" alt="عالم الجمال">
+            </div>
+            <h3 class="store-name">عالم الجمال</h3>
+            <p class="store-category">جمال وعناية</p>
+            <div class="store-rating">
+              <span class="stars">⭐⭐⭐⭐</span>
+              <span class="rating-value">(4.7)</span>
+            </div>
+            <p class="store-description">منتجات التجميل والعناية الشخصية الأصلية</p>
+            <div class="store-stats">
+              <div class="stat">
+                <span class="stat-value">200+</span>
+                <span class="stat-label">منتج</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">1.5k</span>
+                <span class="stat-label">عميل</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">جدة</span>
+                <span class="stat-label">الموقع</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-primary btn-block">زيارة المتجر</a>
+          </article>
+
+          <!-- Store Card 6 -->
+          <article class="store-card" data-category="books" data-rating="4.5" data-city="riyadh" data-verified="false">
+            <div class="store-logo">
+              <img src="https://via.placeholder.com/100" alt="مكتبة المعرفة">
+            </div>
+            <h3 class="store-name">مكتبة المعرفة</h3>
+            <p class="store-category">كتب وقرطاسية</p>
+            <div class="store-rating">
+              <span class="stars">⭐⭐⭐⭐</span>
+              <span class="rating-value">(4.5)</span>
+            </div>
+            <p class="store-description">أفضل الكتب والأدوات المكتبية لجميع الأعمار</p>
+            <div class="store-stats">
+              <div class="stat">
+                <span class="stat-value">500+</span>
+                <span class="stat-label">منتج</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">750</span>
+                <span class="stat-label">عميل</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">الرياض</span>
+                <span class="stat-label">الموقع</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-primary btn-block">زيارة المتجر</a>
+          </article>
+
+          <!-- Store Card 7 -->
+          <article class="store-card" data-category="food" data-rating="4.8" data-city="makkah" data-verified="true">
+            <div class="store-badge verified">✓ موثق</div>
+            <div class="store-logo">
+              <img src="https://via.placeholder.com/100" alt="متجر الذواقة">
+            </div>
+            <h3 class="store-name">متجر الذواقة</h3>
+            <p class="store-category">أطعمة ومشروبات</p>
+            <div class="store-rating">
+              <span class="stars">⭐⭐⭐⭐⭐</span>
+              <span class="rating-value">(4.8)</span>
+            </div>
+            <p class="store-description">أجود المنتجات الغذائية والمشروبات الفاخرة</p>
+            <div class="store-stats">
+              <div class="stat">
+                <span class="stat-value">280+</span>
+                <span class="stat-label">منتج</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">920</span>
+                <span class="stat-label">عميل</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">مكة</span>
+                <span class="stat-label">الموقع</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-primary btn-block">زيارة المتجر</a>
+          </article>
+
+          <!-- Store Card 8 -->
+          <article class="store-card" data-category="toys" data-rating="4.6" data-city="madinah" data-verified="false">
+            <div class="store-logo">
+              <img src="https://via.placeholder.com/100" alt="عالم الألعاب">
+            </div>
+            <h3 class="store-name">عالم الألعاب</h3>
+            <p class="store-category">ألعاب وأطفال</p>
+            <div class="store-rating">
+              <span class="stars">⭐⭐⭐⭐</span>
+              <span class="rating-value">(4.6)</span>
+            </div>
+            <p class="store-description">ألعاب تعليمية وترفيهية آمنة للأطفال</p>
+            <div class="store-stats">
+              <div class="stat">
+                <span class="stat-value">350+</span>
+                <span class="stat-label">منتج</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">680</span>
+                <span class="stat-label">عميل</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">المدينة</span>
+                <span class="stat-label">الموقع</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-primary btn-block">زيارة المتجر</a>
+          </article>
+
+          <!-- Store Card 9 -->
+          <article class="store-card" data-category="electronics" data-rating="4.9" data-city="jeddah" data-verified="true">
+            <div class="store-badge verified">✓ موثق</div>
+            <div class="store-logo">
+              <img src="https://via.placeholder.com/100" alt="تك زون">
+            </div>
+            <h3 class="store-name">تك زون</h3>
+            <p class="store-category">إلكترونيات</p>
+            <div class="store-rating">
+              <span class="stars">⭐⭐⭐⭐⭐</span>
+              <span class="rating-value">(4.9)</span>
+            </div>
+            <p class="store-description">أحدث الأجهزة الذكية والإكسسوارات التقنية</p>
+            <div class="store-stats">
+              <div class="stat">
+                <span class="stat-value">420+</span>
+                <span class="stat-label">منتج</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">2.1k</span>
+                <span class="stat-label">عميل</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">جدة</span>
+                <span class="stat-label">الموقع</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-primary btn-block">زيارة المتجر</a>
+          </article>
+
+          <!-- Store Card 10 -->
+          <article class="store-card" data-category="fashion" data-rating="4.7" data-city="riyadh" data-verified="true">
+            <div class="store-badge verified">✓ موثق</div>
+            <div class="store-logo">
+              <img src="https://via.placeholder.com/100" alt="الأناقة الراقية">
+            </div>
+            <h3 class="store-name">الأناقة الراقية</h3>
+            <p class="store-category">أزياء وموضة</p>
+            <div class="store-rating">
+              <span class="stars">⭐⭐⭐⭐</span>
+              <span class="rating-value">(4.7)</span>
+            </div>
+            <p class="store-description">ملابس راقية وعصرية للمناسبات الخاصة</p>
+            <div class="store-stats">
+              <div class="stat">
+                <span class="stat-value">220+</span>
+                <span class="stat-label">منتج</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">1.1k</span>
+                <span class="stat-label">عميل</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">الرياض</span>
+                <span class="stat-label">الموقع</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-primary btn-block">زيارة المتجر</a>
+          </article>
+
+          <!-- Store Card 11 -->
+          <article class="store-card" data-category="home" data-rating="4.5" data-city="dammam" data-verified="false">
+            <div class="store-logo">
+              <img src="https://via.placeholder.com/100" alt="منزل الأحلام">
+            </div>
+            <h3 class="store-name">منزل الأحلام</h3>
+            <p class="store-category">منزل ومفروشات</p>
+            <div class="store-rating">
+              <span class="stars">⭐⭐⭐⭐</span>
+              <span class="rating-value">(4.5)</span>
+            </div>
+            <p class="store-description">أثاث عصري وديكورات منزلية فاخرة</p>
+            <div class="store-stats">
+              <div class="stat">
+                <span class="stat-value">380+</span>
+                <span class="stat-label">منتج</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">590</span>
+                <span class="stat-label">عميل</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">الدمام</span>
+                <span class="stat-label">الموقع</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-primary btn-block">زيارة المتجر</a>
+          </article>
+
+          <!-- Store Card 12 -->
+          <article class="store-card" data-category="sports" data-rating="4.8" data-city="jeddah" data-verified="true">
+            <div class="store-badge verified">✓ موثق</div>
+            <div class="store-logo">
+              <img src="https://via.placeholder.com/100" alt="فتنس بلس">
+            </div>
+            <h3 class="store-name">فتنس بلس</h3>
+            <p class="store-category">رياضة ولياقة</p>
+            <div class="store-rating">
+              <span class="stars">⭐⭐⭐⭐⭐</span>
+              <span class="rating-value">(4.8)</span>
+            </div>
+            <p class="store-description">أجهزة اللياقة البدنية والمكملات الغذائية</p>
+            <div class="store-stats">
+              <div class="stat">
+                <span class="stat-value">190+</span>
+                <span class="stat-label">منتج</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">870</span>
+                <span class="stat-label">عميل</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">جدة</span>
+                <span class="stat-label">الموقع</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-primary btn-block">زيارة المتجر</a>
+          </article>
+        </div>
+
+        <!-- Load More -->
+        <div class="load-more">
+          <button class="btn btn-secondary btn-lg">تحميل المزيد من المتاجر</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-content">
+          <h2 class="cta-title">هل أنت بائع؟</h2>
+          <p class="cta-text">انضم إلى منصة جنورا وابدأ في بيع منتجاتك لآلاف العملاء</p>
+          <a href="#" class="btn btn-gold btn-lg">سجل متجرك الآن</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3 class="footer-title">جنورا</h3>
+          <p class="footer-text">منصتك المثالية للتسوق الإلكتروني في المملكة العربية السعودية</p>
+          <div class="footer-social">
+            <a href="#" aria-label="فيسبوك">📘</a>
+            <a href="#" aria-label="تويتر">🐦</a>
+            <a href="#" aria-label="إنستغرام">📷</a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h4 class="footer-subtitle">روابط سريعة</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="categories.html">المنتجات</a></li>
+            <li><a href="stores.html">المتاجر</a></li>
+            <li><a href="terms.html">الشروط والأحكام</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4 class="footer-subtitle">خدمة العملاء</h4>
+          <ul class="footer-links">
+            <li><a href="#">مركز المساعدة</a></li>
+            <li><a href="#">تتبع الطلب</a></li>
+            <li><a href="#">الإرجاع والاسترداد</a></li>
+            <li><a href="#">اتصل بنا</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4 class="footer-subtitle">تواصل معنا</h4>
+          <ul class="footer-contact">
+            <li>📧 support@geenora.com</li>
+            <li>📞 920000000</li>
+            <li>📍 الرياض، السعودية</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 جنورا. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    // Filter and Sort Functions
+    function filterStores() {
+      const searchTerm = document.getElementById('searchStore').value.toLowerCase();
+      const category = document.getElementById('categoryFilter').value;
+      const rating = parseFloat(document.getElementById('ratingFilter').value);
+      const city = document.getElementById('cityFilter').value;
+      const verifiedOnly = document.getElementById('verifiedFilter').checked;
+      
+      const stores = document.querySelectorAll('.store-card');
+      let visibleCount = 0;
+      
+      stores.forEach(store => {
+        const storeName = store.querySelector('.store-name').textContent.toLowerCase();
+        const storeCategory = store.dataset.category;
+        const storeRating = parseFloat(store.dataset.rating);
+        const storeCity = store.dataset.city;
+        const storeVerified = store.dataset.verified === 'true';
+        
+        const matchesSearch = storeName.includes(searchTerm);
+        const matchesCategory = !category || storeCategory === category;
+        const matchesRating = !rating || storeRating >= rating;
+        const matchesCity = !city || storeCity === city;
+        const matchesVerified = !verifiedOnly || storeVerified;
+        
+        if (matchesSearch && matchesCategory && matchesRating && matchesCity && matchesVerified) {
+          store.style.display = 'block';
+          visibleCount++;
+        } else {
+          store.style.display = 'none';
+        }
+      });
+      
+      document.getElementById('storesCount').innerHTML = `عرض <strong>${visibleCount}</strong> متجر`;
+    }
+    
+    function sortStores() {
+      const sortValue = document.getElementById('sortFilter').value;
+      const grid = document.getElementById('storesGrid');
+      const stores = Array.from(grid.querySelectorAll('.store-card'));
+      
+      stores.sort((a, b) => {
+        switch(sortValue) {
+          case 'rating':
+            return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+          case 'products':
+            const aProducts = parseInt(a.querySelector('.stat-value').textContent);
+            const bProducts = parseInt(b.querySelector('.stat-value').textContent);
+            return bProducts - aProducts;
+          case 'newest':
+            return Math.random() - 0.5; // Random for demo
+          default:
+            return 0;
+        }
+      });
+      
+      stores.forEach(store => grid.appendChild(store));
+    }
+    
+    function resetFilters() {
+      document.getElementById('searchStore').value = '';
+      document.getElementById('categoryFilter').value = '';
+      document.getElementById('ratingFilter').value = '';
+      document.getElementById('cityFilter').value = '';
+      document.getElementById('sortFilter').value = 'featured';
+      document.getElementById('verifiedFilter').checked = false;
+      filterStores();
+    }
+  </script>
+</body>
+</html>
