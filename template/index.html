@@ -6,8 +6,8 @@
   <title>Geenora | جينورا - المتاجر المتعددة</title>
   <meta name="description" content="منصة جينورا للتسوق - اكتشف مجموعة واسعة من المنتجات من متاجر متعددة في مكان واحد">
   
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts - Cairo -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Custom CSS -->
@@ -31,7 +31,7 @@
           <a href="index.html" class="nav-link active">الرئيسية</a>
           <a href="categories.html" class="nav-link">الأصناف</a>
           <a href="stores.html" class="nav-link">المتاجر</a>
-          <a href="about.html" class="nav-link">من نحن</a>
+          <a href="terms.html" class="nav-link">الشروط</a>
         </nav>
 
         <div class="header-actions">
@@ -57,41 +57,375 @@
 
   <!-- Hero Section -->
   <section class="hero">
+    <div class="hero-bg-effects">
+      <div class="hero-bg-circle hero-bg-circle-1"></div>
+      <div class="hero-bg-circle hero-bg-circle-2"></div>
+    </div>
     <div class="container">
       <div class="hero-content">
         <div class="hero-text">
-          <p class="hero-subtitle">مرحباً بك في</p>
-          <h1 class="hero-title">جينورا <span class="highlight">المتاجر المتعددة</span></h1>
-          <p class="hero-description">منصة رقمية ذات فلسفة تمكينية وإنسانية تجمع عدة متاجر متنوعة في مكان واحد</p>
-          <div class="hero-actions">
-            <a href="categories.html" class="btn btn-gold btn-lg">ابدأ التسوق الآن</a>
-            <a href="stores.html" class="btn btn-secondary btn-lg">تصفح المتاجر</a>
-          </div>
+          <p class="hero-subtitle animate-fade-in">مرحباً بك في</p>
+          <h1 class="hero-title animate-fade-in">
+            جينورا <br>
+            <span class="highlight">المتاجر المتعددة</span>
+          </h1>
+          <p class="hero-description animate-fade-in">
+            منصة رقمية ذات فلسفة تمكينية وإنسانية تجمع عدة متاجر متنوعة في مكان واحد. تسوق بسهولة وثقة
+          </p>
           <div class="hero-stats">
-            <div class="stat">
+            <div class="stat animate-fade-in">
               <span class="stat-value">500+</span>
               <span class="stat-label">متجر</span>
             </div>
-            <div class="stat">
+            <div class="stat animate-fade-in" style="animation-delay: 0.1s;">
               <span class="stat-value">10K+</span>
               <span class="stat-label">منتج</span>
             </div>
-            <div class="stat">
+            <div class="stat animate-fade-in" style="animation-delay: 0.2s;">
               <span class="stat-value">5K+</span>
               <span class="stat-label">عميل</span>
             </div>
           </div>
+          <div class="hero-actions">
+            <a href="categories.html" class="btn btn-primary btn-lg">
+              <i class="fas fa-shopping-bag"></i>
+              ابدأ التسوق الآن
+            </a>
+            <a href="stores.html" class="btn btn-secondary btn-lg">
+              <i class="fas fa-store"></i>
+              للبائعين: انضم الآن
+            </a>
+          </div>
         </div>
-        <div class="hero-image">
-          <img src="assets/images/hero.jpg" alt="Geenora">
-          <div class="hero-badge">جديد 2024</div>
+        <div class="hero-image animate-fade-in">
+          <div class="hero-image-wrapper">
+            <img src="assets/images/hero.jpg" alt="Geenora Marketplace" class="hero-main-image">
+            <div class="hero-badge">جديد 2024</div>
+          </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="benefits-section">
+    <div class="benefits-bg-pattern">
+      <div class="pattern-circle pattern-circle-1"></div>
+      <div class="pattern-circle pattern-circle-2"></div>
+    </div>
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">لماذا جينورا؟</div>
+        <h2 class="section-title">
+          فوائد <span class="text-gradient">التسوق</span>
+        </h2>
+        <p class="section-description">
+          استمتع بتجربة تسوق فريدة مع مميزات حصرية
+        </p>
+      </div>
+
+      <div class="benefits-grid">
+        <div class="benefit-card animate-fade-in">
+          <div class="benefit-image">
+            <img src="assets/images/benefit-shopping.jpg" alt="أسعار تنافسية">
+          </div>
+          <h3 class="benefit-title">أسعار تنافسية</h3>
+          <p class="benefit-description">
+            مقارنة الأسعار بسهولة بين البائعين المختلفين للحصول على أفضل العروض
+          </p>
+        </div>
+
+        <div class="benefit-card animate-fade-in" style="animation-delay: 0.15s;">
+          <div class="benefit-image">
+            <img src="assets/images/benefit-vendor.jpg" alt="تسوق سهل">
+          </div>
+          <h3 class="benefit-title">تسوق سهل</h3>
+          <p class="benefit-description">
+            تصفح المنتجات والخدمات بسهولة من تجار مختلفين بشكل ملائم في مكان واحد
+          </p>
+        </div>
+
+        <div class="benefit-card animate-fade-in" style="animation-delay: 0.3s;">
+          <div class="benefit-image">
+            <img src="assets/images/benefit-variety.jpg" alt="خيارات متعددة">
+          </div>
+          <h3 class="benefit-title">خيارات متعددة</h3>
+          <p class="benefit-description">
+            عرض مجموعة واسعة من المنتجات والخدمات من العديد من البائعين وتلبية كل احتياج
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Stores Section -->
+  <section class="featured-stores-section">
+    <div class="featured-bg-pattern">
+      <div class="pattern-blur pattern-blur-1"></div>
+      <div class="pattern-blur pattern-blur-2"></div>
+    </div>
+    <div class="container">
+      <div class="featured-stores-content">
+        <div class="featured-stores-image animate-fade-in">
+          <div class="featured-image-wrapper">
+            <img src="assets/images/stores-row.jpg" alt="المتاجر المميزة" class="featured-main-image">
+            <div class="featured-badge">
+              <i class="fas fa-star"></i>
+              <span>متاجر موثوقة</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="featured-stores-text">
+          <h2 class="featured-title animate-fade-in">
+            اكتشف <span class="text-gradient">المتاجر المميزة</span>
+          </h2>
+          <p class="featured-description animate-fade-in">
+            تسوق من مجموعة مختارة من أفضل المتاجر والبائعين الموثوقين في المملكة
+          </p>
+
+          <div class="featured-features">
+            <div class="featured-feature animate-fade-in">
+              <div class="feature-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="feature-content">
+                <h4>منتجات عالية الجودة</h4>
+                <p>جميع المتاجر مراجعة ومعتمدة</p>
+              </div>
+            </div>
+
+            <div class="featured-feature animate-fade-in" style="animation-delay: 0.1s;">
+              <div class="feature-icon">
+                <i class="fas fa-headset"></i>
+              </div>
+              <div class="feature-content">
+                <h4>خدمة عملاء ممتازة</h4>
+                <p>دعم على مدار الساعة</p>
+              </div>
+            </div>
+
+            <div class="featured-feature animate-fade-in" style="animation-delay: 0.2s;">
+              <div class="feature-icon">
+                <i class="fas fa-shipping-fast"></i>
+              </div>
+              <div class="feature-content">
+                <h4>توصيل سريع</h4>
+                <p>شحن آمن لجميع المناطق</p>
+              </div>
+            </div>
+          </div>
+
+          <a href="stores.html" class="btn btn-primary btn-lg">
+            <i class="fas fa-store"></i>
+            استكشف المتاجر
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Timeline Section -->
+  <section class="process-timeline-section">
+    <div class="timeline-bg-effects">
+      <div class="timeline-bg-circle timeline-bg-circle-1"></div>
+      <div class="timeline-bg-circle timeline-bg-circle-2"></div>
+    </div>
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title text-white">
+          خط <span class="text-gradient">الوصول</span>
+        </h2>
+        <p class="section-description text-white-70">
+          أربع خطوات سهلة للبدء في رحلة التسوق
+        </p>
+      </div>
+
+      <div class="timeline-steps">
+        <div class="timeline-step animate-fade-in">
+          <div class="step-icon-wrapper">
+            <div class="step-icon step-icon-pink">
+              <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="step-number">01</div>
+          </div>
+          <h3 class="step-title">التسجيل</h3>
+          <p class="step-description">إنشاء حساب مجاني</p>
+          <div class="step-connector"></div>
+        </div>
+
+        <div class="timeline-step animate-fade-in" style="animation-delay: 0.15s;">
+          <div class="step-icon-wrapper">
+            <div class="step-icon step-icon-orange">
+              <i class="fas fa-search"></i>
+            </div>
+            <div class="step-number">02</div>
+          </div>
+          <h3 class="step-title">التصفح</h3>
+          <p class="step-description">استكشف المنتجات من متاجر متعددة</p>
+          <div class="step-connector"></div>
+        </div>
+
+        <div class="timeline-step animate-fade-in" style="animation-delay: 0.3s;">
+          <div class="step-icon-wrapper">
+            <div class="step-icon step-icon-teal">
+              <i class="fas fa-credit-card"></i>
+            </div>
+            <div class="step-number">03</div>
+          </div>
+          <h3 class="step-title">الدفع</h3>
+          <p class="step-description">اختر طريقة الدفع المناسبة</p>
+          <div class="step-connector"></div>
+        </div>
+
+        <div class="timeline-step animate-fade-in" style="animation-delay: 0.45s;">
+          <div class="step-icon-wrapper">
+            <div class="step-icon step-icon-yellow">
+              <i class="fas fa-box"></i>
+            </div>
+            <div class="step-number">04</div>
+          </div>
+          <h3 class="step-title">التوصيل</h3>
+          <p class="step-description">استلم طلبك في الوقت المحدد</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Payment Methods Section -->
+  <section class="payment-methods-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">طرق الدفع</div>
+        <h2 class="section-title">
+          <span class="text-gradient">آمنة</span> ومتعددة
+        </h2>
+        <p class="section-description">
+          نوفر لك خيارات دفع متنوعة وآمنة لراحتك
+        </p>
+      </div>
+
+      <div class="payment-content">
+        <div class="payment-methods">
+          <div class="payment-method animate-fade-in">
+            <div class="payment-icon payment-icon-pink">
+              <i class="fas fa-credit-card"></i>
+            </div>
+            <div class="payment-info">
+              <h3 class="payment-title">البطاقات الائتمانية</h3>
+              <p class="payment-description">فيزا، ماستركارد، مدى - دفع آمن ومشفر</p>
+              <div class="payment-badge">
+                <i class="fas fa-shield-alt"></i>
+                دفع آمن 100%
+              </div>
+            </div>
+          </div>
+
+          <div class="payment-method animate-fade-in" style="animation-delay: 0.15s;">
+            <div class="payment-icon payment-icon-orange">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <div class="payment-info">
+              <h3 class="payment-title">المحفظة الإلكترونية</h3>
+              <p class="payment-description">Apple Pay، STC Pay، وغيرها - دفع سريع</p>
+              <div class="payment-badge">
+                <i class="fas fa-shield-alt"></i>
+                دفع آمن 100%
+              </div>
+            </div>
+          </div>
+
+          <div class="payment-method animate-fade-in" style="animation-delay: 0.3s;">
+            <div class="payment-icon payment-icon-teal">
+              <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="payment-info">
+              <h3 class="payment-title">الدفع عند الاستلام</h3>
+              <p class="payment-description">ادفع نقداً عند استلام طلبك - مرن وآمن</p>
+              <div class="payment-badge">
+                <i class="fas fa-shield-alt"></i>
+                دفع آمن 100%
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="payment-image animate-fade-in">
+          <div class="payment-image-wrapper">
+            <img src="assets/images/payment-workspace.jpg" alt="طرق الدفع الآمنة">
+            <div class="payment-floating-icon">
+              <i class="fas fa-credit-card"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Registration CTA Section -->
+  <section class="registration-cta-section">
+    <div class="cta-bg-effects">
+      <div class="cta-bg-blur cta-bg-blur-1"></div>
+      <div class="cta-bg-blur cta-bg-blur-2"></div>
+    </div>
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">
+          ابدأ رحلتك <span class="text-gradient">الآن</span>
+        </h2>
+        <p class="section-description">
+          سجل مجاناً واستمتع بتجربة تسوق لا مثيل لها
+        </p>
+      </div>
+
+      <div class="cta-steps">
+        <div class="cta-step animate-fade-in">
+          <div class="cta-step-number">01</div>
+          <h3 class="cta-step-title">تسجيل الدخول</h3>
+          <ul class="cta-step-list">
+            <li><i class="fas fa-check"></i> إنشاء حساب مجاني</li>
+            <li><i class="fas fa-check"></i> حفظ العناوين المفضلة</li>
+            <li><i class="fas fa-check"></i> تتبع طلباتك بسهولة</li>
+          </ul>
+        </div>
+
+        <div class="cta-step animate-fade-in" style="animation-delay: 0.15s;">
+          <div class="cta-step-number">02</div>
+          <h3 class="cta-step-title">استعراض المتاجر</h3>
+          <ul class="cta-step-list">
+            <li><i class="fas fa-check"></i> تصفح آلاف المنتجات</li>
+            <li><i class="fas fa-check"></i> قارن الأسعار والجودة</li>
+            <li><i class="fas fa-check"></i> اقرأ تقييمات العملاء</li>
+          </ul>
+        </div>
+
+        <div class="cta-step animate-fade-in" style="animation-delay: 0.3s;">
+          <div class="cta-step-number">03</div>
+          <h3 class="cta-step-title">ابدأ التسوق</h3>
+          <ul class="cta-step-list">
+            <li><i class="fas fa-check"></i> أضف المنتجات للسلة</li>
+            <li><i class="fas fa-check"></i> اختر طريقة الدفع</li>
+            <li><i class="fas fa-check"></i> استلم طلبك بسرعة</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cta-action">
+        <a href="register.html" class="btn btn-gradient btn-xl">
+          <i class="fas fa-user-plus"></i>
+          سجل الآن وابدأ التسوق
+        </a>
+        <p class="cta-note">التسجيل مجاني ولا يتطلب بطاقة ائتمان</p>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
   <footer class="footer">
+    <div class="footer-bg-effects">
+      <div class="footer-bg-circle footer-bg-circle-1"></div>
+      <div class="footer-bg-circle footer-bg-circle-2"></div>
+    </div>
     <div class="container">
       <div class="footer-main">
         <div class="footer-brand">
@@ -100,16 +434,56 @@
             <span>جينورا</span>
           </div>
           <p class="footer-description">منصة رقمية تمكينية تجمع عدة متاجر في مكان واحد</p>
-          <div class="footer-social">
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
+          
+          <div class="footer-contact">
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <span>info@geenora.com</span>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-phone"></i>
+              <span dir="ltr">+966 50 123 4567</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-stats">
+          <div class="footer-stat">
+            <div class="stat-icon">
+              <i class="fas fa-store"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value">500+</span>
+              <span class="stat-label">متجر نشط</span>
+            </div>
+          </div>
+          <div class="footer-stat">
+            <div class="stat-icon">
+              <i class="fas fa-box"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value">10K+</span>
+              <span class="stat-label">منتج متوفر</span>
+            </div>
+          </div>
+          <div class="footer-stat">
+            <div class="stat-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value">5K+</span>
+              <span class="stat-label">عميل راضٍ</span>
+            </div>
           </div>
         </div>
       </div>
+
       <div class="footer-bottom">
         <div class="footer-bottom-content">
           <p class="footer-copyright">© 2024 جينورا. جميع الحقوق محفوظة</p>
+          <p class="footer-made-with">
+            صنع بـ <i class="fas fa-heart"></i> في المملكة العربية السعودية
+          </p>
         </div>
       </div>
     </div>
@@ -117,8 +491,6 @@
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Custom JS -->
   <script src="assets/js/main.js"></script>
 </body>
