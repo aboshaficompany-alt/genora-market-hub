@@ -370,6 +370,135 @@ export default function StoreDetail() {
           </CardContent>
         </Card>
 
+        {/* Category Slider */}
+        {storeCategories.length > 0 && (
+          <Card className="mb-8">
+            <CardContent className="p-6">
+              <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                <Package className="h-6 w-6 text-primary" />
+                أصناف المنتجات
+              </h2>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  variant={selectedCategory === null ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(null)}
+                  className={selectedCategory === null ? "bg-gradient-primary" : ""}
+                  size="lg"
+                >
+                  الكل ({storeProducts.length})
+                </Button>
+                {storeCategories.map((category) => {
+                  const count = storeProducts.filter(p => p.store_category_id === category.id).length;
+                  return (
+                    <Button
+                      key={category.id}
+                      variant={selectedCategory === category.id ? "default" : "outline"}
+                      onClick={() => setSelectedCategory(category.id)}
+                      className={selectedCategory === category.id ? "bg-gradient-primary" : ""}
+                      size="lg"
+                    >
+                      {category.name} ({count})
+                    </Button>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Store Products */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+            <ShoppingCart className="h-6 w-6 text-primary" />
+            منتجات المتجر
+          </h2>
+          
+          {/* Products Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {storeProducts
+              .filter(product => !selectedCategory || product.store_category_id === selectedCategory)
+              .map((product) => (
+              <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                {product.image_url && (
+                  <img
+                    src={product.image_url}
+                    alt={product.name}
+                    className="w-full h-48 object-cover"
+                  />
+                )}
+                <CardContent className="p-4">
+                  <Link to={`/product/${product.id}`}>
+                    <h3 className="font-bold text-lg mb-2 hover:text-primary transition-colors">
+                      {product.name}
+                    </h3>
+                  </Link>
+                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                    {product.description}
+                  </p>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <span className="text-sm font-semibold">
+                      {product.rating || 0}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      ({product.reviews_count || 0})
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xl font-bold text-primary">
+                      {product.discount_price || product.price} ر.س
+                    </span>
+                    {product.discount_price && (
+                      <span className="text-sm line-through text-muted-foreground">
+                        {product.price} ر.س
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      className="flex-1 bg-gradient-primary"
+                      onClick={() => {
+                        addToCart(product);
+                        toast({
+                          title: "تمت الإضافة",
+                          description: "تم إضافة المنتج إلى السلة",
+                        });
+                      }}
+                    >
+                      <ShoppingCart className="ml-2 h-4 w-4" />
+                      أضف للسلة
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        addToWishlist(product);
+                        toast({
+                          title: "تمت الإضافة",
+                          description: "تم إضافة المنتج للمفضلة",
+                        });
+                      }}
+                    >
+                      <Heart className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {storeProducts.filter(product => !selectedCategory || product.store_category_id === selectedCategory).length === 0 && (
+            <Card className="mt-6">
+              <CardContent className="p-8 text-center">
+                <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-muted-foreground text-lg">
+                  لا توجد منتجات في هذا الصنف حالياً
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
         {/* Store Reviews Section */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
@@ -490,119 +619,6 @@ export default function StoreDetail() {
             )}
           </div>
         </div>
-
-        {/* Store Products */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-6">منتجات المتجر</h2>
-          
-          {/* Categories Filter */}
-          {storeCategories.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              <Button
-                variant={selectedCategory === null ? "default" : "outline"}
-                onClick={() => setSelectedCategory(null)}
-                className={selectedCategory === null ? "bg-gradient-primary" : ""}
-              >
-                الكل
-              </Button>
-              {storeCategories.map((category) => (
-                <Button
-                  key={category.id}
-                  variant={selectedCategory === category.id ? "default" : "outline"}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={selectedCategory === category.id ? "bg-gradient-primary" : ""}
-                >
-                  {category.name}
-                </Button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {storeProducts
-            .filter(product => !selectedCategory || product.store_category_id === selectedCategory)
-            .map((product) => (
-            <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              {product.image_url && (
-                <img
-                  src={product.image_url}
-                  alt={product.name}
-                  className="w-full h-48 object-cover"
-                />
-              )}
-              <CardContent className="p-4">
-                <Link to={`/product/${product.id}`}>
-                  <h3 className="font-bold text-lg mb-2 hover:text-primary transition-colors">
-                    {product.name}
-                  </h3>
-                </Link>
-                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                  {product.description}
-                </p>
-                <div className="flex items-center gap-2 mb-3">
-                  <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                  <span className="text-sm font-semibold">
-                    {product.rating || 0}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    ({product.reviews_count || 0})
-                  </span>
-                </div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xl font-bold text-primary">
-                    {product.discount_price || product.price} ر.س
-                  </span>
-                  {product.discount_price && (
-                    <span className="text-sm line-through text-muted-foreground">
-                      {product.price} ر.س
-                    </span>
-                  )}
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    className="flex-1 bg-gradient-primary"
-                    onClick={() => {
-                      addToCart(product);
-                      toast({
-                        title: "تمت الإضافة",
-                        description: "تم إضافة المنتج إلى السلة",
-                      });
-                    }}
-                  >
-                    <ShoppingCart className="ml-2 h-4 w-4" />
-                    أضف للسلة
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                      addToWishlist(product);
-                      toast({
-                        title: "تمت الإضافة",
-                        description: "تم إضافة المنتج للمفضلة",
-                      });
-                    }}
-                  >
-                    <Heart className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {storeProducts.filter(product => !selectedCategory || product.store_category_id === selectedCategory).length === 0 && (
-          <Card className="mt-6">
-            <CardContent className="p-8 text-center">
-              <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-muted-foreground text-lg">
-                لا توجد منتجات في هذا الصنف حالياً
-              </p>
-            </CardContent>
-          </Card>
-        )}
       </main>
 
       {isMobile ? <MobileFooter /> : <Footer />}
