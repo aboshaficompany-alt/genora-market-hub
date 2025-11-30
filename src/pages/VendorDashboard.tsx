@@ -109,21 +109,14 @@ export default function VendorDashboard() {
       title: "المنتجات",
       icon: Package,
       description: "إدارة منتجات المتجر",
-      link: "/vendor-dashboard?tab=products",
+      link: "/vendor-products",
       color: "bg-blue-500/10 text-blue-500"
-    },
-    {
-      title: "الأصناف",
-      icon: Folder,
-      description: "تصنيف المنتجات",
-      link: "/vendor-dashboard?tab=categories",
-      color: "bg-purple-500/10 text-purple-500"
     },
     {
       title: "الفروع",
       icon: GitBranch,
       description: "إدارة فروع المتجر",
-      link: "/vendor-dashboard?tab=branches",
+      link: "/branches",
       color: "bg-green-500/10 text-green-500"
     },
     {

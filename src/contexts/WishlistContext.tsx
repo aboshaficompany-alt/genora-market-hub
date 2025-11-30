@@ -1,12 +1,19 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Product } from "@/data/products";
 import { useToast } from "@/hooks/use-toast";
+
+interface Product {
+  id: string | number;
+  name: string;
+  price: number;
+  image: string;
+  storeName?: string;
+}
 
 interface WishlistContextType {
   items: Product[];
   addToWishlist: (product: Product) => void;
-  removeFromWishlist: (productId: number) => void;
-  isInWishlist: (productId: number) => boolean;
+  removeFromWishlist: (productId: string | number) => void;
+  isInWishlist: (productId: string | number) => boolean;
 }
 
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
@@ -32,7 +39,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const removeFromWishlist = (productId: number) => {
+  const removeFromWishlist = (productId: string | number) => {
     setItems((prev) => prev.filter((item) => item.id !== productId));
     toast({
       title: "تم الحذف",
@@ -40,7 +47,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const isInWishlist = (productId: number) => {
+  const isInWishlist = (productId: string | number) => {
     return items.some((item) => item.id === productId);
   };
 

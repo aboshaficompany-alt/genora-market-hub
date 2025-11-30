@@ -4,7 +4,7 @@ import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, ShoppingCart, Star, Trash2 } from "lucide-react";
+import { Heart, ShoppingCart, Star, Trash2, Store } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import MobileNavbar from "@/components/MobileNavbar";
 import MobileBottomNav from "@/components/MobileBottomNav";
@@ -68,13 +68,6 @@ const Wishlist = () => {
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                   </Link>
-                  {product.discount && (
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-red-500 text-white font-bold shadow-card text-lg px-3 py-1">
-                        -{product.discount}%
-                      </Badge>
-                    </div>
-                  )}
                   <Button
                     size="sm"
                     onClick={() => removeFromWishlist(product.id)}
@@ -90,26 +83,16 @@ const Wishlist = () => {
                       {product.name}
                     </h3>
                   </Link>
-                  <p className="text-charcoal-light mb-4 line-clamp-2 text-sm">
-                    {product.description}
-                  </p>
-                  
-                  <div className="flex items-center gap-2 mb-4 text-sm">
-                    <Star className="w-4 h-4 text-yellow-light fill-yellow-light" />
-                    <span className="font-bold text-charcoal">{product.rating}</span>
-                    <span className="text-charcoal-light">({product.reviews} تقييم)</span>
-                  </div>
+                  {product.storeName && (
+                    <p className="text-sm text-charcoal-light mb-3">
+                      <Store className="w-4 h-4 inline ml-1" />
+                      {product.storeName}
+                    </p>
+                  )}
                   
                   <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <div className="text-2xl font-black text-primary">
-                        {product.price} ر.س
-                      </div>
-                      {product.originalPrice && (
-                        <div className="text-sm text-charcoal-light line-through">
-                          {product.originalPrice} ر.س
-                        </div>
-                      )}
+                    <div className="text-2xl font-black text-primary">
+                      {product.price} ر.س
                     </div>
                   </div>
                   
