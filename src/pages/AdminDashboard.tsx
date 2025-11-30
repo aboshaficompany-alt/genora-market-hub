@@ -37,7 +37,16 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/AdminSidebar";
 
@@ -50,6 +59,9 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedStore, setSelectedStore] = useState<any>(null);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [editCategoryDialog, setEditCategoryDialog] = useState(false);
+  const [selectedStoreCategory, setSelectedStoreCategory] = useState("");
   const [stats, setStats] = useState({
     totalStores: 0,
     pendingStores: 0,
@@ -88,6 +100,15 @@ export default function AdminDashboard() {
   }, [user, authLoading, navigate]);
 
   const loadAdminData = async () => {
+    // تحميل الفئات
+    const { data: categoriesData } = await supabase
+      .from("categories")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order");
+    
+    setCategories(categoriesData || []);
+
     const { data: storesData } = await supabase
       .from("stores")
       .select("*, profiles(full_name)")
@@ -215,6 +236,36 @@ export default function AdminDashboard() {
         title: "نجاح",
         description: "تم رفض المتجر بنجاح",
       });
+      loadAdminData();
+    }
+  };
+
+  const handleEditCategory = (store: any) => {
+    setSelectedStore(store);
+    setSelectedStoreCategory(store.category || "مأكولات ومشروبات");
+    setEditCategoryDialog(true);
+  };
+
+  const handleUpdateCategory = async () => {
+    if (!selectedStore) return;
+
+    const { error } = await supabase
+      .from("stores")
+      .update({ category: selectedStoreCategory })
+      .eq("id", selectedStore.id);
+
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: "فشل تحديث فئة المتجر",
+      });
+    } else {
+      toast({
+        title: "نجاح",
+        description: "تم تحديث فئة المتجر بنجاح",
+      });
+      setEditCategoryDialog(false);
       loadAdminData();
     }
   };
@@ -407,7 +458,7 @@ export default function AdminDashboard() {
                   {stores.map((store) => (
                     <Card key={store.id}>
                       <CardContent className="p-6">
-                        <div className="flex justify-between items-start">
+                         <div className="flex justify-between items-start">
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
                               <h3 className="font-bold text-lg">{store.name}</h3>
@@ -435,6 +486,13 @@ export default function AdminDashboard() {
                             >
                               <Eye className="h-4 w-4 ml-1" />
                               عرض
+                            </Button>
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => handleEditCategory(store)}
+                            >
+                              تغيير الفئة
                             </Button>
                             {!store.is_approved && (
                               <>
@@ -518,7 +576,7 @@ export default function AdminDashboard() {
       </div>
       
       {/* Store Details Dialog */}
-      <Dialog open={!!selectedStore} onOpenChange={() => setSelectedStore(null)}>
+      <Dialog open={!!selectedStore && !editCategoryDialog} onOpenChange={() => setSelectedStore(null)}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>تفاصيل المتجر</DialogTitle>
@@ -568,6 +626,44 @@ export default function AdminDashboard() {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Category Dialog */}
+      <Dialog open={editCategoryDialog} onOpenChange={setEditCategoryDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>تغيير فئة المتجر</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>اسم المتجر</Label>
+              <p className="text-sm font-medium">{selectedStore?.name}</p>
+            </div>
+            <div className="space-y-2">
+              <Label>الفئة الجديدة</Label>
+              <Select value={selectedStoreCategory} onValueChange={setSelectedStoreCategory}>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر الفئة" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.name_ar}>
+                      {category.icon} {category.name_ar}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditCategoryDialog(false)}>
+              إلغاء
+            </Button>
+            <Button onClick={handleUpdateCategory}>
+              حفظ التغييرات
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </SidebarProvider>

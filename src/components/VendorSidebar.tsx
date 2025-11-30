@@ -16,7 +16,7 @@ const items = [
   { title: "لوحة التحكم", url: "/vendor-dashboard", icon: LayoutDashboard },
   { title: "المنتجات", url: "/vendor-products", icon: Package },
   { title: "الفروع", url: "/branches", icon: Store },
-  { title: "الطلبات", url: "/vendor-dashboard?tab=orders", icon: ShoppingCart },
+  { title: "الطلبات", url: "/vendor-orders", icon: ShoppingCart },
   { title: "طلبات السحب", url: "/withdrawal-requests", icon: DollarSign },
   { title: "المديونيات", url: "/debts", icon: CreditCard },
   { title: "إعدادات المتجر", url: "/store-settings", icon: Settings },

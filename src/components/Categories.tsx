@@ -73,12 +73,12 @@ const Categories = () => {
               to={`/stores?category=${encodeURIComponent(category.name_ar)}`}
               className="group"
             >
-              <Card className="h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-2 bg-card border-2 border-border hover:border-primary">
+              <Card className="h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-2 bg-card border-2 border-border hover:border-primary cursor-pointer">
                 <CardContent className="p-6 text-center">
                   <div className="text-5xl mb-4 transition-transform duration-300 group-hover:scale-110">
                     {category.icon}
                   </div>
-                  <h3 className="font-bold text-lg mb-2 text-foreground">
+                  <h3 className="font-bold text-lg mb-2 text-foreground group-hover:text-primary transition-colors">
                     {category.name_ar}
                   </h3>
                   {category.description && (
