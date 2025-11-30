@@ -17,7 +17,8 @@ import {
   GitBranch,
   Megaphone,
   Package,
-  TrendingUp
+  TrendingUp,
+  Layers
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -34,6 +35,7 @@ import {
 
 const systemItems = [
   { title: "المستخدمون", url: "/users", icon: Users },
+  { title: "الفئات", url: "/categories", icon: Layers },
   { title: "الرسائل/الاستفسارات", url: "/messages", icon: MessageSquare },
   { title: "العروض", url: "/offers", icon: Gift },
   { title: "برومو كود", url: "/promo-codes", icon: Percent },
