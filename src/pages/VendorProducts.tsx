@@ -29,6 +29,7 @@ interface Product {
   price: number;
   discount_price: number | null;
   category: string | null;
+  category_id: string | null;
   image_url: string | null;
   in_stock: boolean;
   store_id: string;
@@ -58,6 +59,7 @@ export default function VendorProducts() {
     price: "",
     discount_price: "",
     category: "",
+    category_id: "",
     in_stock: true,
   });
 
@@ -162,6 +164,7 @@ export default function VendorProducts() {
         price: parseFloat(formData.price),
         discount_price: formData.discount_price ? parseFloat(formData.discount_price) : null,
         category: formData.category,
+        category_id: formData.category_id || null,
         in_stock: formData.in_stock,
         image_url: imageUrl,
         store_id: store.id,
@@ -206,6 +209,7 @@ export default function VendorProducts() {
       price: product.price.toString(),
       discount_price: product.discount_price?.toString() || "",
       category: product.category || "",
+      category_id: product.category_id || "",
       in_stock: product.in_stock,
     });
     setDialogOpen(true);
@@ -240,6 +244,7 @@ export default function VendorProducts() {
       price: "",
       discount_price: "",
       category: "",
+      category_id: "",
       in_stock: true,
     });
     setEditingProduct(null);
@@ -324,13 +329,23 @@ export default function VendorProducts() {
 
                       <div>
                         <Label>الفئة</Label>
-                        <Select value={formData.category} onValueChange={(val) => setFormData({ ...formData, category: val })}>
+                        <Select 
+                          value={formData.category_id} 
+                          onValueChange={(val) => {
+                            const selectedCat = categories.find(c => c.id === val);
+                            setFormData({ 
+                              ...formData, 
+                              category_id: val,
+                              category: selectedCat?.name_ar || ""
+                            });
+                          }}
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="اختر الفئة" />
                           </SelectTrigger>
                           <SelectContent>
                             {categories.map((cat) => (
-                              <SelectItem key={cat.id} value={cat.name_ar}>
+                              <SelectItem key={cat.id} value={cat.id}>
                                 {cat.name_ar}
                               </SelectItem>
                             ))}

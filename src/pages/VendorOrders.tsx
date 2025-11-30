@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { VendorSidebar } from "@/components/VendorSidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { VendorNotifications } from "@/components/VendorNotifications";
 import {
   Select,
   SelectContent,
@@ -190,13 +191,16 @@ export default function VendorOrders() {
           <main className="flex-1 container mx-auto px-4 py-8">
             <SidebarTrigger className="mb-4" />
 
-            <div className="mb-8">
-              <h1 className="text-4xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
-                إدارة الطلبات
-              </h1>
-              <p className="text-muted-foreground">
-                عرض وإدارة الطلبات المتعلقة بمنتجاتك
-              </p>
+            <div className="mb-8 flex items-center justify-between">
+              <div>
+                <h1 className="text-4xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
+                  إدارة الطلبات
+                </h1>
+                <p className="text-muted-foreground">
+                  عرض وإدارة الطلبات المتعلقة بمنتجاتك
+                </p>
+              </div>
+              <VendorNotifications />
             </div>
 
             {orders.length === 0 ? (

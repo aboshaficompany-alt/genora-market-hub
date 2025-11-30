@@ -27,6 +27,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { VendorSidebar } from "@/components/VendorSidebar";
+import { VendorNotifications } from "@/components/VendorNotifications";
 
 export default function VendorDashboard() {
   const { user, hasRole, loading: authLoading } = useAuth();
@@ -200,15 +201,21 @@ export default function VendorDashboard() {
             ) : (
               <>
                 {/* Header Actions */}
-                <div className="flex justify-end gap-2 mb-4">
-                  <Button variant="outline" size="sm">
-                    <Key className="h-4 w-4 ml-2" />
-                    تغيير كلمة المرور
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={handleLogout}>
-                    <LogOut className="h-4 w-4 ml-2" />
-                    خروج
-                  </Button>
+                <div className="flex justify-between items-center mb-4">
+                  <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                    لوحة التحكم
+                  </h1>
+                  <div className="flex gap-2">
+                    <VendorNotifications />
+                    <Button variant="outline" size="sm">
+                      <Key className="h-4 w-4 ml-2" />
+                      تغيير كلمة المرور
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={handleLogout}>
+                      <LogOut className="h-4 w-4 ml-2" />
+                      خروج
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Store Info Header */}
