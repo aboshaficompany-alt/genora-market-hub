@@ -1,54 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
-  Legend,
-} from "recharts";
-import {
-  Store,
-  Users,
-  ShoppingCart,
-  CheckCircle,
-  XCircle,
-  Eye,
-} from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/AdminSidebar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ProductsStats from "./ProductsStats";
 
 export default function AdminDashboard() {
   const { user, hasRole, loading: authLoading } = useAuth();
@@ -445,12 +402,107 @@ export default function AdminDashboard() {
             </div>
 
             {/* التبويبات */}
-            <Tabs defaultValue="stores" className="space-y-4">
+            <Tabs defaultValue="stats" className="space-y-4">
               <TabsList>
+                <TabsTrigger value="stats">الإحصائيات</TabsTrigger>
+                <TabsTrigger value="products">إحصائيات المنتجات</TabsTrigger>
                 <TabsTrigger value="stores">المتاجر</TabsTrigger>
                 <TabsTrigger value="users">المستخدمين</TabsTrigger>
                 <TabsTrigger value="orders">الطلبات</TabsTrigger>
               </TabsList>
+
+              <TabsContent value="stats">
+                {/* الرسوم البيانية الأساسية */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card className="gradient-border">
+                    <CardHeader>
+                      <CardTitle>المتاجر حسب الفئة</CardTitle>
+                      <CardDescription>توزيع المتاجر على الفئات المختلفة</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <PieChart>
+                          <Pie
+                            data={chartData.categoriesData}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            label={({ name, percent }) =>
+                              `${name}: ${(percent * 100).toFixed(0)}%`
+                            }
+                            outerRadius={80}
+                            fill="hsl(var(--primary))"
+                            dataKey="value"
+                          >
+                            {chartData.categoriesData.map((_: any, index: number) => (
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={
+                                  index === 0
+                                    ? "hsl(var(--primary))"
+                                    : index === 1
+                                    ? "hsl(var(--secondary))"
+                                    : index === 2
+                                    ? "hsl(var(--accent))"
+                                    : "hsl(var(--muted))"
+                                }
+                              />
+                            ))}
+                          </Pie>
+                          <Tooltip />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="gradient-border">
+                    <CardHeader>
+                      <CardTitle>الطلبات حسب الحالة</CardTitle>
+                      <CardDescription>توزيع الطلبات على الحالات المختلفة</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={chartData.ordersData}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="name" />
+                          <YAxis />
+                          <Tooltip />
+                          <Bar dataKey="value" fill="hsl(var(--primary))" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="gradient-border lg:col-span-2">
+                    <CardHeader>
+                      <CardTitle>الإيرادات الشهرية</CardTitle>
+                      <CardDescription>إيرادات آخر 6 أشهر</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <LineChart data={chartData.revenueData}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="name" />
+                          <YAxis />
+                          <Tooltip />
+                          <Legend />
+                          <Line
+                            type="monotone"
+                            dataKey="value"
+                            stroke="hsl(var(--primary))"
+                            strokeWidth={2}
+                            name="الإيرادات (ر.س)"
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="products">
+                <ProductsStats />
+              </TabsContent>
 
               <TabsContent value="stores" className="space-y-4">
                 <h2 className="text-2xl font-bold">إدارة المتاجر</h2>
