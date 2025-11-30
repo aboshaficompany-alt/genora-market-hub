@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -22,6 +23,13 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { VendorSidebar } from "@/components/VendorSidebar";
 
+interface Variant {
+  id: string;
+  attributes: Record<string, string>;
+  price: number;
+  quantity: number;
+}
+
 interface Product {
   id: string;
   name: string;
@@ -34,6 +42,11 @@ interface Product {
   image_url: string | null;
   in_stock: boolean;
   store_id: string;
+  variants?: Variant[];
+  attributes?: Record<string, any>;
+  approval_status?: string;
+  rejection_reason?: string | null;
+  is_approved?: boolean;
 }
 
 interface Category {
@@ -70,7 +83,15 @@ export default function VendorProducts() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [variants, setVariants] = useState<Variant[]>([]);
+  const [categoryAttributes, setCategoryAttributes] = useState<string[]>([]);
+  const [variantDialog, setVariantDialog] = useState(false);
+  const [currentVariant, setCurrentVariant] = useState<Partial<Variant>>({
+    attributes: {},
+    price: 0,
+    quantity: 0,
+  });
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -139,7 +160,7 @@ export default function VendorProducts() {
       .eq("store_id", storeData.id)
       .order("created_at", { ascending: false });
     
-    setProducts(productsData || []);
+    setProducts((productsData || []) as any);
     
     // Load categories
     const { data: categoriesData } = await supabase
@@ -168,24 +189,29 @@ export default function VendorProducts() {
     if (!store) return;
 
     try {
-      let imageUrl = editingProduct?.image_url || null;
+      let imageUrls: string[] = [];
       
-      // Upload image if provided
-      if (imageFile) {
-        const fileExt = imageFile.name.split('.').pop();
-        const fileName = `${Math.random()}.${fileExt}`;
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('product-images')
-          .upload(fileName, imageFile);
+      // Upload multiple images if provided
+      if (imageFiles.length > 0) {
+        for (const file of imageFiles) {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Math.random()}.${fileExt}`;
+          const { error: uploadError } = await supabase.storage
+            .from('product-images')
+            .upload(fileName, file);
 
-        if (uploadError) throw uploadError;
-        
-        const { data: { publicUrl } } = supabase.storage
-          .from('product-images')
-          .getPublicUrl(fileName);
-        
-        imageUrl = publicUrl;
+          if (uploadError) throw uploadError;
+          
+          const { data: { publicUrl } } = supabase.storage
+            .from('product-images')
+            .getPublicUrl(fileName);
+          
+          imageUrls.push(publicUrl);
+        }
       }
+
+      // استخدام الصورة الأولى كصورة رئيسية
+      const mainImageUrl = imageUrls.length > 0 ? imageUrls[0] : (editingProduct?.image_url || null);
 
       const productData = {
         name: formData.name,
@@ -196,7 +222,9 @@ export default function VendorProducts() {
         category_id: formData.category_id || null,
         store_category_id: formData.store_category_id || null,
         in_stock: formData.in_stock,
-        image_url: imageUrl,
+        image_url: mainImageUrl,
+        variants: variants.length > 0 ? JSON.stringify(variants) : null,
+        attributes: imageUrls.length > 0 ? { images: imageUrls } : (editingProduct?.attributes || {}),
         store_id: store.id,
       };
 
@@ -243,6 +271,19 @@ export default function VendorProducts() {
       store_category_id: product.store_category_id || "",
       in_stock: product.in_stock,
     });
+    
+    // تحميل المتغيرات الموجودة
+    if (product.variants) {
+      try {
+        const parsedVariants = typeof product.variants === 'string' 
+          ? JSON.parse(product.variants) 
+          : product.variants;
+        setVariants(parsedVariants);
+      } catch (e) {
+        setVariants([]);
+      }
+    }
+    
     setDialogOpen(true);
   };
 
@@ -280,7 +321,60 @@ export default function VendorProducts() {
       in_stock: true,
     });
     setEditingProduct(null);
-    setImageFile(null);
+    setImageFiles([]);
+    setVariants([]);
+    setCategoryAttributes([]);
+  };
+
+  const handleAddVariant = () => {
+    if (!currentVariant.attributes || Object.keys(currentVariant.attributes).length === 0) {
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: "يجب تحديد الخصائص",
+      });
+      return;
+    }
+
+    const newVariant: Variant = {
+      id: Math.random().toString(),
+      attributes: currentVariant.attributes!,
+      price: currentVariant.price || 0,
+      quantity: currentVariant.quantity || 0,
+    };
+
+    setVariants([...variants, newVariant]);
+    setCurrentVariant({ attributes: {}, price: 0, quantity: 0 });
+    setVariantDialog(false);
+    
+    toast({ title: "تم إضافة المتغير بنجاح" });
+  };
+
+  const handleDeleteVariant = (variantId: string) => {
+    setVariants(variants.filter(v => v.id !== variantId));
+    toast({ title: "تم حذف المتغير بنجاح" });
+  };
+
+  const handleCategoryChange = async (categoryId: string) => {
+    setFormData({ ...formData, category_id: categoryId });
+    
+    // تحميل خصائص الفئة
+    const { data: categoryData } = await supabase
+      .from("categories")
+      .select("attributes")
+      .eq("id", categoryId)
+      .single();
+    
+    if (categoryData?.attributes) {
+      try {
+        const attrs = typeof categoryData.attributes === 'string' 
+          ? JSON.parse(categoryData.attributes) 
+          : categoryData.attributes;
+        setCategoryAttributes(Array.isArray(attrs) ? attrs : []);
+      } catch (e) {
+        setCategoryAttributes([]);
+      }
+    }
   };
 
   const handleCategorySubmit = async (e: React.FormEvent) => {
@@ -569,6 +663,7 @@ export default function VendorProducts() {
                               category_id: val,
                               category: selectedCat?.name_ar || ""
                             });
+                            handleCategoryChange(val);
                           }}
                         >
                           <SelectTrigger>
@@ -609,13 +704,124 @@ export default function VendorProducts() {
                       </div>
 
                       <div>
-                        <Label>صورة المنتج</Label>
+                        <Label>صور المنتج (متعددة)</Label>
                         <Input
                           type="file"
                           accept="image/*"
-                          onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                          multiple
+                          onChange={(e) => {
+                            const files = Array.from(e.target.files || []);
+                            setImageFiles(files);
+                          }}
                         />
+                        {imageFiles.length > 0 && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            تم اختيار {imageFiles.length} صورة
+                          </p>
+                        )}
                       </div>
+
+                      {/* إدارة المتغيرات */}
+                      {categoryAttributes.length > 0 && (
+                        <div className="border rounded-lg p-4 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-base font-bold">المتغيرات</Label>
+                            <Dialog open={variantDialog} onOpenChange={setVariantDialog}>
+                              <DialogTrigger asChild>
+                                <Button type="button" size="sm" variant="outline">
+                                  <Plus className="w-4 h-4 ml-1" />
+                                  إضافة متغير
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent>
+                                <DialogHeader>
+                                  <DialogTitle>إضافة متغير جديد</DialogTitle>
+                                </DialogHeader>
+                                <div className="space-y-4">
+                                  {categoryAttributes.map((attr: string) => (
+                                    <div key={attr}>
+                                      <Label>{attr}</Label>
+                                      <Input
+                                        placeholder={`أدخل ${attr}`}
+                                        value={currentVariant.attributes?.[attr] || ""}
+                                        onChange={(e) => setCurrentVariant({
+                                          ...currentVariant,
+                                          attributes: {
+                                            ...currentVariant.attributes,
+                                            [attr]: e.target.value
+                                          }
+                                        })}
+                                      />
+                                    </div>
+                                  ))}
+                                  
+                                  <div>
+                                    <Label>السعر</Label>
+                                    <Input
+                                      type="number"
+                                      step="0.01"
+                                      value={currentVariant.price || 0}
+                                      onChange={(e) => setCurrentVariant({
+                                        ...currentVariant,
+                                        price: parseFloat(e.target.value)
+                                      })}
+                                    />
+                                  </div>
+                                  
+                                  <div>
+                                    <Label>الكمية</Label>
+                                    <Input
+                                      type="number"
+                                      value={currentVariant.quantity || 0}
+                                      onChange={(e) => setCurrentVariant({
+                                        ...currentVariant,
+                                        quantity: parseInt(e.target.value)
+                                      })}
+                                    />
+                                  </div>
+                                  
+                                  <Button type="button" onClick={handleAddVariant} className="w-full">
+                                    إضافة
+                                  </Button>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          </div>
+
+                          {variants.length > 0 ? (
+                            <div className="space-y-2">
+                              {variants.map((variant) => (
+                                <div key={variant.id} className="flex items-center justify-between p-2 border rounded">
+                                  <div className="flex-1">
+                                    <div className="flex gap-2 text-sm">
+                                      {Object.entries(variant.attributes).map(([key, value]) => (
+                                        <Badge key={key} variant="secondary">
+                                          {key}: {value}
+                                        </Badge>
+                                      ))}
+                                    </div>
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                      السعر: {variant.price} ر.س | الكمية: {variant.quantity}
+                                    </p>
+                                  </div>
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleDeleteVariant(variant.id)}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-sm text-muted-foreground text-center py-4">
+                              لم يتم إضافة متغيرات بعد
+                            </p>
+                          )}
+                        </div>
+                      )}
 
                       <div className="flex items-center gap-2">
                         <Switch

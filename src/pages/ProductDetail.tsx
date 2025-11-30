@@ -8,6 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { Star, ShoppingCart, Heart, Share2, Store, ShieldCheck, Truck, RotateCcw, Send } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import MobileNavbar from "@/components/MobileNavbar";
@@ -16,6 +18,7 @@ import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ProductImageGallery } from "@/components/ProductImageGallery";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -31,6 +34,9 @@ const ProductDetail = () => {
   const [reviews, setReviews] = useState<any[]>([]);
   const [newReview, setNewReview] = useState({ rating: 5, comment: "" });
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState<any>(null);
+  const [variants, setVariants] = useState<any[]>([]);
+  const [productImages, setProductImages] = useState<string[]>([]);
 
   useEffect(() => {
     if (id) {
@@ -54,6 +60,28 @@ const ProductDetail = () => {
     }
     
     setProduct(productData);
+    
+    // تحميل الصور
+    const images: string[] = [];
+    if (productData.image_url) {
+      images.push(productData.image_url);
+    }
+    if (productData.attributes?.images && Array.isArray(productData.attributes.images)) {
+      images.push(...productData.attributes.images);
+    }
+    setProductImages(images.length > 0 ? images : ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500']);
+    
+    // تحميل المتغيرات
+    if (productData.variants) {
+      try {
+        const parsedVariants = typeof productData.variants === 'string' 
+          ? JSON.parse(productData.variants) 
+          : productData.variants;
+        setVariants(Array.isArray(parsedVariants) ? parsedVariants : []);
+      } catch (e) {
+        setVariants([]);
+      }
+    }
     
     // Load store
     const { data: storeData } = await supabase
@@ -155,24 +183,13 @@ const ProductDetail = () => {
       <section className="pt-32 pb-16">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            {/* Product Image */}
+            {/* Product Image Gallery */}
             <div className="animate-fade-in">
-              <Card className="overflow-hidden border-4 border-white shadow-float">
-                <div className="relative">
-                  <img 
-                    src={product.image_url || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500'} 
-                    alt={product.name}
-                    className="w-full h-[600px] object-cover"
-                  />
-                  {product.discount_price && (
-                    <div className="absolute top-6 left-6">
-                      <Badge className="bg-red-500 text-white font-bold shadow-card text-2xl px-6 py-3">
-                        -{Math.round(((product.price - product.discount_price) / product.price) * 100)}%
-                      </Badge>
-                    </div>
-                  )}
-                </div>
-              </Card>
+              <ProductImageGallery 
+                images={productImages}
+                productName={product.name}
+                discountPercentage={product.discount_price ? Math.round(((product.price - product.discount_price) / product.price) * 100) : undefined}
+              />
             </div>
 
             {/* Product Info */}
@@ -223,14 +240,51 @@ const ProductDetail = () => {
                 </Card>
               </Link>
 
-              {/* Price */}
+              {/* Price and Variants */}
               <Card className="bg-white shadow-soft border-2 border-primary/20">
                 <CardContent className="p-8">
+                  {/* اختيار المتغيرات */}
+                  {variants.length > 0 && (
+                    <div className="mb-6 space-y-4">
+                      <h3 className="font-bold text-lg">اختر المواصفات</h3>
+                      {Object.keys(variants[0].attributes).map((attrKey) => (
+                        <div key={attrKey}>
+                          <Label>{attrKey}</Label>
+                          <Select 
+                            value={selectedVariant?.attributes?.[attrKey] || ""}
+                            onValueChange={(value) => {
+                              const variant = variants.find(v => 
+                                v.attributes[attrKey] === value
+                              );
+                              if (variant) setSelectedVariant(variant);
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder={`اختر ${attrKey}`} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {[...new Set(variants.map(v => v.attributes[attrKey]))].map((value: string) => (
+                                <SelectItem key={value} value={value}>
+                                  {value}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      ))}
+                      {selectedVariant && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <span>متوفر: {selectedVariant.quantity} قطعة</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
                   <div className="flex items-center gap-6 mb-6">
                     <div className="text-5xl font-black text-primary">
-                      {product.discount_price || product.price} ر.س
+                      {selectedVariant ? selectedVariant.price : (product.discount_price || product.price)} ر.س
                     </div>
-                    {product.discount_price && (
+                    {!selectedVariant && product.discount_price && (
                       <div className="text-2xl text-charcoal-light line-through">
                         {product.price} ر.س
                       </div>
