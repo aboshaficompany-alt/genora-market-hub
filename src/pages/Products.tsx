@@ -1,6 +1,6 @@
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { products } from "@/data/products";
+import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,6 +18,22 @@ import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+interface Product {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  discount_price: number | null;
+  image_url: string | null;
+  rating: number | null;
+  reviews_count: number | null;
+  in_stock: boolean;
+  category: string | null;
+  stores?: {
+    name: string;
+  };
+}
+
 const Products = () => {
   const { addToCart } = useCart();
   const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist();
@@ -25,38 +41,69 @@ const Products = () => {
   const [searchParams] = useSearchParams();
   const categoryFromUrl = searchParams.get("category");
   
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl || "all");
   const [priceRange, setPriceRange] = useState([0, 5000]);
   const [minRating, setMinRating] = useState(0);
   const [sortBy, setSortBy] = useState("default");
 
-  const categories = useMemo(() => {
-    const cats = ["all", ...new Set(products.map(p => p.category))];
-    return cats;
+  useEffect(() => {
+    loadData();
   }, []);
+
+  const loadData = async () => {
+    // Load products
+    const { data: productsData } = await supabase
+      .from("products")
+      .select(`
+        *,
+        stores(name)
+      `)
+      .order("created_at", { ascending: false });
+
+    if (productsData) {
+      setProducts(productsData);
+    }
+
+    // Load categories
+    const { data: categoriesData } = await supabase
+      .from("categories")
+      .select("name_ar")
+      .eq("is_active", true)
+      .order("display_order");
+
+    if (categoriesData) {
+      setCategories(["all", ...categoriesData.map(c => c.name_ar)]);
+    }
+
+    setLoading(false);
+  };
 
   const filteredProducts = useMemo(() => {
     let filtered = products.filter(product => {
-      const matchesSearch = product.name.includes(searchQuery) || 
-                           product.description.includes(searchQuery);
+      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                           (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) || false);
       const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
-      const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
-      const matchesRating = product.rating >= minRating;
+      const productPrice = product.discount_price || product.price;
+      const matchesPrice = productPrice >= priceRange[0] && productPrice <= priceRange[1];
+      const matchesRating = (product.rating || 0) >= minRating;
       
       return matchesSearch && matchesCategory && matchesPrice && matchesRating;
     });
 
     if (sortBy === "price-low") {
-      filtered.sort((a, b) => a.price - b.price);
+      filtered.sort((a, b) => (a.discount_price || a.price) - (b.discount_price || b.price));
     } else if (sortBy === "price-high") {
-      filtered.sort((a, b) => b.price - a.price);
+      filtered.sort((a, b) => (b.discount_price || b.price) - (a.discount_price || a.price));
     } else if (sortBy === "rating") {
-      filtered.sort((a, b) => b.rating - a.rating);
+      filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     }
 
     return filtered;
-  }, [searchQuery, selectedCategory, priceRange, minRating, sortBy]);
+  }, [products, searchQuery, selectedCategory, priceRange, minRating, sortBy]);
 
   return (
     <div className="min-h-screen bg-gradient-warm" dir="rtl">
@@ -183,19 +230,25 @@ const Products = () => {
               >
                 <Card className="overflow-hidden border-2 border-transparent hover:border-primary hover:shadow-glow transition-all duration-300 hover:scale-105 bg-white h-full flex flex-col">
                   <div className="relative h-64 overflow-hidden">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    {product.discount && (
+                    {product.image_url ? (
+                      <img 
+                        src={product.image_url} 
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <Store className="w-12 h-12 text-muted-foreground" />
+                      </div>
+                    )}
+                    {product.discount_price && (
                       <div className="absolute top-4 left-4">
                         <Badge className="bg-red-500 text-white font-bold shadow-card text-lg px-3 py-1">
-                          -{product.discount}%
+                          -{Math.round(((product.price - product.discount_price) / product.price) * 100)}%
                         </Badge>
                       </div>
                     )}
-                    {!product.inStock && (
+                    {!product.in_stock && (
                       <div className="absolute inset-0 bg-charcoal/60 flex items-center justify-center">
                         <span className="text-white text-xl font-bold">غير متوفر</span>
                       </div>
@@ -205,30 +258,30 @@ const Products = () => {
                   <CardContent className="p-6 flex-1 flex flex-col">
                     <div className="flex items-center gap-2 mb-3 text-sm text-charcoal-light">
                       <Store className="w-4 h-4" />
-                      <span>{product.storeName}</span>
+                      <span>{product.stores?.name || "متجر"}</span>
                     </div>
                     
                     <h3 className="text-xl font-bold text-charcoal mb-2 group-hover:text-primary transition-colors">
                       {product.name}
                     </h3>
                     <p className="text-charcoal-light mb-4 line-clamp-2 text-sm flex-1">
-                      {product.description}
+                      {product.description || "لا يوجد وصف"}
                     </p>
                     
                     <div className="flex items-center gap-2 mb-4 text-sm">
                       <Star className="w-4 h-4 text-yellow-light fill-yellow-light" />
-                      <span className="font-bold text-charcoal">{product.rating}</span>
-                      <span className="text-charcoal-light">({product.reviews} تقييم)</span>
+                      <span className="font-bold text-charcoal">{product.rating?.toFixed(1) || "0.0"}</span>
+                      <span className="text-charcoal-light">({product.reviews_count || 0} تقييم)</span>
                     </div>
                     
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-2xl font-black text-primary">
-                          {product.price} ر.س
+                          {product.discount_price || product.price} ر.س
                         </div>
-                        {product.originalPrice && (
+                        {product.discount_price && (
                           <div className="text-sm text-charcoal-light line-through">
-                            {product.originalPrice} ر.س
+                            {product.price} ر.س
                           </div>
                         )}
                       </div>
@@ -238,7 +291,13 @@ const Products = () => {
                           className="bg-gradient-primary text-primary-foreground hover:shadow-glow rounded-full flex-1"
                           onClick={(e) => {
                             e.preventDefault();
-                            addToCart(product);
+                            addToCart({
+                              id: product.id,
+                              name: product.name,
+                              price: product.discount_price || product.price,
+                              image: product.image_url || "",
+                              storeName: product.stores?.name || "متجر",
+                            });
                           }}
                         >
                           <ShoppingCart className="w-4 h-4" />
@@ -252,7 +311,13 @@ const Products = () => {
                             if (isInWishlist(product.id)) {
                               removeFromWishlist(product.id);
                             } else {
-                              addToWishlist(product);
+                              addToWishlist({
+                                id: product.id,
+                                name: product.name,
+                                price: product.discount_price || product.price,
+                                image: product.image_url || "",
+                                storeName: product.stores?.name || "متجر",
+                              });
                             }
                           }}
                         >

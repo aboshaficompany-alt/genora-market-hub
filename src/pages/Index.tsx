@@ -5,6 +5,7 @@ import Hero from "@/components/Hero";
 import Benefits from "@/components/Benefits";
 import Categories from "@/components/Categories";
 import FeaturedStores from "@/components/FeaturedStores";
+import FeaturedProducts from "@/components/FeaturedProducts";
 import ProcessTimeline from "@/components/ProcessTimeline";
 import PaymentMethods from "@/components/PaymentMethods";
 import RegistrationCTA from "@/components/RegistrationCTA";
@@ -23,6 +24,7 @@ const Index = () => {
       <Benefits />
       <Categories />
       <FeaturedStores />
+      <FeaturedProducts />
       <ProcessTimeline />
       <PaymentMethods />
       <RegistrationCTA />

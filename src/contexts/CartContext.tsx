@@ -1,6 +1,13 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Product } from "@/data/products";
 import { useToast } from "@/hooks/use-toast";
+
+interface Product {
+  id: string | number;
+  name: string;
+  price: number;
+  image: string;
+  storeName?: string;
+}
 
 interface CartItem extends Product {
   quantity: number;
@@ -9,8 +16,8 @@ interface CartItem extends Product {
 interface CartContextType {
   items: CartItem[];
   addToCart: (product: Product) => void;
-  removeFromCart: (productId: number) => void;
-  updateQuantity: (productId: number, quantity: number) => void;
+  removeFromCart: (productId: string | number) => void;
+  updateQuantity: (productId: string | number, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -44,7 +51,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const removeFromCart = (productId: number) => {
+  const removeFromCart = (productId: string | number) => {
     setItems((prev) => prev.filter((item) => item.id !== productId));
     toast({
       title: "تم الحذف",
@@ -52,7 +59,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const updateQuantity = (productId: number, quantity: number) => {
+  const updateQuantity = (productId: string | number, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId);
       return;
