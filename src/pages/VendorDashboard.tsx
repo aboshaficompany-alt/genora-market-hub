@@ -3,7 +3,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
@@ -28,6 +32,7 @@ export default function VendorDashboard() {
   const { user, hasRole, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [isVendor, setIsVendor] = useState(false);
   const [store, setStore] = useState<any>(null);
   const [debt, setDebt] = useState(0);
@@ -170,7 +175,7 @@ export default function VendorDashboard() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex flex-col w-full">
-        <Navbar />
+        {isMobile ? <MobileNavbar /> : <Navbar />}
         
         <div className="flex flex-1 w-full">
           <VendorSidebar />
@@ -308,7 +313,8 @@ export default function VendorDashboard() {
           </main>
         </div>
         
-        <Footer />
+        {isMobile ? <MobileFooter /> : <Footer />}
+        {isMobile && <MobileBottomNav />}
       </div>
     </SidebarProvider>
   );

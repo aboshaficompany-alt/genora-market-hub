@@ -3,7 +3,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,6 +25,7 @@ export default function WithdrawalRequests() {
   const { user, hasRole } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [requests, setRequests] = useState<any[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [store, setStore] = useState<any>(null);
@@ -110,7 +115,7 @@ export default function WithdrawalRequests() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex flex-col w-full">
-        <Navbar />
+        {isMobile ? <MobileNavbar /> : <Navbar />}
         
         <div className="flex flex-1 w-full">
           <Sidebar />
@@ -210,7 +215,8 @@ export default function WithdrawalRequests() {
           </main>
         </div>
         
-        <Footer />
+        {isMobile ? <MobileFooter /> : <Footer />}
+        {isMobile && <MobileBottomNav />}
       </div>
     </SidebarProvider>
   );

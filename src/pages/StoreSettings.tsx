@@ -6,7 +6,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -64,6 +68,7 @@ export default function StoreSettings() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [store, setStore] = useState<any>(null);
   const [categories, setCategories] = useState<any[]>([]);
@@ -253,7 +258,7 @@ export default function StoreSettings() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-muted/20">
-      <Navbar />
+      {isMobile ? <MobileNavbar /> : <Navbar />}
 
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
@@ -597,7 +602,8 @@ export default function StoreSettings() {
         </div>
       </main>
 
-      <Footer />
+      {isMobile ? <MobileFooter /> : <Footer />}
+      {isMobile && <MobileBottomNav />}
     </div>
   );
 }
