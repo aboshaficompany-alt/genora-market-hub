@@ -6,16 +6,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Heart, ShoppingCart, Star, Trash2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Wishlist = () => {
   const { items, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
+  const isMobile = useIsMobile();
 
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-warm" dir="rtl">
-        <Navbar />
+        {isMobile ? <MobileNavbar /> : <Navbar />}
         <div className="container mx-auto px-4 py-32">
           <div className="text-center animate-fade-in">
             <Heart className="w-24 h-24 mx-auto text-charcoal-light mb-6" />
@@ -32,14 +37,15 @@ const Wishlist = () => {
             </Link>
           </div>
         </div>
-        <Footer />
+        {isMobile ? <MobileFooter /> : <Footer />}
+        {isMobile && <MobileBottomNav />}
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-warm" dir="rtl">
-      <Navbar />
+      {isMobile ? <MobileNavbar /> : <Navbar />}
       
       <section className="pt-32 pb-16">
         <div className="container mx-auto px-4">
@@ -121,7 +127,8 @@ const Wishlist = () => {
         </div>
       </section>
 
-      <Footer />
+      {isMobile ? <MobileFooter /> : <Footer />}
+      {isMobile && <MobileBottomNav />}
     </div>
   );
 };

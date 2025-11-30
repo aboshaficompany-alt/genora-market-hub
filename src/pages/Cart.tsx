@@ -6,13 +6,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Minus, Plus, Trash2, ShoppingBag, Tag } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Cart = () => {
   const { items, removeFromCart, updateQuantity, totalPrice } = useCart();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [promoCode, setPromoCode] = useState("");
   const [appliedPromo, setAppliedPromo] = useState<any>(null);
   const [checkingPromo, setCheckingPromo] = useState(false);
@@ -116,7 +121,7 @@ const Cart = () => {
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-warm" dir="rtl">
-        <Navbar />
+        {isMobile ? <MobileNavbar /> : <Navbar />}
         <div className="container mx-auto px-4 py-32">
           <div className="text-center animate-fade-in">
             <ShoppingBag className="w-24 h-24 mx-auto text-charcoal-light mb-6" />
@@ -133,14 +138,15 @@ const Cart = () => {
             </Link>
           </div>
         </div>
-        <Footer />
+        {isMobile ? <MobileFooter /> : <Footer />}
+        {isMobile && <MobileBottomNav />}
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-warm" dir="rtl">
-      <Navbar />
+      {isMobile ? <MobileNavbar /> : <Navbar />}
       
       <section className="pt-32 pb-16">
         <div className="container mx-auto px-4">
@@ -314,7 +320,8 @@ const Cart = () => {
         </div>
       </section>
 
-      <Footer />
+      {isMobile ? <MobileFooter /> : <Footer />}
+      {isMobile && <MobileBottomNav />}
     </div>
   );
 };

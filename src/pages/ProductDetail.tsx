@@ -12,8 +12,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Star, ShoppingCart, Heart, Share2, Store, ShieldCheck, Truck, RotateCcw, Send } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -23,6 +27,7 @@ const ProductDetail = () => {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { user } = useAuth();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   
   const [reviews, setReviews] = useState<any[]>([]);
   const [newReview, setNewReview] = useState({ rating: 5, comment: "" });
@@ -70,7 +75,7 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-gradient-warm" dir="rtl">
-      <Navbar />
+      {isMobile ? <MobileNavbar /> : <Navbar />}
       
       {/* Product Details */}
       <section className="pt-32 pb-16">
@@ -333,7 +338,8 @@ const ProductDetail = () => {
         </div>
       </section>
 
-      <Footer />
+      {isMobile ? <MobileFooter /> : <Footer />}
+      {isMobile && <MobileBottomNav />}
     </div>
   );
 };

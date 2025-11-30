@@ -2,7 +2,10 @@ import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +15,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function StoreDetail() {
   const { id } = useParams();
@@ -19,6 +23,7 @@ export default function StoreDetail() {
   const { addToWishlist } = useWishlist();
   const { user } = useAuth();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [store, setStore] = useState<any>(null);
   const [storeProducts, setStoreProducts] = useState<any[]>([]);
   const [storeReviews, setStoreReviews] = useState<any[]>([]);
@@ -152,11 +157,12 @@ export default function StoreDetail() {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {isMobile ? <MobileNavbar /> : <Navbar />}
         <main className="flex-1 container mx-auto px-4 py-8">
           <p className="text-center text-xl">جاري التحميل...</p>
         </main>
-        <Footer />
+        {isMobile ? <MobileFooter /> : <Footer />}
+        {isMobile && <MobileBottomNav />}
       </div>
     );
   }
@@ -164,18 +170,19 @@ export default function StoreDetail() {
   if (!store) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {isMobile ? <MobileNavbar /> : <Navbar />}
         <main className="flex-1 container mx-auto px-4 py-8">
           <p className="text-center text-xl">المتجر غير موجود</p>
         </main>
-        <Footer />
+        {isMobile ? <MobileFooter /> : <Footer />}
+        {isMobile && <MobileBottomNav />}
       </div>
     );
   }
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      {isMobile ? <MobileNavbar /> : <Navbar />}
 
       <main className="flex-1 container mx-auto px-4 py-24">
         {/* Store Header */}
@@ -546,7 +553,8 @@ export default function StoreDetail() {
         </div>
       </main>
 
-      <Footer />
+      {isMobile ? <MobileFooter /> : <Footer />}
+      {isMobile && <MobileBottomNav />}
     </div>
   );
 }

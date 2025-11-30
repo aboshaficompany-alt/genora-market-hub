@@ -9,7 +9,7 @@ const MobileBottomNav = () => {
     { icon: Home, label: "الرئيسية", path: "/" },
     { icon: Store, label: "المتاجر", path: "/stores" },
     { icon: ShoppingBag, label: "المنتجات", path: "/products" },
-    { icon: User, label: "حسابي", path: "/auth" },
+    { icon: User, label: "حسابي", path: "/profile" },
   ];
 
   return (
