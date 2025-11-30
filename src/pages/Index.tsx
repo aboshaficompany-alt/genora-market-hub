@@ -1,4 +1,6 @@
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Hero from "@/components/Hero";
 import Benefits from "@/components/Benefits";
 import Categories from "@/components/Categories";
@@ -7,11 +9,15 @@ import ProcessTimeline from "@/components/ProcessTimeline";
 import PaymentMethods from "@/components/PaymentMethods";
 import RegistrationCTA from "@/components/RegistrationCTA";
 import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
+  const isMobile = useIsMobile();
+
   return (
     <div className="min-h-screen" dir="rtl">
-      <Navbar />
+      {isMobile ? <MobileNavbar /> : <Navbar />}
       <Hero />
       <Benefits />
       <Categories />
@@ -19,7 +25,8 @@ const Index = () => {
       <ProcessTimeline />
       <PaymentMethods />
       <RegistrationCTA />
-      <Footer />
+      {isMobile ? <MobileFooter /> : <Footer />}
+      {isMobile && <MobileBottomNav />}
     </div>
   );
 };

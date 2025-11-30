@@ -1,26 +1,40 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, MapPin, Package, ShieldCheck } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Stores = () => {
   const [stores, setStores] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+  const categoryFilter = searchParams.get("category");
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const fetchStores = async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("stores")
         .select(`
           *,
           products(count)
         `)
-        .eq("is_approved", true)
-        .order("created_at", { ascending: false });
+        .eq("is_approved", true);
+
+      if (categoryFilter) {
+        query = query.eq("category", categoryFilter);
+      }
+
+      query = query.order("created_at", { ascending: false });
+
+      const { data, error } = await query;
 
       if (!error && data) {
         setStores(data);
@@ -29,22 +43,23 @@ const Stores = () => {
     };
 
     fetchStores();
-  }, []);
+  }, [categoryFilter]);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-warm" dir="rtl">
-        <Navbar />
+        {isMobile ? <MobileNavbar /> : <Navbar />}
         <div className="flex items-center justify-center min-h-[60vh]">
           <p className="text-xl text-charcoal-light">جاري التحميل...</p>
         </div>
-        <Footer />
+        {isMobile ? <MobileFooter /> : <Footer />}
+        {isMobile && <MobileBottomNav />}
       </div>
     );
   }
   return (
     <div className="min-h-screen bg-gradient-warm" dir="rtl">
-      <Navbar />
+      {isMobile ? <MobileNavbar /> : <Navbar />}
       
       {/* Hero Section */}
       <section className="pt-32 pb-16 relative overflow-hidden">
@@ -56,10 +71,21 @@ const Stores = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16 animate-fade-in">
             <h1 className="text-5xl lg:text-6xl font-black text-charcoal mb-6">
-              جميع <span className="bg-gradient-primary bg-clip-text text-transparent">المتاجر</span>
+              {categoryFilter ? (
+                <>
+                  متاجر <span className="bg-gradient-primary bg-clip-text text-transparent">{categoryFilter}</span>
+                </>
+              ) : (
+                <>
+                  جميع <span className="bg-gradient-primary bg-clip-text text-transparent">المتاجر</span>
+                </>
+              )}
             </h1>
             <p className="text-xl text-charcoal-light max-w-2xl mx-auto">
-              استكشف مجموعة واسعة من المتاجر الموثوقة في مختلف التخصصات
+              {categoryFilter 
+                ? `استكشف المتاجر المتخصصة في ${categoryFilter}`
+                : "استكشف مجموعة واسعة من المتاجر الموثوقة في مختلف التخصصات"
+              }
             </p>
           </div>
 
@@ -123,7 +149,8 @@ const Stores = () => {
         </div>
       </section>
 
-      <Footer />
+      {isMobile ? <MobileFooter /> : <Footer />}
+      {isMobile && <MobileBottomNav />}
     </div>
   );
 };

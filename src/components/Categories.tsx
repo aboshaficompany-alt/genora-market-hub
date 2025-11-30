@@ -70,7 +70,7 @@ const Categories = () => {
           {categories.map((category) => (
             <Link
               key={category.id}
-              to={`/products?category=${encodeURIComponent(category.name_ar)}`}
+              to={`/stores?category=${encodeURIComponent(category.name_ar)}`}
               className="group"
             >
               <Card className="h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-2 bg-card border-2 border-border hover:border-primary">
