@@ -38,6 +38,7 @@ import Advertisements from "./pages/Advertisements";
 import AllProducts from "./pages/AllProducts";
 import AllOrders from "./pages/AllOrders";
 import Promotions from "./pages/Promotions";
+import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -84,6 +85,7 @@ const App = () => (
                 <Route path="/all-products" element={<AllProducts />} />
                 <Route path="/all-orders" element={<AllOrders />} />
                 <Route path="/promotions" element={<Promotions />} />
+                <Route path="/install" element={<Install />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
