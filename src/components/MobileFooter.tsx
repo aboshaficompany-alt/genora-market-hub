@@ -1,4 +1,7 @@
 import { Mail, Phone } from "lucide-react";
+import { Download } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const MobileFooter = () => {
   return (
@@ -9,9 +12,15 @@ const MobileFooter = () => {
           <h3 className="text-2xl font-black bg-gradient-primary bg-clip-text text-transparent mb-2">
             Geenora
           </h3>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-sm mb-4">
             المتاجر المتعددة
           </p>
+          <Link to="/install">
+            <Button variant="outline" size="sm" className="rounded-full">
+              <Download className="w-4 h-4 ml-2" />
+              ثبّت التطبيق
+            </Button>
+          </Link>
         </div>
 
         {/* Contact */}

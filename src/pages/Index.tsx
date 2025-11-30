@@ -10,6 +10,7 @@ import PaymentMethods from "@/components/PaymentMethods";
 import RegistrationCTA from "@/components/RegistrationCTA";
 import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
+import { InstallPrompt } from "@/components/InstallPrompt";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
@@ -27,6 +28,7 @@ const Index = () => {
       <RegistrationCTA />
       {isMobile ? <MobileFooter /> : <Footer />}
       {isMobile && <MobileBottomNav />}
+      <InstallPrompt />
     </div>
   );
 };
