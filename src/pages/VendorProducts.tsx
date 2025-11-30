@@ -218,13 +218,13 @@ export default function VendorProducts() {
         description: formData.description,
         price: parseFloat(formData.price),
         discount_price: formData.discount_price ? parseFloat(formData.discount_price) : null,
-        category: formData.category,
-        category_id: formData.category_id || null,
-        store_category_id: formData.store_category_id || null,
+        category: formData.category || null,
+        category_id: formData.category_id && formData.category_id !== "" ? formData.category_id : null,
+        store_category_id: formData.store_category_id && formData.store_category_id !== "" ? formData.store_category_id : null,
         in_stock: formData.in_stock,
         image_url: mainImageUrl,
-        variants: variants.length > 0 ? JSON.stringify(variants) : null,
-        attributes: imageUrls.length > 0 ? { images: imageUrls } : (editingProduct?.attributes || {}),
+        variants: variants.length > 0 ? variants as any : null,
+        attributes: imageUrls.length > 0 ? { images: imageUrls } as any : (editingProduct?.attributes || null),
         store_id: store.id,
       };
 

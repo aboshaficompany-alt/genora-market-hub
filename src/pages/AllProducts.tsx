@@ -3,7 +3,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { CheckCircle, XCircle, Edit, Trash2, Eye } from "lucide-react";
 import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Product {
   id: string;
@@ -38,6 +42,7 @@ interface Product {
 export default function AllProducts() {
   const { user, hasRole, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>("all");
@@ -218,7 +223,7 @@ export default function AllProducts() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex flex-col w-full" dir="rtl">
-        <Navbar />
+        {isMobile ? <MobileNavbar /> : <Navbar />}
         <div className="flex flex-1 w-full">
           <AdminSidebar />
           <main className="flex-1 container mx-auto px-4 py-8">
@@ -357,7 +362,8 @@ export default function AllProducts() {
             )}
           </main>
         </div>
-        <Footer />
+        {isMobile ? <MobileFooter /> : <Footer />}
+        {isMobile && <MobileBottomNav />}
       </div>
 
       {/* Reject Dialog */}
