@@ -37,6 +37,7 @@ import { Switch } from "@/components/ui/switch";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Category {
   id: string;
@@ -45,7 +46,15 @@ interface Category {
   description: string | null;
   display_order: number;
   is_active: boolean;
+  parent_id: string | null;
+  attributes: any;
   created_at: string;
+}
+
+interface CategoryAttribute {
+  name: string;
+  type: string;
+  options?: string[];
 }
 
 const Categories = () => {
@@ -61,7 +70,10 @@ const Categories = () => {
     description: "",
     display_order: 0,
     is_active: true,
+    parent_id: "",
+    attributes: [] as any[],
   });
+  const [newAttribute, setNewAttribute] = useState({ name: "", type: "text", options: [] as string[] });
 
   useEffect(() => {
     if (!user) {
@@ -149,6 +161,8 @@ const Categories = () => {
       description: category.description || "",
       display_order: category.display_order,
       is_active: category.is_active,
+      parent_id: category.parent_id || "",
+      attributes: category.attributes || [],
     });
     setIsDialogOpen(true);
   };
@@ -161,8 +175,29 @@ const Categories = () => {
       description: "",
       display_order: 0,
       is_active: true,
+      parent_id: "",
+      attributes: [] as any[],
     });
   };
+
+  const addAttribute = () => {
+    if (newAttribute.name) {
+      setFormData({
+        ...formData,
+        attributes: [...formData.attributes, newAttribute],
+      });
+      setNewAttribute({ name: "", type: "text", options: [] });
+    }
+  };
+
+  const removeAttribute = (index: number) => {
+    setFormData({
+      ...formData,
+      attributes: formData.attributes.filter((_, i) => i !== index),
+    });
+  };
+
+  const parentCategories = categories.filter(c => !c.parent_id);
 
   if (!user || loading) return null;
 
@@ -201,7 +236,7 @@ const Categories = () => {
                               : "أدخل بيانات الفئة الجديدة"}
                           </DialogDescription>
                         </DialogHeader>
-                        <div className="grid gap-4 py-4">
+                        <div className="grid gap-4 py-4 max-h-[500px] overflow-y-auto">
                           <div className="grid gap-2">
                             <Label htmlFor="name_ar">اسم الفئة</Label>
                             <Input
@@ -213,6 +248,29 @@ const Categories = () => {
                               required
                             />
                           </div>
+                          
+                          <div className="grid gap-2">
+                            <Label htmlFor="parent_id">الفئة الأساسية (اختياري)</Label>
+                            <Select
+                              value={formData.parent_id}
+                              onValueChange={(value) =>
+                                setFormData({ ...formData, parent_id: value })
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="اختر الفئة الأساسية" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="">بدون فئة أساسية</SelectItem>
+                                {parentCategories.map((cat) => (
+                                  <SelectItem key={cat.id} value={cat.id}>
+                                    {cat.icon} {cat.name_ar}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          
                           <div className="grid gap-2">
                             <Label htmlFor="icon">أيقونة (إيموجي)</Label>
                             <Input
@@ -225,6 +283,7 @@ const Categories = () => {
                               required
                             />
                           </div>
+                          
                           <div className="grid gap-2">
                             <Label htmlFor="description">الوصف</Label>
                             <Textarea
@@ -239,6 +298,7 @@ const Categories = () => {
                               placeholder="وصف مختصر للفئة"
                             />
                           </div>
+                          
                           <div className="grid gap-2">
                             <Label htmlFor="display_order">ترتيب العرض</Label>
                             <Input
@@ -254,6 +314,7 @@ const Categories = () => {
                               min="0"
                             />
                           </div>
+                          
                           <div className="flex items-center justify-between">
                             <Label htmlFor="is_active">الفئة نشطة</Label>
                             <Switch
@@ -263,6 +324,53 @@ const Categories = () => {
                                 setFormData({ ...formData, is_active: checked })
                               }
                             />
+                          </div>
+                          
+                          <div className="grid gap-2 border-t pt-4">
+                            <Label>خصائص الفئة (للتجار)</Label>
+                            <div className="space-y-2">
+                              {formData.attributes.map((attr, index) => (
+                                <div key={index} className="flex gap-2 items-center p-2 bg-muted rounded">
+                                  <span className="flex-1">{attr.name} ({attr.type})</span>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => removeAttribute(index)}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                            
+                            <div className="flex gap-2">
+                              <Input
+                                placeholder="اسم الخاصية (مثل: اللون)"
+                                value={newAttribute.name}
+                                onChange={(e) =>
+                                  setNewAttribute({ ...newAttribute, name: e.target.value })
+                                }
+                              />
+                              <Select
+                                value={newAttribute.type}
+                                onValueChange={(value: any) =>
+                                  setNewAttribute({ ...newAttribute, type: value })
+                                }
+                              >
+                                <SelectTrigger className="w-32">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="text">نص</SelectItem>
+                                  <SelectItem value="number">رقم</SelectItem>
+                                  <SelectItem value="select">قائمة</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <Button type="button" onClick={addAttribute} size="icon">
+                                <Plus className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </div>
                         </div>
                         <DialogFooter>
@@ -292,49 +400,66 @@ const Categories = () => {
                       <TableHead>الترتيب</TableHead>
                       <TableHead>الأيقونة</TableHead>
                       <TableHead>الاسم</TableHead>
+                      <TableHead>الفئة الأساسية</TableHead>
+                      <TableHead>الخصائص</TableHead>
                       <TableHead>الوصف</TableHead>
                       <TableHead>الحالة</TableHead>
                       <TableHead>الإجراءات</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {categories.map((category) => (
-                      <TableRow key={category.id}>
-                        <TableCell>{category.display_order}</TableCell>
-                        <TableCell className="text-2xl">{category.icon}</TableCell>
-                        <TableCell className="font-medium">
-                          {category.name_ar}
-                        </TableCell>
-                        <TableCell className="max-w-xs truncate">
-                          {category.description}
-                        </TableCell>
-                        <TableCell>
-                          {category.is_active ? (
-                            <span className="text-green-600">نشط</span>
-                          ) : (
-                            <span className="text-red-600">غير نشط</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex gap-2">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleEdit(category)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleDelete(category.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {categories.map((category) => {
+                      const parentCat = categories.find(c => c.id === category.parent_id);
+                      return (
+                        <TableRow key={category.id}>
+                          <TableCell>{category.display_order}</TableCell>
+                          <TableCell className="text-2xl">{category.icon}</TableCell>
+                          <TableCell className="font-medium">
+                            {category.name_ar}
+                          </TableCell>
+                          <TableCell>
+                            {parentCat ? `${parentCat.icon} ${parentCat.name_ar}` : "-"}
+                          </TableCell>
+                          <TableCell>
+                            {category.attributes?.length > 0 ? (
+                              <span className="text-sm text-muted-foreground">
+                                {category.attributes.length} خاصية
+                              </span>
+                            ) : (
+                              "-"
+                            )}
+                          </TableCell>
+                          <TableCell className="max-w-xs truncate">
+                            {category.description}
+                          </TableCell>
+                          <TableCell>
+                            {category.is_active ? (
+                              <span className="text-green-600">نشط</span>
+                            ) : (
+                              <span className="text-red-600">غير نشط</span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleEdit(category)}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleDelete(category.id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </CardContent>

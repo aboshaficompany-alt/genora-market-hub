@@ -642,19 +642,20 @@ export default function VendorProducts() {
                   </Dialog>
                 </CardHeader>
                 <CardContent>
-                <Table>
+                  <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>الصورة</TableHead>
                       <TableHead>الاسم</TableHead>
                       <TableHead>الفئة</TableHead>
                       <TableHead>السعر</TableHead>
-                      <TableHead>الحالة</TableHead>
+                      <TableHead>المخزون</TableHead>
+                      <TableHead>حالة الموافقة</TableHead>
                       <TableHead>الإجراءات</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {products.map((product) => (
+                    {products.map((product: any) => (
                       <TableRow key={product.id}>
                         <TableCell>
                           {product.image_url ? (
@@ -684,6 +685,18 @@ export default function VendorProducts() {
                             <span className="text-green-500">متوفر</span>
                           ) : (
                             <span className="text-red-500">غير متوفر</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {product.approval_status === "approved" ? (
+                            <span className="text-green-600">معتمد</span>
+                          ) : product.approval_status === "rejected" ? (
+                            <span className="text-red-600">مرفوض</span>
+                          ) : (
+                            <span className="text-yellow-600">قيد المراجعة</span>
+                          )}
+                          {product.rejection_reason && (
+                            <p className="text-xs text-red-600 mt-1">{product.rejection_reason}</p>
                           )}
                         </TableCell>
                         <TableCell>
