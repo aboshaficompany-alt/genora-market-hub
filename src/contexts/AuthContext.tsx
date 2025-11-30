@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   user: User | null;
@@ -21,6 +22,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -106,10 +108,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    toast({
-      title: "تم تسجيل الخروج بنجاح",
-    });
+    try {
+      // Clear local state first
+      setUser(null);
+      setSession(null);
+      
+      // Sign out from Supabase (ignore errors if session is already gone)
+      const { error } = await supabase.auth.signOut();
+      
+      if (error && !error.message.includes("Session not found")) {
+        console.error("Sign out error:", error);
+      }
+      
+      toast({
+        title: "تم تسجيل الخروج بنجاح",
+      });
+      
+      // Navigate to home page
+      navigate("/");
+      
+      // Force reload to clear any cached state
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    } catch (error: any) {
+      console.error("Unexpected sign out error:", error);
+      // Still clear local state and navigate even if there's an error
+      setUser(null);
+      setSession(null);
+      navigate("/");
+      window.location.reload();
+    }
   };
 
   const hasRole = async (role: "admin" | "vendor" | "customer") => {

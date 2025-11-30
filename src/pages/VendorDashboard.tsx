@@ -30,7 +30,7 @@ import { VendorSidebar } from "@/components/VendorSidebar";
 import { VendorNotifications } from "@/components/VendorNotifications";
 
 export default function VendorDashboard() {
-  const { user, hasRole, loading: authLoading } = useAuth();
+  const { user, hasRole, signOut, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -106,8 +106,7 @@ export default function VendorDashboard() {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate("/");
+    await signOut();
   };
 
   const dashboardSections = [
