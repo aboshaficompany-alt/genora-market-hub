@@ -417,6 +417,7 @@ export type Database = {
           price: number
           rating: number | null
           reviews_count: number | null
+          store_category_id: string | null
           store_id: string
           updated_at: string | null
         }
@@ -433,6 +434,7 @@ export type Database = {
           price: number
           rating?: number | null
           reviews_count?: number | null
+          store_category_id?: string | null
           store_id: string
           updated_at?: string | null
         }
@@ -449,6 +451,7 @@ export type Database = {
           price?: number
           rating?: number | null
           reviews_count?: number | null
+          store_category_id?: string | null
           store_id?: string
           updated_at?: string | null
         }
@@ -458,6 +461,13 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_store_category_id_fkey"
+            columns: ["store_category_id"]
+            isOneToOne: false
+            referencedRelation: "store_categories"
             referencedColumns: ["id"]
           },
           {
@@ -624,6 +634,47 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      store_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          id: string
+          is_active: boolean | null
+          name: string
+          store_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          store_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          store_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "store_categories_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       store_reviews: {
         Row: {
