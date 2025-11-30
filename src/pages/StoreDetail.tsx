@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, MapPin, ShoppingCart, Heart, Facebook, Instagram, Twitter, Globe, Store, Send } from "lucide-react";
+import { Star, MapPin, ShoppingCart, Heart, Facebook, Instagram, Twitter, Globe, Store, Send, Package } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -26,6 +26,8 @@ export default function StoreDetail() {
   const isMobile = useIsMobile();
   const [store, setStore] = useState<any>(null);
   const [storeProducts, setStoreProducts] = useState<any[]>([]);
+  const [storeCategories, setStoreCategories] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [storeReviews, setStoreReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(5);
@@ -48,6 +50,16 @@ export default function StoreDetail() {
       .single();
 
     setStore(storeData);
+
+    // Load store categories
+    const { data: categoriesData } = await supabase
+      .from("store_categories")
+      .select("*")
+      .eq("store_id", id)
+      .eq("is_active", true)
+      .order("display_order");
+
+    setStoreCategories(categoriesData || []);
 
     // Load products
     const { data: productsData } = await supabase
@@ -480,9 +492,38 @@ export default function StoreDetail() {
         </div>
 
         {/* Store Products */}
-        <h2 className="text-2xl font-bold mb-6">منتجات المتجر</h2>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold mb-6">منتجات المتجر</h2>
+          
+          {/* Categories Filter */}
+          {storeCategories.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-6">
+              <Button
+                variant={selectedCategory === null ? "default" : "outline"}
+                onClick={() => setSelectedCategory(null)}
+                className={selectedCategory === null ? "bg-gradient-primary" : ""}
+              >
+                الكل
+              </Button>
+              {storeCategories.map((category) => (
+                <Button
+                  key={category.id}
+                  variant={selectedCategory === category.id ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={selectedCategory === category.id ? "bg-gradient-primary" : ""}
+                >
+                  {category.name}
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {storeProducts.map((product) => (
+          {storeProducts
+            .filter(product => !selectedCategory || product.store_category_id === selectedCategory)
+            .map((product) => (
             <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               {product.image_url && (
                 <img
@@ -551,6 +592,17 @@ export default function StoreDetail() {
             </Card>
           ))}
         </div>
+
+        {storeProducts.filter(product => !selectedCategory || product.store_category_id === selectedCategory).length === 0 && (
+          <Card className="mt-6">
+            <CardContent className="p-8 text-center">
+              <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-muted-foreground text-lg">
+                لا توجد منتجات في هذا الصنف حالياً
+              </p>
+            </CardContent>
+          </Card>
+        )}
       </main>
 
       {isMobile ? <MobileFooter /> : <Footer />}
