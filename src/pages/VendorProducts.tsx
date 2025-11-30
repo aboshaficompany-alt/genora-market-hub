@@ -30,6 +30,7 @@ interface Product {
   discount_price: number | null;
   category: string | null;
   category_id: string | null;
+  store_category_id?: string | null;
   image_url: string | null;
   in_stock: boolean;
   store_id: string;
@@ -41,6 +42,15 @@ interface Category {
   is_active: boolean;
 }
 
+interface StoreCategory {
+  id: string;
+  name: string;
+  description: string | null;
+  display_order: number;
+  is_active: boolean;
+  store_id: string;
+}
+
 export default function VendorProducts() {
   const { user, hasRole, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -48,7 +58,15 @@ export default function VendorProducts() {
   const isMobile = useIsMobile();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [storeCategories, setStoreCategories] = useState<StoreCategory[]>([]);
   const [store, setStore] = useState<any>(null);
+  const [showCategoryDialog, setShowCategoryDialog] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<StoreCategory | null>(null);
+  const [categoryFormData, setCategoryFormData] = useState({
+    name: "",
+    description: "",
+    display_order: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -60,6 +78,7 @@ export default function VendorProducts() {
     discount_price: "",
     category: "",
     category_id: "",
+    store_category_id: "",
     in_stock: true,
   });
 
@@ -130,6 +149,16 @@ export default function VendorProducts() {
       .order("display_order");
     
     setCategories(categoriesData || []);
+    
+    // Load store categories (أصناف المتجر الداخلية)
+    const { data: storeCategoriesData } = await supabase
+      .from("store_categories")
+      .select("*")
+      .eq("store_id", storeData.id)
+      .eq("is_active", true)
+      .order("display_order");
+    
+    setStoreCategories(storeCategoriesData || []);
     setLoading(false);
   };
 
@@ -165,6 +194,7 @@ export default function VendorProducts() {
         discount_price: formData.discount_price ? parseFloat(formData.discount_price) : null,
         category: formData.category,
         category_id: formData.category_id || null,
+        store_category_id: formData.store_category_id || null,
         in_stock: formData.in_stock,
         image_url: imageUrl,
         store_id: store.id,
@@ -210,6 +240,7 @@ export default function VendorProducts() {
       discount_price: product.discount_price?.toString() || "",
       category: product.category || "",
       category_id: product.category_id || "",
+      store_category_id: product.store_category_id || "",
       in_stock: product.in_stock,
     });
     setDialogOpen(true);
@@ -245,10 +276,96 @@ export default function VendorProducts() {
       discount_price: "",
       category: "",
       category_id: "",
+      store_category_id: "",
       in_stock: true,
     });
     setEditingProduct(null);
     setImageFile(null);
+  };
+
+  const handleCategorySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!store) return;
+
+    try {
+      const categoryData = {
+        name: categoryFormData.name,
+        description: categoryFormData.description,
+        display_order: categoryFormData.display_order,
+        store_id: store.id,
+      };
+
+      if (editingCategory) {
+        const { error } = await supabase
+          .from("store_categories")
+          .update(categoryData)
+          .eq("id", editingCategory.id);
+        
+        if (error) throw error;
+        
+        toast({ title: "تم تحديث الصنف بنجاح" });
+      } else {
+        const { error } = await supabase
+          .from("store_categories")
+          .insert(categoryData);
+        
+        if (error) throw error;
+        
+        toast({ title: "تم إضافة الصنف بنجاح" });
+      }
+
+      resetCategoryForm();
+      loadData();
+      setShowCategoryDialog(false);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "حدث خطأ",
+        description: error.message,
+      });
+    }
+  };
+
+  const handleEditCategory = (category: StoreCategory) => {
+    setEditingCategory(category);
+    setCategoryFormData({
+      name: category.name,
+      description: category.description || "",
+      display_order: category.display_order,
+    });
+    setShowCategoryDialog(true);
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    if (!confirm("هل أنت متأكد من حذف هذا الصنف؟")) return;
+
+    try {
+      const { error } = await supabase
+        .from("store_categories")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast({ title: "تم حذف الصنف بنجاح" });
+      loadData();
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "حدث خطأ",
+        description: error.message,
+      });
+    }
+  };
+
+  const resetCategoryForm = () => {
+    setCategoryFormData({
+      name: "",
+      description: "",
+      display_order: 0,
+    });
+    setEditingCategory(null);
   };
 
   if (authLoading || loading) {
@@ -266,19 +383,133 @@ export default function VendorProducts() {
           <main className="flex-1 container mx-auto px-4 py-8">
             <SidebarTrigger className="mb-4" />
             
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>إدارة المنتجات</CardTitle>
-                <Dialog open={dialogOpen} onOpenChange={(open) => {
-                  setDialogOpen(open);
-                  if (!open) resetForm();
-                }}>
-                  <DialogTrigger asChild>
-                    <Button className="bg-gradient-primary">
-                      <Plus className="w-4 h-4 ml-2" />
-                      إضافة منتج
-                    </Button>
-                  </DialogTrigger>
+            <div className="space-y-6">
+              {/* أصناف المتجر */}
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>أصناف المتجر</CardTitle>
+                  <Dialog open={showCategoryDialog} onOpenChange={(open) => {
+                    setShowCategoryDialog(open);
+                    if (!open) resetCategoryForm();
+                  }}>
+                    <DialogTrigger asChild>
+                      <Button className="bg-gradient-primary">
+                        <Plus className="w-4 h-4 ml-2" />
+                        إضافة صنف
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>
+                          {editingCategory ? "تعديل الصنف" : "إضافة صنف جديد"}
+                        </DialogTitle>
+                      </DialogHeader>
+                      <form onSubmit={handleCategorySubmit} className="space-y-4">
+                        <div>
+                          <Label>اسم الصنف</Label>
+                          <Input
+                            required
+                            value={categoryFormData.name}
+                            onChange={(e) => setCategoryFormData({ ...categoryFormData, name: e.target.value })}
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label>الوصف</Label>
+                          <Textarea
+                            value={categoryFormData.description}
+                            onChange={(e) => setCategoryFormData({ ...categoryFormData, description: e.target.value })}
+                            rows={2}
+                          />
+                        </div>
+
+                        <div>
+                          <Label>ترتيب العرض</Label>
+                          <Input
+                            type="number"
+                            value={categoryFormData.display_order}
+                            onChange={(e) => setCategoryFormData({ ...categoryFormData, display_order: parseInt(e.target.value) })}
+                          />
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button type="submit" className="flex-1 bg-gradient-primary">
+                            {editingCategory ? "تحديث" : "إضافة"}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setShowCategoryDialog(false)}
+                          >
+                            إلغاء
+                          </Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>اسم الصنف</TableHead>
+                        <TableHead>الوصف</TableHead>
+                        <TableHead>الترتيب</TableHead>
+                        <TableHead>الإجراءات</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {storeCategories.map((category) => (
+                        <TableRow key={category.id}>
+                          <TableCell className="font-medium">{category.name}</TableCell>
+                          <TableCell>{category.description}</TableCell>
+                          <TableCell>{category.display_order}</TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleEditCategory(category)}
+                              >
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleDeleteCategory(category.id)}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                      {storeCategories.length === 0 && (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                            لا توجد أصناف. ابدأ بإضافة صنف جديد.
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+
+              {/* المنتجات */}
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>إدارة المنتجات</CardTitle>
+                  <Dialog open={dialogOpen} onOpenChange={(open) => {
+                    setDialogOpen(open);
+                    if (!open) resetForm();
+                  }}>
+                    <DialogTrigger asChild>
+                      <Button className="bg-gradient-primary">
+                        <Plus className="w-4 h-4 ml-2" />
+                        إضافة منتج
+                      </Button>
+                    </DialogTrigger>
                   <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle>
@@ -328,7 +559,7 @@ export default function VendorProducts() {
                       </div>
 
                       <div>
-                        <Label>الفئة</Label>
+                        <Label>الفئة الرئيسية</Label>
                         <Select 
                           value={formData.category_id} 
                           onValueChange={(val) => {
@@ -341,12 +572,36 @@ export default function VendorProducts() {
                           }}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="اختر الفئة" />
+                            <SelectValue placeholder="اختر الفئة الرئيسية" />
                           </SelectTrigger>
                           <SelectContent>
                             {categories.map((cat) => (
                               <SelectItem key={cat.id} value={cat.id}>
                                 {cat.name_ar}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label>الصنف داخل المتجر</Label>
+                        <Select 
+                          value={formData.store_category_id} 
+                          onValueChange={(val) => {
+                            setFormData({ 
+                              ...formData, 
+                              store_category_id: val
+                            });
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="اختر الصنف" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {storeCategories.map((cat) => (
+                              <SelectItem key={cat.id} value={cat.id}>
+                                {cat.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -384,9 +639,9 @@ export default function VendorProducts() {
                       </div>
                     </form>
                   </DialogContent>
-                </Dialog>
-              </CardHeader>
-              <CardContent>
+                  </Dialog>
+                </CardHeader>
+                <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -460,8 +715,9 @@ export default function VendorProducts() {
                     )}
                   </TableBody>
                 </Table>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           </main>
         </div>
         
