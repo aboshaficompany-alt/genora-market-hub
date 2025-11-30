@@ -14,8 +14,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import MobileFooter from "@/components/MobileFooter";
 import { AdminSidebar } from "@/components/AdminSidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import Footer from "@/components/Footer";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface StoreCategory {
   id: string;
@@ -38,6 +43,7 @@ export default function StoreCategories() {
   const { user, hasRole, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [categories, setCategories] = useState<StoreCategory[]>([]);
   const [stores, setStores] = useState<Store[]>([]);
   const [loading, setLoading] = useState(true);
@@ -198,165 +204,178 @@ export default function StoreCategories() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      
-      <div className="flex flex-1">
-        <AdminSidebar />
+    <SidebarProvider>
+      <div className="min-h-screen flex flex-col w-full">
+        {isMobile ? <MobileNavbar /> : <Navbar />}
         
-        <main className="flex-1 container mx-auto px-4 py-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>إدارة أصناف المتاجر</CardTitle>
-              <Dialog open={dialogOpen} onOpenChange={(open) => {
-                setDialogOpen(open);
-                if (!open) resetForm();
-              }}>
-                <DialogTrigger asChild>
-                  <Button className="bg-gradient-primary">
-                    <Plus className="w-4 h-4 ml-2" />
-                    إضافة صنف
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>
-                      {editingCategory ? "تعديل الصنف" : "إضافة صنف جديد"}
-                    </DialogTitle>
-                  </DialogHeader>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                      <Label>المتجر</Label>
-                      <Select 
-                        required
-                        value={formData.store_id} 
-                        onValueChange={(val) => setFormData({ ...formData, store_id: val })}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="اختر المتجر" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {stores.map((store) => (
-                            <SelectItem key={store.id} value={store.id}>
-                              {store.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+        <div className="flex items-start">
+          <SidebarTrigger className="m-4" />
+        </div>
+        
+        <div className="flex flex-1 w-full">
+          <AdminSidebar />
+          
+          <main className="flex-1 container mx-auto px-4 py-8">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>إدارة أصناف المتاجر</CardTitle>
+                <Dialog open={dialogOpen} onOpenChange={(open) => {
+                  setDialogOpen(open);
+                  if (!open) resetForm();
+                }}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-gradient-primary">
+                      <Plus className="w-4 h-4 ml-2" />
+                      إضافة صنف
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        {editingCategory ? "تعديل الصنف" : "إضافة صنف جديد"}
+                      </DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <div>
+                        <Label>المتجر</Label>
+                        <Select 
+                          required
+                          value={formData.store_id} 
+                          onValueChange={(val) => setFormData({ ...formData, store_id: val })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="اختر المتجر" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {stores.map((store) => (
+                              <SelectItem key={store.id} value={store.id}>
+                                {store.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                    <div>
-                      <Label>اسم الصنف</Label>
-                      <Input
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label>الوصف</Label>
-                      <Textarea
-                        value={formData.description}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        rows={2}
-                      />
-                    </div>
+                      <div>
+                        <Label>اسم الصنف</Label>
+                        <Input
+                          required
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label>الوصف</Label>
+                        <Textarea
+                          value={formData.description}
+                          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                          rows={2}
+                        />
+                      </div>
 
-                    <div>
-                      <Label>ترتيب العرض</Label>
-                      <Input
-                        type="number"
-                        value={formData.display_order}
-                        onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) })}
-                      />
-                    </div>
+                      <div>
+                        <Label>ترتيب العرض</Label>
+                        <Input
+                          type="number"
+                          value={formData.display_order}
+                          onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) })}
+                        />
+                      </div>
 
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={formData.is_active}
-                        onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
-                      />
-                      <Label>نشط</Label>
-                    </div>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={formData.is_active}
+                          onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+                        />
+                        <Label>نشط</Label>
+                      </div>
 
-                    <div className="flex gap-2">
-                      <Button type="submit" className="flex-1 bg-gradient-primary">
-                        {editingCategory ? "تحديث" : "إضافة"}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => setDialogOpen(false)}
-                      >
-                        إلغاء
-                      </Button>
-                    </div>
-                  </form>
-                </DialogContent>
-              </Dialog>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>المتجر</TableHead>
-                    <TableHead>اسم الصنف</TableHead>
-                    <TableHead>الوصف</TableHead>
-                    <TableHead>الترتيب</TableHead>
-                    <TableHead>الحالة</TableHead>
-                    <TableHead>الإجراءات</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {categories.map((category) => (
-                    <TableRow key={category.id}>
-                      <TableCell className="font-medium">{category.stores?.name}</TableCell>
-                      <TableCell>{category.name}</TableCell>
-                      <TableCell>{category.description}</TableCell>
-                      <TableCell>{category.display_order}</TableCell>
-                      <TableCell>
-                        {category.is_active ? (
-                          <span className="text-green-500">نشط</span>
-                        ) : (
-                          <span className="text-red-500">غير نشط</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleEdit(category)}
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => handleDelete(category.id)}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  {categories.length === 0 && (
+                      <div className="flex gap-2">
+                        <Button type="submit" className="flex-1 bg-gradient-primary">
+                          {editingCategory ? "تحديث" : "إضافة"}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setDialogOpen(false)}
+                        >
+                          إلغاء
+                        </Button>
+                      </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                        لا توجد أصناف. ابدأ بإضافة صنف جديد.
-                      </TableCell>
+                      <TableHead>المتجر</TableHead>
+                      <TableHead>اسم الصنف</TableHead>
+                      <TableHead>الوصف</TableHead>
+                      <TableHead>الترتيب</TableHead>
+                      <TableHead>الحالة</TableHead>
+                      <TableHead>الإجراءات</TableHead>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </main>
+                  </TableHeader>
+                  <TableBody>
+                    {categories.map((category) => (
+                      <TableRow key={category.id}>
+                        <TableCell className="font-medium">{category.stores?.name}</TableCell>
+                        <TableCell>{category.name}</TableCell>
+                        <TableCell>{category.description}</TableCell>
+                        <TableCell>{category.display_order}</TableCell>
+                        <TableCell>
+                          {category.is_active ? (
+                            <span className="text-green-500">نشط</span>
+                          ) : (
+                            <span className="text-red-500">غير نشط</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleEdit(category)}
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => handleDelete(category.id)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {categories.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                          لا توجد أصناف. ابدأ بإضافة صنف جديد.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </main>
+        </div>
+        
+        {isMobile ? (
+          <>
+            <MobileBottomNav />
+            <MobileFooter />
+          </>
+        ) : (
+          <Footer />
+        )}
       </div>
-      
-      <Footer />
-    </div>
+    </SidebarProvider>
   );
 }
