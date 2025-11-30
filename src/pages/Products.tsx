@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { products } from "@/data/products";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -12,14 +12,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Star, ShoppingCart, Store, Search, Heart, SlidersHorizontal } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Products = () => {
   const { addToCart } = useCart();
   const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist();
+  const isMobile = useIsMobile();
+  const [searchParams] = useSearchParams();
+  const categoryFromUrl = searchParams.get("category");
   
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl || "all");
   const [priceRange, setPriceRange] = useState([0, 5000]);
   const [minRating, setMinRating] = useState(0);
   const [sortBy, setSortBy] = useState("default");
@@ -53,7 +60,7 @@ const Products = () => {
 
   return (
     <div className="min-h-screen bg-gradient-warm" dir="rtl">
-      <Navbar />
+      {isMobile ? <MobileNavbar /> : <Navbar />}
       
       <section className="pt-32 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
@@ -263,7 +270,8 @@ const Products = () => {
         </div>
       </section>
 
-      <Footer />
+      {isMobile ? <MobileFooter /> : <Footer />}
+      {isMobile && <MobileBottomNav />}
     </div>
   );
 };
