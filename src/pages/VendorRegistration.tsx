@@ -75,7 +75,7 @@ export default function VendorRegistration() {
       email: "",
       password: "",
       plan_id: "",
-      category: "",
+      category: "مأكولات ومشروبات",
       name: "",
       description: "",
       city: "",
