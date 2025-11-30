@@ -66,8 +66,11 @@ const ProductDetail = () => {
     if (productData.image_url) {
       images.push(productData.image_url);
     }
-    if (productData.attributes?.images && Array.isArray(productData.attributes.images)) {
-      images.push(...productData.attributes.images);
+    if (productData.attributes && typeof productData.attributes === 'object' && 'images' in productData.attributes) {
+      const attrs = productData.attributes as { images?: string[] };
+      if (attrs.images && Array.isArray(attrs.images)) {
+        images.push(...attrs.images);
+      }
     }
     setProductImages(images.length > 0 ? images : ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500']);
     
