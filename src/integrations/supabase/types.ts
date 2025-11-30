@@ -96,6 +96,7 @@ export type Database = {
       }
       categories: {
         Row: {
+          attributes: Json | null
           created_at: string | null
           description: string | null
           display_order: number | null
@@ -103,9 +104,11 @@ export type Database = {
           id: string
           is_active: boolean | null
           name_ar: string
+          parent_id: string | null
           updated_at: string | null
         }
         Insert: {
+          attributes?: Json | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
@@ -113,9 +116,11 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           name_ar: string
+          parent_id?: string | null
           updated_at?: string | null
         }
         Update: {
+          attributes?: Json | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
@@ -123,9 +128,18 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           name_ar?: string
+          parent_id?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       cities: {
         Row: {
@@ -405,6 +419,8 @@ export type Database = {
       }
       products: {
         Row: {
+          approval_status: string | null
+          attributes: Json | null
           category: string | null
           category_id: string | null
           created_at: string | null
@@ -413,15 +429,20 @@ export type Database = {
           id: string
           image_url: string | null
           in_stock: boolean | null
+          is_approved: boolean | null
           name: string
           price: number
           rating: number | null
+          rejection_reason: string | null
           reviews_count: number | null
           store_category_id: string | null
           store_id: string
           updated_at: string | null
+          variants: Json | null
         }
         Insert: {
+          approval_status?: string | null
+          attributes?: Json | null
           category?: string | null
           category_id?: string | null
           created_at?: string | null
@@ -430,15 +451,20 @@ export type Database = {
           id?: string
           image_url?: string | null
           in_stock?: boolean | null
+          is_approved?: boolean | null
           name: string
           price: number
           rating?: number | null
+          rejection_reason?: string | null
           reviews_count?: number | null
           store_category_id?: string | null
           store_id: string
           updated_at?: string | null
+          variants?: Json | null
         }
         Update: {
+          approval_status?: string | null
+          attributes?: Json | null
           category?: string | null
           category_id?: string | null
           created_at?: string | null
@@ -447,13 +473,16 @@ export type Database = {
           id?: string
           image_url?: string | null
           in_stock?: boolean | null
+          is_approved?: boolean | null
           name?: string
           price?: number
           rating?: number | null
+          rejection_reason?: string | null
           reviews_count?: number | null
           store_category_id?: string | null
           store_id?: string
           updated_at?: string | null
+          variants?: Json | null
         }
         Relationships: [
           {
