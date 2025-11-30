@@ -3,7 +3,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,11 +14,13 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/AdminSidebar";
 import { useToast } from "@/hooks/use-toast";
 import { Users as UsersIcon } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Users() {
   const { user, hasRole, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [users, setUsers] = useState<any[]>([]);
   const [userRoles, setUserRoles] = useState<any[]>([]);
 
@@ -60,7 +65,7 @@ export default function Users() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex flex-col w-full">
-        <Navbar />
+        {isMobile ? <MobileNavbar /> : <Navbar />}
         <div className="flex flex-1 w-full">
           <AdminSidebar />
           <main className="flex-1 container mx-auto px-4 py-8">
@@ -94,7 +99,8 @@ export default function Users() {
             </div>
           </main>
         </div>
-        <Footer />
+        {isMobile ? <MobileFooter /> : <Footer />}
+        {isMobile && <MobileBottomNav />}
       </div>
     </SidebarProvider>
   );
