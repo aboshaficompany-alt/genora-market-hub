@@ -35,7 +35,8 @@ import {
 
 const systemItems = [
   { title: "المستخدمون", url: "/users", icon: Users },
-  { title: "الفئات", url: "/categories", icon: Layers },
+  { title: "الفئات الرئيسية", url: "/categories", icon: Layers },
+  { title: "أصناف المتاجر", url: "/store-categories", icon: Package },
   { title: "الرسائل/الاستفسارات", url: "/messages", icon: MessageSquare },
   { title: "العروض", url: "/offers", icon: Gift },
   { title: "برومو كود", url: "/promo-codes", icon: Percent },

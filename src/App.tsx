@@ -28,6 +28,7 @@ import Debts from "./pages/Debts";
 import Banners from "./pages/Banners";
 import Users from "./pages/Users";
 import Categories from "./pages/Categories";
+import StoreCategories from "./pages/StoreCategories";
 import Messages from "./pages/Messages";
 import Offers from "./pages/Offers";
 import PromoCodes from "./pages/PromoCodes";
@@ -78,6 +79,7 @@ const App = () => (
                 <Route path="/banners" element={<Banners />} />
                 <Route path="/users" element={<Users />} />
                 <Route path="/categories" element={<Categories />} />
+                <Route path="/store-categories" element={<StoreCategories />} />
                 <Route path="/messages" element={<Messages />} />
                 <Route path="/offers" element={<Offers />} />
                 <Route path="/promo-codes" element={<PromoCodes />} />
