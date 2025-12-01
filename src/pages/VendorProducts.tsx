@@ -195,16 +195,21 @@ export default function VendorProducts() {
       if (imageFiles.length > 0) {
         for (const file of imageFiles) {
           const fileExt = file.name.split('.').pop();
-          const fileName = `${Math.random()}.${fileExt}`;
-          const { error: uploadError } = await supabase.storage
+          const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
+          const filePath = `${store.id}/${fileName}`;
+          
+          const { error: uploadError, data: uploadData } = await supabase.storage
             .from('product-images')
-            .upload(fileName, file);
+            .upload(filePath, file);
 
-          if (uploadError) throw uploadError;
+          if (uploadError) {
+            console.error("Upload error:", uploadError);
+            throw new Error(`فشل رفع الصورة: ${uploadError.message}`);
+          }
           
           const { data: { publicUrl } } = supabase.storage
             .from('product-images')
-            .getPublicUrl(fileName);
+            .getPublicUrl(filePath);
           
           imageUrls.push(publicUrl);
         }
@@ -215,7 +220,7 @@ export default function VendorProducts() {
 
       const productData = {
         name: formData.name,
-        description: formData.description,
+        description: formData.description || null,
         price: parseFloat(formData.price),
         discount_price: formData.discount_price ? parseFloat(formData.discount_price) : null,
         category: formData.category || null,
@@ -226,6 +231,7 @@ export default function VendorProducts() {
         variants: variants.length > 0 ? variants as any : null,
         attributes: imageUrls.length > 0 ? { images: imageUrls } as any : (editingProduct?.attributes || null),
         store_id: store.id,
+        approval_status: 'pending',
       };
 
       if (editingProduct) {
