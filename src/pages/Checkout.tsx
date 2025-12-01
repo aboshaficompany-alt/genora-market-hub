@@ -49,6 +49,12 @@ const Checkout = () => {
   }, [user, authLoading, navigate]);
 
   useEffect(() => {
+    if (items.length === 0) {
+      navigate("/cart");
+    }
+  }, [items, navigate]);
+
+  useEffect(() => {
     loadPaymentMethods();
   }, [items]);
 
@@ -306,7 +312,6 @@ const Checkout = () => {
   };
 
   if (items.length === 0) {
-    navigate("/cart");
     return null;
   }
 
