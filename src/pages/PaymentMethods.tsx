@@ -333,6 +333,256 @@ export default function PaymentMethods() {
     );
   };
 
+  const PayPalForm = () => {
+    const method = paymentMethods.find((m) => m.gateway_type === "paypal");
+    const [formData, setFormData] = useState({
+      api_key: method?.api_key || "",
+      secret_key: method?.secret_key || "",
+      merchant_id: method?.merchant_id || "",
+      is_active: method?.is_active || false,
+      is_test_mode: method?.is_test_mode ?? true,
+    });
+
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CreditCard className="h-5 w-5" />
+            PayPal
+          </CardTitle>
+          <CardDescription>قبول المدفوعات عبر PayPal</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Alert>
+            <AlertDescription>
+              احصل على بيانات API من{" "}
+              <a href="https://developer.paypal.com/" target="_blank" className="text-primary underline">
+                PayPal Developer
+              </a>
+            </AlertDescription>
+          </Alert>
+
+          <div className="space-y-2">
+            <Label htmlFor="paypal-client-id">Client ID</Label>
+            <Input
+              id="paypal-client-id"
+              placeholder="AYSq3RDGsmBLJE-otTkBtM-jBRd1TCQwFf9..."
+              value={formData.api_key}
+              onChange={(e) => setFormData({ ...formData, api_key: e.target.value })}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="paypal-secret">Client Secret</Label>
+            <Input
+              id="paypal-secret"
+              type="password"
+              placeholder="EHx2aa0..."
+              value={formData.secret_key}
+              onChange={(e) => setFormData({ ...formData, secret_key: e.target.value })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Label htmlFor="paypal-test-mode">وضع التجربة (Sandbox)</Label>
+            <Switch
+              id="paypal-test-mode"
+              checked={formData.is_test_mode}
+              onCheckedChange={(checked) => setFormData({ ...formData, is_test_mode: checked })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Label htmlFor="paypal-active">تفعيل</Label>
+            <Switch
+              id="paypal-active"
+              checked={formData.is_active}
+              onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+            />
+          </div>
+
+          <div className="flex gap-2">
+            <Button onClick={() => savePaymentMethod("paypal", formData)} disabled={saving} className="flex-1">
+              {saving && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+              حفظ
+            </Button>
+            {method && (
+              <Button variant="destructive" onClick={() => deletePaymentMethod(method.id)}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  const MoyasarForm = () => {
+    const method = paymentMethods.find((m) => m.gateway_type === "moyasar");
+    const [formData, setFormData] = useState({
+      api_key: method?.api_key || "",
+      secret_key: method?.secret_key || "",
+      is_active: method?.is_active || false,
+      is_test_mode: method?.is_test_mode ?? true,
+    });
+
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CreditCard className="h-5 w-5" />
+            Moyasar
+          </CardTitle>
+          <CardDescription>قبول المدفوعات عبر Moyasar</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Alert>
+            <AlertDescription>
+              احصل على مفاتيح API من{" "}
+              <a href="https://moyasar.com/dashboard/" target="_blank" className="text-primary underline">
+                لوحة تحكم Moyasar
+              </a>
+            </AlertDescription>
+          </Alert>
+
+          <div className="space-y-2">
+            <Label htmlFor="moyasar-api-key">Publishable Key</Label>
+            <Input
+              id="moyasar-api-key"
+              placeholder="pk_test_..."
+              value={formData.api_key}
+              onChange={(e) => setFormData({ ...formData, api_key: e.target.value })}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="moyasar-secret-key">Secret Key</Label>
+            <Input
+              id="moyasar-secret-key"
+              type="password"
+              placeholder="sk_test_..."
+              value={formData.secret_key}
+              onChange={(e) => setFormData({ ...formData, secret_key: e.target.value })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Label htmlFor="moyasar-test-mode">وضع التجربة</Label>
+            <Switch
+              id="moyasar-test-mode"
+              checked={formData.is_test_mode}
+              onCheckedChange={(checked) => setFormData({ ...formData, is_test_mode: checked })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Label htmlFor="moyasar-active">تفعيل</Label>
+            <Switch
+              id="moyasar-active"
+              checked={formData.is_active}
+              onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+            />
+          </div>
+
+          <div className="flex gap-2">
+            <Button onClick={() => savePaymentMethod("moyasar", formData)} disabled={saving} className="flex-1">
+              {saving && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+              حفظ
+            </Button>
+            {method && (
+              <Button variant="destructive" onClick={() => deletePaymentMethod(method.id)}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  const HyperPayForm = () => {
+    const method = paymentMethods.find((m) => m.gateway_type === "hyperpay");
+    const [formData, setFormData] = useState({
+      api_key: method?.api_key || "",
+      merchant_id: method?.merchant_id || "",
+      is_active: method?.is_active || false,
+      is_test_mode: method?.is_test_mode ?? true,
+    });
+
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CreditCard className="h-5 w-5" />
+            HyperPay
+          </CardTitle>
+          <CardDescription>قبول المدفوعات عبر HyperPay</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Alert>
+            <AlertDescription>
+              احصل على بيانات الاتصال من{" "}
+              <a href="https://www.hyperpay.com/" target="_blank" className="text-primary underline">
+                HyperPay
+              </a>
+            </AlertDescription>
+          </Alert>
+
+          <div className="space-y-2">
+            <Label htmlFor="hyperpay-access-token">Access Token</Label>
+            <Input
+              id="hyperpay-access-token"
+              type="password"
+              placeholder="OGE4Mjk0MTc0YjdlY2I..."
+              value={formData.api_key}
+              onChange={(e) => setFormData({ ...formData, api_key: e.target.value })}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="hyperpay-entity-id">Entity ID</Label>
+            <Input
+              id="hyperpay-entity-id"
+              placeholder="8a8294174b7ecb28014b9699..."
+              value={formData.merchant_id}
+              onChange={(e) => setFormData({ ...formData, merchant_id: e.target.value })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Label htmlFor="hyperpay-test-mode">وضع التجربة</Label>
+            <Switch
+              id="hyperpay-test-mode"
+              checked={formData.is_test_mode}
+              onCheckedChange={(checked) => setFormData({ ...formData, is_test_mode: checked })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Label htmlFor="hyperpay-active">تفعيل</Label>
+            <Switch
+              id="hyperpay-active"
+              checked={formData.is_active}
+              onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+            />
+          </div>
+
+          <div className="flex gap-2">
+            <Button onClick={() => savePaymentMethod("hyperpay", formData)} disabled={saving} className="flex-1">
+              {saving && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
+              حفظ
+            </Button>
+            {method && (
+              <Button variant="destructive" onClick={() => deletePaymentMethod(method.id)}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
   const BankTransferForm = () => {
     const method = paymentMethods.find((m) => m.gateway_type === "bank_transfer");
     const [formData, setFormData] = useState({
@@ -455,9 +705,12 @@ export default function PaymentMethods() {
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-6">
                 <TabsTrigger value="stripe">Stripe</TabsTrigger>
                 <TabsTrigger value="tap">Tap</TabsTrigger>
+                <TabsTrigger value="paypal">PayPal</TabsTrigger>
+                <TabsTrigger value="moyasar">Moyasar</TabsTrigger>
+                <TabsTrigger value="hyperpay">HyperPay</TabsTrigger>
                 <TabsTrigger value="bank">تحويل بنكي</TabsTrigger>
               </TabsList>
 
@@ -467,6 +720,18 @@ export default function PaymentMethods() {
 
               <TabsContent value="tap">
                 <TapForm />
+              </TabsContent>
+
+              <TabsContent value="paypal">
+                <PayPalForm />
+              </TabsContent>
+
+              <TabsContent value="moyasar">
+                <MoyasarForm />
+              </TabsContent>
+
+              <TabsContent value="hyperpay">
+                <HyperPayForm />
               </TabsContent>
 
               <TabsContent value="bank">
