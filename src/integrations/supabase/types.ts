@@ -417,6 +417,78 @@ export type Database = {
           },
         ]
       }
+      payment_methods: {
+        Row: {
+          account_holder_name: string | null
+          account_number: string | null
+          api_key: string | null
+          bank_name: string | null
+          created_at: string | null
+          gateway_type: string
+          iban: string | null
+          id: string
+          is_active: boolean | null
+          is_test_mode: boolean | null
+          merchant_id: string | null
+          secret_key: string | null
+          settings: Json | null
+          store_id: string
+          updated_at: string | null
+          vendor_id: string
+        }
+        Insert: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          api_key?: string | null
+          bank_name?: string | null
+          created_at?: string | null
+          gateway_type: string
+          iban?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_test_mode?: boolean | null
+          merchant_id?: string | null
+          secret_key?: string | null
+          settings?: Json | null
+          store_id: string
+          updated_at?: string | null
+          vendor_id: string
+        }
+        Update: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          api_key?: string | null
+          bank_name?: string | null
+          created_at?: string | null
+          gateway_type?: string
+          iban?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_test_mode?: boolean | null
+          merchant_id?: string | null
+          secret_key?: string | null
+          settings?: Json | null
+          store_id?: string
+          updated_at?: string | null
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_methods_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_methods_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           approval_status: string | null

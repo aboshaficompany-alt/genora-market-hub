@@ -1,4 +1,4 @@
-import { LayoutDashboard, Package, ShoppingCart, Settings, Store, DollarSign, CreditCard } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Settings, Store, DollarSign, CreditCard, Wallet } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
@@ -17,6 +17,7 @@ const items = [
   { title: "المنتجات", url: "/vendor-products", icon: Package },
   { title: "الفروع", url: "/branches", icon: Store },
   { title: "الطلبات", url: "/vendor-orders", icon: ShoppingCart },
+  { title: "وسائل الدفع", url: "/payment-methods", icon: Wallet },
   { title: "طلبات السحب", url: "/withdrawal-requests", icon: DollarSign },
   { title: "المديونيات", url: "/debts", icon: CreditCard },
   { title: "إعدادات المتجر", url: "/store-settings", icon: Settings },
