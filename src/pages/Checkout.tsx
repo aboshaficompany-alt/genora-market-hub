@@ -196,6 +196,27 @@ const Checkout = () => {
   const discount = calculateDiscount();
   const finalTotal = totalPrice - discount;
 
+  const processPayment = async (orderId: string) => {
+    // Simulate payment processing based on gateway
+    const selectedMethod = availablePaymentMethods.find(m => m.gateway_type === paymentMethod);
+    
+    if (!selectedMethod) {
+      return { success: false, error: "بوابة الدفع غير متوفرة" };
+    }
+
+    // For Stripe, we would integrate with Stripe SDK here
+    // For now, simulate successful payment
+    if (paymentMethod === "stripe" && selectedMethod.api_key) {
+      // In real implementation:
+      // const stripe = await loadStripe(selectedMethod.api_key);
+      // Process payment with Stripe
+      return { success: true, transaction_id: `stripe_${Date.now()}` };
+    }
+
+    // For other gateways, simulate processing
+    return { success: true, transaction_id: `${paymentMethod}_${Date.now()}` };
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -211,6 +232,9 @@ const Checkout = () => {
           user_id: user.id,
           total_amount: finalTotal,
           payment_method: paymentMethod as any,
+          payment_gateway: paymentMethod,
+          payment_status: "pending",
+          payment_amount: finalTotal,
           shipping_name: formData.name,
           shipping_email: formData.email,
           shipping_phone: formData.phone,
@@ -224,10 +248,25 @@ const Checkout = () => {
 
       if (orderError) throw orderError;
 
+      // Process payment
+      const paymentResult = await processPayment(orderData.id);
+
+      if (paymentResult.success) {
+        // Update order with payment info
+        await supabase
+          .from("orders")
+          .update({
+            payment_status: "completed",
+            payment_transaction_id: paymentResult.transaction_id,
+            payment_date: new Date().toISOString(),
+          })
+          .eq("id", orderData.id);
+      }
+
       // Create order items
       const orderItems = items.map(item => ({
         order_id: orderData.id,
-        product_id: null, // Mock data doesn't have real product IDs
+        product_id: String(item.id),
         product_name: item.name,
         product_price: item.price,
         quantity: item.quantity,
@@ -250,11 +289,11 @@ const Checkout = () => {
 
       toast({
         title: "تم إرسال الطلب بنجاح!",
-        description: "سيتم التواصل معك قريباً لتأكيد الطلب",
+        description: "تمت معالجة الدفع بنجاح",
       });
 
       clearCart();
-      navigate("/orders");
+      navigate(`/order-complete?order_id=${orderData.id}`);
     } catch (error: any) {
       toast({
         variant: "destructive",

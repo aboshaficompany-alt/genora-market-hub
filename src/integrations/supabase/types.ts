@@ -366,7 +366,12 @@ export type Database = {
           created_at: string | null
           id: string
           notes: string | null
+          payment_amount: number | null
+          payment_date: string | null
+          payment_gateway: string | null
           payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_status: string | null
+          payment_transaction_id: string | null
           shipping_address: string
           shipping_city: string
           shipping_email: string
@@ -381,7 +386,12 @@ export type Database = {
           created_at?: string | null
           id?: string
           notes?: string | null
+          payment_amount?: number | null
+          payment_date?: string | null
+          payment_gateway?: string | null
           payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_status?: string | null
+          payment_transaction_id?: string | null
           shipping_address: string
           shipping_city: string
           shipping_email: string
@@ -396,7 +406,12 @@ export type Database = {
           created_at?: string | null
           id?: string
           notes?: string | null
+          payment_amount?: number | null
+          payment_date?: string | null
+          payment_gateway?: string | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
+          payment_status?: string | null
+          payment_transaction_id?: string | null
           shipping_address?: string
           shipping_city?: string
           shipping_email?: string
@@ -1082,6 +1097,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_payment_gateway_stats: {
+        Args: {
+          p_end_date?: string
+          p_start_date?: string
+          p_store_id?: string
+        }
+        Returns: {
+          gateway: string
+          pending_payments: number
+          successful_payments: number
+          total_amount: number
+          total_orders: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
