@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { Store, ShoppingCart, Heart, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { Store, ShoppingCart, Heart, Menu, X, LayoutDashboard, LogOut } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -10,6 +11,18 @@ const MobileNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { totalItems } = useCart();
   const { items: wishlistItems } = useWishlist();
+  const { user, signOut, hasRole } = useAuth();
+  const [isVendor, setIsVendor] = useState(false);
+
+  useEffect(() => {
+    const checkRole = async () => {
+      if (user) {
+        const vendorRole = await hasRole("vendor");
+        setIsVendor(vendorRole);
+      }
+    };
+    checkRole();
+  }, [user, hasRole]);
 
   return (
     <>
@@ -118,16 +131,42 @@ const MobileNavbar = () => {
 
           {/* Menu Footer */}
           <div className="p-4 border-t border-border space-y-2">
-            <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
-              <Button className="w-full bg-gradient-primary text-primary-foreground">
-                تسجيل الدخول
-              </Button>
-            </Link>
-            <Link to="/vendor-registration" onClick={() => setIsMenuOpen(false)}>
-              <Button variant="outline" className="w-full">
-                تسجيل كتاجر
-              </Button>
-            </Link>
+            {user ? (
+              <>
+                {isVendor && (
+                  <Link to="/vendor-dashboard" onClick={() => setIsMenuOpen(false)}>
+                    <Button variant="outline" className="w-full justify-start">
+                      <LayoutDashboard className="ml-2 w-5 h-5" />
+                      لوحة التاجر
+                    </Button>
+                  </Link>
+                )}
+                <Button 
+                  variant="destructive" 
+                  className="w-full justify-start"
+                  onClick={async () => {
+                    await signOut();
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  <LogOut className="ml-2 w-5 h-5" />
+                  تسجيل الخروج
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
+                  <Button className="w-full bg-gradient-primary text-primary-foreground">
+                    تسجيل الدخول
+                  </Button>
+                </Link>
+                <Link to="/vendor-registration" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="outline" className="w-full">
+                    تسجيل كتاجر
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
