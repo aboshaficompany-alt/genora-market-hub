@@ -183,9 +183,9 @@ const ProductDetail = () => {
       {isMobile ? <MobileNavbar /> : <Navbar />}
       
       {/* Product Details */}
-      <section className="pt-32 pb-16">
+      <section className={`${isMobile ? 'pt-16 pb-24' : 'pt-32 pb-16'}`}>
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 mb-16">
+          <div className={`grid ${isMobile ? 'grid-cols-1' : 'lg:grid-cols-2'} gap-8 mb-16`}>
             {/* Product Image Gallery */}
             <div className="animate-fade-in">
               <ProductImageGallery 
@@ -202,7 +202,7 @@ const ProductDetail = () => {
                   {product.category || 'غير مصنف'}
                 </Badge>
                 
-                <h1 className="text-5xl font-black text-charcoal mb-4">
+                <h1 className={`${isMobile ? 'text-3xl' : 'text-5xl'} font-black text-charcoal mb-4`}>
                   {product.name}
                 </h1>
                 
@@ -355,9 +355,9 @@ const ProductDetail = () => {
               </Card>
 
               {/* Features */}
-              <div className="grid grid-cols-3 gap-4">
+              <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-3'} gap-4`}>
                 <Card className="bg-gradient-card">
-                  <CardContent className="p-6 text-center">
+                  <CardContent className={`${isMobile ? 'p-4' : 'p-6'} text-center`}>
                     <Truck className="w-8 h-8 text-primary mx-auto mb-2" />
                     <div className="font-bold text-charcoal">شحن مجاني</div>
                     <div className="text-xs text-charcoal-light">للطلبات +200 ر.س</div>
