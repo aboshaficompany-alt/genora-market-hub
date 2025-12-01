@@ -46,11 +46,7 @@ const Profile = () => {
 
   const loadProfile = async () => {
     try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user?.id)
-        .single();
+      const { data, error } = await supabase.from("profiles").select("*").eq("id", user?.id).single();
 
       if (error) throw error;
 
@@ -92,10 +88,7 @@ const Profile = () => {
     setSaving(true);
 
     try {
-      const { error } = await supabase
-        .from("profiles")
-        .update(formData)
-        .eq("id", user?.id);
+      const { error } = await supabase.from("profiles").update(formData).eq("id", user?.id);
 
       if (error) throw error;
 
@@ -111,10 +104,7 @@ const Profile = () => {
 
   const markNotificationAsRead = async (notificationId: string) => {
     try {
-      const { error } = await supabase
-        .from("user_notifications")
-        .update({ is_read: true })
-        .eq("id", notificationId);
+      const { error } = await supabase.from("user_notifications").update({ is_read: true }).eq("id", notificationId);
 
       if (error) throw error;
       loadNotifications();
@@ -153,23 +143,14 @@ const Profile = () => {
                       {formData.full_name?.[0] || user?.email?.[0]?.toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <Button
-                    size="icon"
-                    className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-gradient-primary"
-                  >
+                  <Button size="icon" className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-gradient-primary">
                     <Camera className="w-4 h-4" />
                   </Button>
                 </div>
                 <div className="flex-1">
-                  <h1 className="text-3xl font-bold text-foreground mb-2">
-                    {formData.full_name || "المستخدم"}
-                  </h1>
+                  <h1 className="text-3xl font-bold text-foreground mb-2">{formData.full_name || "المستخدم"}</h1>
                   <p className="text-muted-foreground">{user?.email}</p>
                 </div>
-                <Button onClick={signOut} variant="destructive">
-                  <LogOut className="w-4 h-4 ml-2" />
-                  تسجيل الخروج
-                </Button>
               </div>
             </CardContent>
           </Card>
@@ -215,9 +196,7 @@ const Profile = () => {
                         <Input
                           id="full_name"
                           value={formData.full_name}
-                          onChange={(e) =>
-                            setFormData({ ...formData, full_name: e.target.value })
-                          }
+                          onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                           placeholder="أدخل اسمك الكامل"
                         />
                       </div>
@@ -226,9 +205,7 @@ const Profile = () => {
                         <Input
                           id="phone"
                           value={formData.phone}
-                          onChange={(e) =>
-                            setFormData({ ...formData, phone: e.target.value })
-                          }
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           placeholder="05xxxxxxxx"
                         />
                       </div>
@@ -255,9 +232,7 @@ const Profile = () => {
                       <Textarea
                         id="address"
                         value={formData.address}
-                        onChange={(e) =>
-                          setFormData({ ...formData, address: e.target.value })
-                        }
+                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                         placeholder="الشارع، الحي، رقم المبنى..."
                         rows={3}
                       />
@@ -268,9 +243,7 @@ const Profile = () => {
                         <Input
                           id="city"
                           value={formData.city}
-                          onChange={(e) =>
-                            setFormData({ ...formData, city: e.target.value })
-                          }
+                          onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                           placeholder="الرياض، جدة، الدمام..."
                         />
                       </div>
@@ -279,9 +252,7 @@ const Profile = () => {
                         <Input
                           id="postal_code"
                           value={formData.postal_code}
-                          onChange={(e) =>
-                            setFormData({ ...formData, postal_code: e.target.value })
-                          }
+                          onChange={(e) => setFormData({ ...formData, postal_code: e.target.value })}
                           placeholder="12345"
                         />
                       </div>
@@ -332,20 +303,14 @@ const Profile = () => {
                         <div
                           key={notification.id}
                           className={`p-4 rounded-lg border transition-all ${
-                            notification.is_read
-                              ? "bg-background"
-                              : "bg-primary/5 border-primary/20"
+                            notification.is_read ? "bg-background" : "bg-primary/5 border-primary/20"
                           }`}
                           onClick={() => markNotificationAsRead(notification.id)}
                         >
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
-                              <h4 className="font-bold text-foreground mb-1">
-                                {notification.title}
-                              </h4>
-                              <p className="text-muted-foreground text-sm">
-                                {notification.message}
-                              </p>
+                              <h4 className="font-bold text-foreground mb-1">{notification.title}</h4>
+                              <p className="text-muted-foreground text-sm">{notification.message}</p>
                               <p className="text-xs text-muted-foreground mt-2">
                                 {new Date(notification.created_at).toLocaleDateString("ar-SA")}
                               </p>
