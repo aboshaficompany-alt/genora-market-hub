@@ -19,11 +19,12 @@ const Checkout = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [paymentMethod, setPaymentMethod] = useState("credit_card");
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [promoCode, setPromoCode] = useState("");
   const [appliedPromo, setAppliedPromo] = useState<any>(null);
   const [checkingPromo, setCheckingPromo] = useState(false);
+  const [availablePaymentMethods, setAvailablePaymentMethods] = useState<any[]>([]);
   
   const [formData, setFormData] = useState({
     name: "",
@@ -46,6 +47,59 @@ const Checkout = () => {
       navigate("/auth");
     }
   }, [user, authLoading, navigate]);
+
+  useEffect(() => {
+    loadPaymentMethods();
+  }, [items]);
+
+  const loadPaymentMethods = async () => {
+    if (items.length === 0) return;
+
+    try {
+      // Get product IDs from cart (convert to string)
+      const productIds = items.map(item => String(item.id));
+      
+      // Fetch products to get their store IDs
+      const { data: products, error: productsError } = await supabase
+        .from("products")
+        .select("store_id")
+        .in("id", productIds);
+
+      if (productsError) throw productsError;
+
+      // Get unique store IDs
+      const storeIds = [...new Set(products?.map(p => p.store_id) || [])];
+      
+      if (storeIds.length === 0) return;
+
+      // Fetch active payment methods for these stores
+      const { data, error } = await supabase
+        .from("payment_methods")
+        .select("*")
+        .in("store_id", storeIds)
+        .eq("is_active", true);
+
+      if (error) throw error;
+
+      // Group payment methods by gateway type to avoid duplicates
+      const methodsMap = new Map();
+      data?.forEach(method => {
+        if (!methodsMap.has(method.gateway_type)) {
+          methodsMap.set(method.gateway_type, method);
+        }
+      });
+
+      const methods = Array.from(methodsMap.values());
+      setAvailablePaymentMethods(methods);
+      
+      // Set default payment method
+      if (methods.length > 0 && !paymentMethod) {
+        setPaymentMethod(methods[0].gateway_type);
+      }
+    } catch (error) {
+      console.error("Error loading payment methods:", error);
+    }
+  };
 
   const applyPromoCode = async () => {
     if (!promoCode.trim()) {
@@ -347,42 +401,77 @@ const Checkout = () => {
                       </h2>
                     </div>
                     
-                    <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-                      <div className="space-y-3">
-                        <div className="flex items-center space-x-2 space-x-reverse border-2 rounded-lg p-4 hover:border-primary transition-colors cursor-pointer">
-                          <RadioGroupItem value="credit-card" id="credit-card" />
-                          <Label htmlFor="credit-card" className="flex items-center gap-3 cursor-pointer flex-1">
-                            <CreditCard className="w-5 h-5 text-primary" />
-                            <div>
-                              <div className="font-bold">بطاقة ائتمانية</div>
-                              <div className="text-sm text-charcoal-light">ادفع باستخدام بطاقتك الائتمانية</div>
-                            </div>
-                          </Label>
-                        </div>
-                        
-                        <div className="flex items-center space-x-2 space-x-reverse border-2 rounded-lg p-4 hover:border-primary transition-colors cursor-pointer">
-                          <RadioGroupItem value="wallet" id="wallet" />
-                          <Label htmlFor="wallet" className="flex items-center gap-3 cursor-pointer flex-1">
-                            <Wallet className="w-5 h-5 text-secondary" />
-                            <div>
-                              <div className="font-bold">محفظة إلكترونية</div>
-                              <div className="text-sm text-charcoal-light">الدفع عبر المحافظ الإلكترونية</div>
-                            </div>
-                          </Label>
-                        </div>
-                        
-                        <div className="flex items-center space-x-2 space-x-reverse border-2 rounded-lg p-4 hover:border-primary transition-colors cursor-pointer">
-                          <RadioGroupItem value="bank" id="bank" />
-                          <Label htmlFor="bank" className="flex items-center gap-3 cursor-pointer flex-1">
-                            <Building2 className="w-5 h-5 text-teal-accent" />
-                            <div>
-                              <div className="font-bold">تحويل بنكي</div>
-                              <div className="text-sm text-charcoal-light">الدفع عن طريق التحويل البنكي</div>
-                            </div>
-                          </Label>
-                        </div>
+                    {availablePaymentMethods.length === 0 ? (
+                      <div className="text-center py-8 text-muted-foreground">
+                        لا توجد وسائل دفع متاحة حالياً
                       </div>
-                    </RadioGroup>
+                    ) : (
+                      <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
+                        <div className="space-y-3">
+                          {availablePaymentMethods.map((method) => {
+                            const gatewayConfig = {
+                              stripe: {
+                                label: "Stripe",
+                                description: "الدفع عبر بطاقة الائتمان - Stripe",
+                                icon: CreditCard,
+                              },
+                              tap: {
+                                label: "Tap Payments",
+                                description: "الدفع عبر Tap Payments",
+                                icon: CreditCard,
+                              },
+                              paypal: {
+                                label: "PayPal",
+                                description: "الدفع عبر PayPal",
+                                icon: Wallet,
+                              },
+                              moyasar: {
+                                label: "Moyasar",
+                                description: "الدفع عبر بوابة Moyasar",
+                                icon: CreditCard,
+                              },
+                              hyperpay: {
+                                label: "HyperPay",
+                                description: "الدفع عبر HyperPay",
+                                icon: CreditCard,
+                              },
+                              bank_transfer: {
+                                label: "تحويل بنكي",
+                                description: "الدفع عن طريق التحويل البنكي",
+                                icon: Building2,
+                              },
+                            };
+
+                            const config = gatewayConfig[method.gateway_type as keyof typeof gatewayConfig];
+                            if (!config) return null;
+
+                            const Icon = config.icon;
+
+                            return (
+                              <div
+                                key={method.id}
+                                className="flex items-center space-x-2 space-x-reverse border-2 rounded-lg p-4 hover:border-primary transition-colors cursor-pointer"
+                              >
+                                <RadioGroupItem value={method.gateway_type} id={method.gateway_type} />
+                                <Label
+                                  htmlFor={method.gateway_type}
+                                  className="flex items-center gap-3 cursor-pointer flex-1"
+                                >
+                                  <Icon className="w-5 h-5 text-primary" />
+                                  <div>
+                                    <div className="font-bold">{config.label}</div>
+                                    <div className="text-sm text-charcoal-light">{config.description}</div>
+                                    {method.is_test_mode && (
+                                      <div className="text-xs text-amber-600 mt-1">وضع التجربة</div>
+                                    )}
+                                  </div>
+                                </Label>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </RadioGroup>
+                    )}
                   </CardContent>
                 </Card>
               </div>
