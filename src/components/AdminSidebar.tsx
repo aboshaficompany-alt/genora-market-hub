@@ -18,7 +18,8 @@ import {
   Megaphone,
   Package,
   TrendingUp,
-  Layers
+  Layers,
+  BarChart3
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -55,6 +56,7 @@ const merchantItems = [
   { title: "الاعلانات", url: "/advertisements", icon: Megaphone },
   { title: "المنتجات", url: "/all-products", icon: Package },
   { title: "الطلبات", url: "/all-orders", icon: ShoppingCart },
+  { title: "تقارير الدفعات", url: "/payment-reports", icon: BarChart3 },
   { title: "ترويج", url: "/promotions", icon: TrendingUp },
 ];
 
