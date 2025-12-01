@@ -44,6 +44,7 @@ import AllOrders from "./pages/AllOrders";
 import Promotions from "./pages/Promotions";
 import Install from "./pages/Install";
 import Profile from "./pages/Profile";
+import PaymentMethods from "./pages/PaymentMethods";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -99,6 +100,7 @@ const App = () => {
                 <Route path="/promotions" element={<Promotions />} />
                 <Route path="/install" element={<Install />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/payment-methods" element={<PaymentMethods />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
