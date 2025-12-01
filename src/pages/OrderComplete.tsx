@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar";  
 import MobileNavbar from "@/components/MobileNavbar";
 import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
