@@ -84,6 +84,7 @@ export default function VendorProducts() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [variants, setVariants] = useState<Variant[]>([]);
   const [categoryAttributes, setCategoryAttributes] = useState<string[]>([]);
   const [variantDialog, setVariantDialog] = useState(false);
@@ -290,6 +291,14 @@ export default function VendorProducts() {
       }
     }
     
+    // تحميل الصور الموجودة للمعاينة
+    if (product.attributes && (product.attributes as any).images) {
+      const existingImages = (product.attributes as any).images;
+      setImagePreviews(Array.isArray(existingImages) ? existingImages : []);
+    } else if (product.image_url) {
+      setImagePreviews([product.image_url]);
+    }
+    
     setDialogOpen(true);
   };
 
@@ -328,8 +337,25 @@ export default function VendorProducts() {
     });
     setEditingProduct(null);
     setImageFiles([]);
+    setImagePreviews([]);
     setVariants([]);
     setCategoryAttributes([]);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setImageFiles(files);
+    
+    // إنشاء معاينات للصور
+    const previews = files.map(file => URL.createObjectURL(file));
+    setImagePreviews(previews);
+  };
+
+  const removeImage = (index: number) => {
+    const newFiles = imageFiles.filter((_, i) => i !== index);
+    const newPreviews = imagePreviews.filter((_, i) => i !== index);
+    setImageFiles(newFiles);
+    setImagePreviews(newPreviews);
   };
 
   const handleAddVariant = () => {
@@ -710,20 +736,43 @@ export default function VendorProducts() {
                       </div>
 
                       <div>
-                        <Label>صور المنتج (متعددة)</Label>
+                        <Label className="flex items-center gap-2">
+                          <Upload className="w-4 h-4" />
+                          صور المنتج (يمكنك اختيار صور متعددة)
+                        </Label>
                         <Input
                           type="file"
                           accept="image/*"
                           multiple
-                          onChange={(e) => {
-                            const files = Array.from(e.target.files || []);
-                            setImageFiles(files);
-                          }}
+                          onChange={handleImageChange}
+                          className="cursor-pointer"
                         />
                         {imageFiles.length > 0 && (
-                          <p className="text-sm text-muted-foreground mt-1">
-                            تم اختيار {imageFiles.length} صورة
-                          </p>
+                          <div className="mt-3 space-y-2">
+                            <p className="text-sm font-medium text-primary">
+                              تم اختيار {imageFiles.length} صورة
+                            </p>
+                            <div className="grid grid-cols-3 gap-2">
+                              {imagePreviews.map((preview, index) => (
+                                <div key={index} className="relative group">
+                                  <img 
+                                    src={preview} 
+                                    alt={`معاينة ${index + 1}`}
+                                    className="w-full h-24 object-cover rounded-lg border-2 border-border"
+                                  />
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="destructive"
+                                    className="absolute top-1 left-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    onClick={() => removeImage(index)}
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         )}
                       </div>
 
