@@ -1,11 +1,14 @@
 // ========================================
 // Geenora Platform - Enhanced Footer
 // ========================================
+@use 'sass:color';
+@use 'variables' as *;
+@use 'mixins' as *;
 
 .footer {
   background: linear-gradient(180deg, 
     $charcoal 0%, 
-    lighten($charcoal, 5%) 50%,
+    color.adjust($charcoal, $lightness: 5%) 50%,
     $charcoal 100%
   );
   color: rgba(255, 255, 255, 0.9);

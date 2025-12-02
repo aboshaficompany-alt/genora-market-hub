@@ -1,6 +1,8 @@
 // ========================================
 // Geenora Platform - Base Styles
 // ========================================
+@use 'variables' as *;
+@use 'mixins' as *;
 
 // Reset & Base
 * {
