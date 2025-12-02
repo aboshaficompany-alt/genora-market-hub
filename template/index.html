@@ -66,11 +66,8 @@
   <!-- Enhanced Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
     <div class="mobile-header">
-      <div class="mobile-logo">
-        <i class="fas fa-store"></i>
-        <span>جينورا</span>
-      </div>
-      <button class="mobile-close" id="mobileMenuClose">
+      <div class="logo">جينورا</div>
+      <button class="close-btn" id="mobileMenuClose">
         <i class="fas fa-times"></i>
       </button>
     </div>
@@ -96,15 +93,40 @@
         <i class="fas fa-shopping-cart"></i>
         <span>السلة</span>
       </a>
+      <div class="nav-divider"></div>
       <a href="terms.html" class="mobile-nav-link">
         <i class="fas fa-file-contract"></i>
         <span>الشروط والأحكام</span>
       </a>
     </nav>
     
+    <!-- Vendor Dashboard Link (for logged-in vendors) -->
+    <a href="vendor-dashboard.html" class="vendor-dashboard-link" id="vendorDashboardLink" style="display: none;">
+      <i class="fas fa-tachometer-alt"></i>
+      <span>لوحة التاجر</span>
+    </a>
+    
     <div class="mobile-user-section">
-      <a href="login.php" class="btn btn-primary">تسجيل الدخول</a>
-      <a href="register.php" class="btn btn-secondary">إنشاء حساب</a>
+      <!-- For logged-out users -->
+      <div class="mobile-actions" id="loggedOutActions">
+        <a href="login.php" class="btn btn-primary btn-block">تسجيل الدخول</a>
+        <a href="register.php" class="btn btn-outline btn-block">إنشاء حساب</a>
+      </div>
+      
+      <!-- For logged-in users -->
+      <div id="loggedInActions" style="display: none;">
+        <div class="user-info">
+          <div class="user-avatar">م</div>
+          <div class="user-details">
+            <h4>محمد أحمد</h4>
+            <span>عميل مميز</span>
+          </div>
+        </div>
+        <button class="logout-btn" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>تسجيل الخروج</span>
+        </button>
+      </div>
     </div>
   </div>
 

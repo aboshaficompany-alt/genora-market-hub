@@ -1,0 +1,417 @@
+// ========================================
+// Geenora Platform - Image Gallery Styles
+// Interactive Gallery with Zoom
+// ========================================
+
+// Product Gallery Container
+.product-gallery {
+  position: relative;
+  
+  .gallery-main {
+    position: relative;
+    aspect-ratio: 1/1;
+    border-radius: $border-radius;
+    overflow: hidden;
+    background: $bg-secondary;
+    cursor: zoom-in;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    
+    &:hover img {
+      transform: scale(1.05);
+    }
+    
+    .zoom-hint {
+      position: absolute;
+      bottom: $spacing-md;
+      right: $spacing-md;
+      background: rgba(0, 0, 0, 0.6);
+      color: $text-white;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: 20px;
+      font-size: $font-size-sm;
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      pointer-events: none;
+      opacity: 0.8;
+      
+      i {
+        font-size: 1rem;
+      }
+    }
+  }
+  
+  .gallery-thumbs {
+    display: flex;
+    gap: $spacing-sm;
+    margin-top: $spacing-md;
+    overflow-x: auto;
+    padding: $spacing-xs 0;
+    
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: $primary-orange;
+      border-radius: 2px;
+    }
+    
+    .thumb {
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: $border-radius-sm;
+      overflow: hidden;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: all $transition-fast;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+      
+      &:hover {
+        border-color: rgba($primary-orange, 0.5);
+        
+        img {
+          transform: scale(1.1);
+        }
+      }
+      
+      &.active {
+        border-color: $primary-orange;
+        box-shadow: $shadow-md;
+      }
+    }
+  }
+  
+  // Navigation Arrows
+  .gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $charcoal;
+    font-size: 1.25rem;
+    transition: all $transition-fast;
+    box-shadow: $shadow-md;
+    z-index: 10;
+    
+    &:hover {
+      background: $primary-orange;
+      color: $text-white;
+      transform: translateY(-50%) scale(1.1);
+    }
+    
+    &.prev {
+      right: $spacing-md;
+    }
+    
+    &.next {
+      left: $spacing-md;
+    }
+    
+    @media (max-width: $breakpoint-sm) {
+      width: 36px;
+      height: 36px;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Fullscreen Gallery Modal
+.gallery-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: $z-index-modal;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  
+  &.active {
+    display: flex;
+  }
+  
+  .modal-content {
+    position: relative;
+    width: 90vw;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: $spacing-md;
+    left: $spacing-md;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: $text-white;
+    font-size: 1.5rem;
+    transition: all $transition-fast;
+    z-index: 20;
+    
+    &:hover {
+      background: $primary-orange;
+      transform: rotate(90deg);
+    }
+  }
+  
+  .main-image {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    cursor: grab;
+    
+    &.zoomed {
+      cursor: move;
+    }
+  }
+  
+  // Zoom Controls
+  .zoom-controls {
+    position: absolute;
+    bottom: $spacing-xl;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: $spacing-sm;
+    background: rgba(0, 0, 0, 0.6);
+    padding: $spacing-sm $spacing-md;
+    border-radius: 30px;
+    
+    button {
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      color: $text-white;
+      font-size: 1.25rem;
+      transition: all $transition-fast;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      &:hover {
+        background: $primary-orange;
+        transform: scale(1.1);
+      }
+      
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          transform: none;
+        }
+      }
+    }
+    
+    .zoom-level {
+      display: flex;
+      align-items: center;
+      color: $text-white;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-semibold;
+      min-width: 60px;
+      justify-content: center;
+    }
+  }
+  
+  // Modal Navigation
+  .modal-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: $text-white;
+    font-size: 1.5rem;
+    transition: all $transition-fast;
+    
+    &:hover {
+      background: $primary-orange;
+      transform: translateY(-50%) scale(1.1);
+    }
+    
+    &.prev {
+      right: $spacing-lg;
+    }
+    
+    &.next {
+      left: $spacing-lg;
+    }
+    
+    @media (max-width: $breakpoint-sm) {
+      width: 44px;
+      height: 44px;
+      font-size: 1.25rem;
+      
+      &.prev {
+        right: $spacing-sm;
+      }
+      
+      &.next {
+        left: $spacing-sm;
+      }
+    }
+  }
+  
+  // Modal Thumbnails
+  .modal-thumbs {
+    display: flex;
+    gap: $spacing-sm;
+    margin-top: $spacing-lg;
+    overflow-x: auto;
+    padding: $spacing-sm;
+    max-width: 100%;
+    
+    .thumb {
+      flex-shrink: 0;
+      width: 70px;
+      height: 70px;
+      border-radius: $border-radius-sm;
+      overflow: hidden;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: all $transition-fast;
+      opacity: 0.6;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      &:hover {
+        opacity: 0.8;
+        border-color: rgba($primary-orange, 0.5);
+      }
+      
+      &.active {
+        opacity: 1;
+        border-color: $primary-orange;
+      }
+    }
+  }
+  
+  // Image Counter
+  .image-counter {
+    position: absolute;
+    top: $spacing-md;
+    right: $spacing-md;
+    background: rgba(0, 0, 0, 0.6);
+    color: $text-white;
+    padding: $spacing-xs $spacing-md;
+    border-radius: 20px;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+// Gallery Loading State
+.gallery-loading {
+  position: absolute;
+  inset: 0;
+  background: $bg-secondary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid $border-light;
+    border-top-color: $primary-orange;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Touch/Swipe Gestures (for mobile)
+.gallery-main {
+  touch-action: pan-y pinch-zoom;
+  
+  @media (max-width: $breakpoint-sm) {
+    touch-action: manipulation;
+  }
+}
+
+// Responsive Gallery
+@media (max-width: $breakpoint-sm) {
+  .product-gallery {
+    .gallery-main {
+      border-radius: $border-radius-sm;
+    }
+    
+    .gallery-thumbs {
+      .thumb {
+        width: 60px;
+        height: 60px;
+      }
+    }
+    
+    .zoom-hint {
+      display: none;
+    }
+  }
+  
+  .gallery-modal {
+    .zoom-controls {
+      bottom: $spacing-md;
+      padding: $spacing-xs $spacing-sm;
+      
+      button {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+      }
+    }
+    
+    .modal-thumbs {
+      .thumb {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  }
+}
