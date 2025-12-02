@@ -1,16 +1,9 @@
 <?php
 /**
  * Geenora Platform - Header Include
- * ملف الهيدر المشترك لجميع الصفحات
- * 
- * Variables that can be set before including:
- * - $pageTitle: عنوان الصفحة
- * - $pageDescription: وصف الصفحة
- * - $activePage: الصفحة النشطة (home, categories, stores, terms, wishlist, checkout, orders)
- * - $additionalCSS: أي CSS إضافي
+ * ملف الهيدر المشترك لجميع الصفحات - مطابق للمنصة الحالية
  */
 
-// Default values
 $pageTitle = isset($pageTitle) ? $pageTitle . ' - جينورا' : 'جينورا - المتاجر المتعددة';
 $pageDescription = isset($pageDescription) ? $pageDescription : 'منصة جينورا للتسوق - اكتشف مجموعة واسعة من المنتجات من متاجر متعددة في مكان واحد';
 $activePage = isset($activePage) ? $activePage : '';
@@ -19,9 +12,12 @@ $activePage = isset($activePage) ? $activePage : '';
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title><?php echo htmlspecialchars($pageTitle); ?></title>
   <meta name="description" content="<?php echo htmlspecialchars($pageDescription); ?>">
+  <meta name="theme-color" content="#f97316">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   
   <!-- Google Fonts - Cairo -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
@@ -33,126 +29,146 @@ $activePage = isset($activePage) ? $activePage : '';
 </head>
 <body>
 
-  <!-- Enhanced Header -->
-  <header class="header">
+  <!-- Desktop Header -->
+  <header class="header desktop-header">
     <div class="container">
-      <div class="header-container">
+      <div class="header-inner">
+        <!-- Logo -->
         <a href="index.php" class="logo">
           <i class="fas fa-store logo-icon"></i>
-          <div class="logo-text">
-            <span>جينورا</span>
-            <span class="logo-subtitle">المتاجر المتعددة</span>
-          </div>
+          <span class="logo-text">Geenora</span>
         </a>
 
-        <nav class="nav">
+        <!-- Desktop Navigation - Horizontal -->
+        <nav class="desktop-nav">
           <a href="index.php" class="nav-link <?php echo ($activePage == 'home') ? 'active' : ''; ?>">
+            <i class="fas fa-home"></i>
             الرئيسية
           </a>
-          <a href="categories.php" class="nav-link <?php echo ($activePage == 'categories') ? 'active' : ''; ?>">
-            الأصناف
-          </a>
           <a href="stores.php" class="nav-link <?php echo ($activePage == 'stores') ? 'active' : ''; ?>">
+            <i class="fas fa-store"></i>
             المتاجر
           </a>
-          <a href="terms.php" class="nav-link <?php echo ($activePage == 'terms') ? 'active' : ''; ?>">
-            الشروط
+          <a href="categories.php" class="nav-link <?php echo ($activePage == 'categories') ? 'active' : ''; ?>">
+            <i class="fas fa-shopping-bag"></i>
+            المنتجات
           </a>
         </nav>
 
+        <!-- Desktop Actions -->
         <div class="header-actions">
-          <a href="wishlist.php" class="header-action" title="قائمة المفضلة">
+          <a href="wishlist.php" class="action-btn" title="قائمة المفضلة">
             <i class="far fa-heart"></i>
-            <span class="badge-count"><?php echo isset($_SESSION['wishlist_count']) ? $_SESSION['wishlist_count'] : '0'; ?></span>
+            <span class="badge"><?php echo isset($_SESSION['wishlist_count']) ? $_SESSION['wishlist_count'] : '0'; ?></span>
           </a>
-          <a href="checkout.php" class="header-action" title="سلة التسوق">
+          <a href="checkout.php" class="action-btn" title="سلة التسوق">
             <i class="fas fa-shopping-cart"></i>
-            <span class="badge-count cart-count"><?php echo isset($_SESSION['cart_count']) ? $_SESSION['cart_count'] : '0'; ?></span>
+            <span class="badge primary"><?php echo isset($_SESSION['cart_count']) ? $_SESSION['cart_count'] : '0'; ?></span>
           </a>
           <?php if(isset($_SESSION['user_id'])): ?>
-            <a href="account.php" class="btn btn-primary btn-sm">حسابي</a>
+            <a href="orders.php" class="btn btn-ghost">طلباتي</a>
+            <?php if(isset($_SESSION['is_vendor']) && $_SESSION['is_vendor']): ?>
+              <a href="vendor-dashboard.php" class="btn btn-ghost">لوحة التاجر</a>
+            <?php endif; ?>
+            <a href="logout.php" class="btn btn-ghost btn-danger">
+              <i class="fas fa-sign-out-alt"></i>
+              تسجيل الخروج
+            </a>
           <?php else: ?>
-            <a href="login.php" class="btn btn-primary btn-sm">تسجيل الدخول</a>
+            <a href="login.php" class="btn btn-primary btn-rounded">
+              <i class="fas fa-user"></i>
+              تسجيل الدخول
+            </a>
+            <a href="register.php" class="btn btn-outline btn-rounded">تسجيل كتاجر</a>
           <?php endif; ?>
         </div>
-
-        <button class="mobile-menu-toggle" id="mobileMenuToggle">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
       </div>
     </div>
   </header>
 
-  <!-- Enhanced Mobile Menu -->
-  <div class="mobile-menu" id="mobileMenu">
-    <div class="mobile-header">
-      <div class="logo">جينورا</div>
-      <button class="close-btn" id="mobileMenuClose">
+  <!-- Mobile Header -->
+  <header class="header mobile-header">
+    <div class="mobile-header-inner">
+      <!-- Menu Button -->
+      <button class="mobile-menu-btn" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <!-- Logo -->
+      <a href="index.php" class="mobile-logo">
+        <span>Geenora</span>
+        <i class="fas fa-store"></i>
+      </a>
+
+      <!-- Cart & Wishlist -->
+      <div class="mobile-actions">
+        <a href="wishlist.php" class="action-btn">
+          <i class="far fa-heart"></i>
+          <?php if(isset($_SESSION['wishlist_count']) && $_SESSION['wishlist_count'] > 0): ?>
+            <span class="badge danger"><?php echo $_SESSION['wishlist_count']; ?></span>
+          <?php endif; ?>
+        </a>
+        <a href="checkout.php" class="action-btn">
+          <i class="fas fa-shopping-cart"></i>
+          <?php if(isset($_SESSION['cart_count']) && $_SESSION['cart_count'] > 0): ?>
+            <span class="badge primary"><?php echo $_SESSION['cart_count']; ?></span>
+          <?php endif; ?>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Side Menu Overlay -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+
+  <!-- Mobile Side Menu -->
+  <div class="mobile-side-menu" id="mobileSideMenu">
+    <!-- Menu Header -->
+    <div class="side-menu-header">
+      <div class="side-menu-logo">
+        <i class="fas fa-store"></i>
+        <span>Geenora</span>
+      </div>
+      <button class="close-menu-btn" id="closeMobileMenu">
         <i class="fas fa-times"></i>
       </button>
     </div>
-    
-    <nav class="mobile-nav">
-      <a href="index.php" class="mobile-nav-link <?php echo ($activePage == 'home') ? 'active' : ''; ?>">
-        <i class="fas fa-home"></i>
-        <span>الرئيسية</span>
+
+    <!-- Menu Navigation -->
+    <nav class="side-menu-nav">
+      <a href="index.php" class="side-nav-link <?php echo ($activePage == 'home') ? 'active' : ''; ?>">
+        الرئيسية
       </a>
-      <a href="categories.php" class="mobile-nav-link <?php echo ($activePage == 'categories') ? 'active' : ''; ?>">
-        <i class="fas fa-th-large"></i>
-        <span>الأصناف</span>
+      <a href="stores.php" class="side-nav-link <?php echo ($activePage == 'stores') ? 'active' : ''; ?>">
+        المتاجر
       </a>
-      <a href="stores.php" class="mobile-nav-link <?php echo ($activePage == 'stores') ? 'active' : ''; ?>">
-        <i class="fas fa-store"></i>
-        <span>المتاجر</span>
+      <a href="categories.php" class="side-nav-link <?php echo ($activePage == 'categories') ? 'active' : ''; ?>">
+        المنتجات
       </a>
-      <a href="wishlist.php" class="mobile-nav-link <?php echo ($activePage == 'wishlist') ? 'active' : ''; ?>">
-        <i class="fas fa-heart"></i>
-        <span>المفضلة</span>
-      </a>
-      <a href="checkout.php" class="mobile-nav-link <?php echo ($activePage == 'checkout') ? 'active' : ''; ?>">
-        <i class="fas fa-shopping-cart"></i>
-        <span>السلة</span>
-      </a>
-      <div class="nav-divider"></div>
-      <a href="terms.php" class="mobile-nav-link <?php echo ($activePage == 'terms') ? 'active' : ''; ?>">
-        <i class="fas fa-file-contract"></i>
-        <span>الشروط والأحكام</span>
+      <a href="orders.php" class="side-nav-link <?php echo ($activePage == 'orders') ? 'active' : ''; ?>">
+        طلباتي
       </a>
     </nav>
-    
-    <?php if(isset($_SESSION['user_id']) && isset($_SESSION['is_vendor']) && $_SESSION['is_vendor']): ?>
-    <!-- Vendor Dashboard Link (for logged-in vendors) -->
-    <a href="vendor-dashboard.php" class="vendor-dashboard-link">
-      <i class="fas fa-tachometer-alt"></i>
-      <span>لوحة التاجر</span>
-    </a>
-    <?php endif; ?>
-    
-    <div class="mobile-user-section">
+
+    <!-- Menu Footer -->
+    <div class="side-menu-footer">
       <?php if(isset($_SESSION['user_id'])): ?>
-      <!-- For logged-in users -->
-      <div class="user-info">
-        <div class="user-avatar"><?php echo isset($_SESSION['user_name']) ? mb_substr($_SESSION['user_name'], 0, 1) : 'م'; ?></div>
-        <div class="user-details">
-          <h4><?php echo isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_name']) : 'المستخدم'; ?></h4>
-          <span>عميل مميز</span>
-        </div>
-      </div>
-      <a href="logout.php" class="logout-btn">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>تسجيل الخروج</span>
-      </a>
+        <?php if(isset($_SESSION['is_vendor']) && $_SESSION['is_vendor']): ?>
+          <a href="vendor-dashboard.php" class="btn btn-outline btn-block">
+            <i class="fas fa-tachometer-alt"></i>
+            لوحة التاجر
+          </a>
+        <?php endif; ?>
+        <a href="logout.php" class="btn btn-danger btn-block">
+          <i class="fas fa-sign-out-alt"></i>
+          تسجيل الخروج
+        </a>
       <?php else: ?>
-      <!-- For logged-out users -->
-      <div class="mobile-actions">
         <a href="login.php" class="btn btn-primary btn-block">تسجيل الدخول</a>
-        <a href="register.php" class="btn btn-outline btn-block">إنشاء حساب</a>
-      </div>
+        <a href="register.php" class="btn btn-outline btn-block">تسجيل كتاجر</a>
       <?php endif; ?>
     </div>
   </div>
 
-  <!-- Mobile Menu Overlay -->
-  <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+  <!-- Main Content Wrapper -->
+  <main class="main-content">
